@@ -45,6 +45,20 @@ fun AppNavHost(
         composable(AppDestination.Home.route) {
             PlaceholderScreen(title = stringResource(R.string.screen_home))
         }
+
+        // Las tres rutas quedan registradas aunque todavía no haya pantalla real,
+        // así ningún botón que navegue hacia ellas hace crashear la app.
+        composable(AppDestination.Notifications.route) {
+            PlaceholderScreen(title = stringResource(R.string.screen_notifications))
+        }
+
+        composable(AppDestination.Workout.route) {
+            PlaceholderScreen(title = stringResource(R.string.screen_workout))
+        }
+
+        composable(AppDestination.Nutrition.route) {
+            PlaceholderScreen(title = stringResource(R.string.screen_nutrition))
+        }
     }
 }
 

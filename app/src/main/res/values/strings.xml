@@ -47,4 +47,7 @@
 
     <!-- Títulos de las pantallas provisorias -->
     <string name="screen_home">Home</string>
+    <string name="screen_notifications">Notifications</string>
+    <string name="screen_workout">Workout</string>
+    <string name="screen_nutrition">Nutrition</string>
 </resources>
