@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.voracoach.navigation.AppNavHost
 import com.example.voracoach.ui.theme.VoraCoachParcialTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             // La Activity solo aplica el tema y monta la navegación; no tiene lógica de pantallas.
             VoraCoachParcialTheme {
-                // TODO: AppNavHost()
+                AppNavHost()
             }
         }
     }
