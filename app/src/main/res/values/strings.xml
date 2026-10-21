@@ -59,4 +59,5 @@
     <string name="screen_nutrition">Nutrition</string>
     <string name="screen_progress">Progress</string>
     <string name="screen_profile">Profile</string>
+    <string name="screen_coach">VORA Coach</string>
 </resources>

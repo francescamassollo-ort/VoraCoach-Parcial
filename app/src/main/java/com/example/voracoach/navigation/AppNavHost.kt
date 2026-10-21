@@ -96,6 +96,10 @@ fun AppNavHost(
             composable(AppDestination.Profile.route) {
                 PlaceholderScreen(title = stringResource(R.string.screen_profile))
             }
+
+            composable(AppDestination.Coach.route) {
+                PlaceholderScreen(title = stringResource(R.string.screen_coach))
+            }
         }
     }
 }

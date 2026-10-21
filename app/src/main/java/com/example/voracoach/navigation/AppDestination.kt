@@ -10,4 +10,5 @@ sealed class AppDestination(val route: String) {
     data object Nutrition : AppDestination("nutrition")
     data object Progress : AppDestination("progress")
     data object Profile : AppDestination("profile")
+    data object Coach : AppDestination("coach")
 }
