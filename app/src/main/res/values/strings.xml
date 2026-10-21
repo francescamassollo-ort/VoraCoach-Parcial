@@ -45,6 +45,14 @@
     <string name="signup_go_signin">Sign In</string>
     <string name="signup_error_password_short">Mínimo 8 caracteres</string>
 
+    <!-- Etiquetas de la barra inferior -->
+    <string name="nav_home">Home</string>
+    <string name="nav_workout">Workout</string>
+    <string name="nav_nutrition">Nutrition</string>
+
     <!-- Títulos de las pantallas provisorias -->
     <string name="screen_home">Home</string>
+    <string name="screen_notifications">Notifications</string>
+    <string name="screen_workout">Workout</string>
+    <string name="screen_nutrition">Nutrition</string>
 </resources>
