@@ -8,4 +8,6 @@ sealed class AppDestination(val route: String) {
     data object Notifications : AppDestination("notifications")
     data object Workout : AppDestination("workout")
     data object Nutrition : AppDestination("nutrition")
+    data object Progress : AppDestination("progress")
+    data object Profile : AppDestination("profile")
 }
