@@ -1,9 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)   // Genera el grafo de dependencias de Dagger a partir de las anotaciones de Hilt
     alias(libs.plugins.ksp)    // Procesa anotaciones en compilación (Hilt y Room generan código con esto)
 }
+
+// local.properties es personal de cada compu y no se sube a git, así que cada integrante
+// puede elegir a qué servidor se conecta la app sin cambiar código ni pisar a los demás.
+// Para usar el mock local desde el emulador, agregar ahí: vora.apiUrl=http://10.0.2.2:8000/
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val apiBaseUrl: String = localProperties.getProperty("vora.apiUrl") ?: "https://tp3.martinrivas.ar/"
 
 android {
     namespace = "com.example.voracoach"
@@ -18,9 +29,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // URL de la API en BuildConfig: se cambia en un solo lugar si usamos el servidor local
-        // (en el emulador sería http://10.0.2.2:8000/).
-        buildConfigField("String", "API_BASE_URL", "\"https://tp3.martinrivas.ar/\"")
+        // La URL queda en BuildConfig.API_BASE_URL, que es lo que va a leer Retrofit
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
     }
 
     buildTypes {

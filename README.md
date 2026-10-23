@@ -14,6 +14,21 @@ Desarrollo de Aplicaciones Móviles — ORT 2026.
 ## Cómo ejecutar
 Abrir en Android Studio, sincronizar Gradle y ejecutar `app` (API 24+).
 
+### Servidor de la API
+Por defecto la app usa la API publicada: `https://tp3.martinrivas.ar/`.
+
+Para usar el mock local del paquete del docente:
+1. Con Python 3.9 o posterior, desde la carpeta del paquete: `python mock/server.py` (en macOS/Linux, `python3`).
+2. Verificar que responde en `http://localhost:8000/`.
+3. Agregar en `local.properties` (no se sube al repositorio):
+   ```
+   vora.apiUrl=http://10.0.2.2:8000/
+   ```
+   `10.0.2.2` es la dirección de la compu vista desde el emulador.
+4. Sincronizar Gradle y volver a ejecutar la app.
+
+La conexión `http` (sin cifrar) se permite solo en la versión debug y solo hacia `10.0.2.2` y `localhost`.
+
 ## Estructura del proyecto
 Paquete base: `app/src/main/java/com/example/voracoach/`
 
