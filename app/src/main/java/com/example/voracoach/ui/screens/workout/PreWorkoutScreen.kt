@@ -88,7 +88,6 @@ fun PreWorkoutScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val demoMessage = stringResource(R.string.demo_only_message)
-
     // Fondo verde oscuro en toda la pantalla, también detrás de la barra de estado
     Box(
         modifier = Modifier
@@ -278,8 +277,9 @@ private fun NeedAnythingRow(onMicClick: () -> Unit) {
     }
 }
 
+// internal: lo reusa también Active Workout (mismo paquete), para no duplicar el mensaje de error
 @Composable
-private fun DarkMessage(message: String, onClose: () -> Unit, onRetry: (() -> Unit)?) {
+internal fun DarkMessage(message: String, onClose: () -> Unit, onRetry: (() -> Unit)?) {
     Column(
         modifier = Modifier
             .fillMaxSize()

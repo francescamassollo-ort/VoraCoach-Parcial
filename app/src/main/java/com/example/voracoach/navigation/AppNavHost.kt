@@ -16,9 +16,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.voracoach.R
+import com.example.voracoach.ui.components.StatusBarIconsFor
 import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
+import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
 import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
@@ -39,6 +41,14 @@ fun AppNavHost(
     // La barra solo aparece en las pantallas que son pestañas. En Sign In, Sign Up,
     // Notifications y las futuras sub-pantallas (detalle, agregar...) se oculta.
     val showBottomBar = BottomBarItem.entries.any { it.destination.route == currentDestination?.route }
+
+    // Pantallas con fondo verde oscuro: ahí la hora y la batería se muestran en blanco.
+    // Al sumar otra pantalla oscura (por ejemplo, estados de Coach), agregar su ruta acá.
+    val darkBackgroundRoutes = setOf(
+        AppDestination.PreWorkout.route,
+        AppDestination.ActiveWorkout.route
+    )
+    StatusBarIconsFor(darkBackground = currentDestination?.route in darkBackgroundRoutes)
 
     Scaffold(
         modifier = modifier,
@@ -126,7 +136,19 @@ fun AppNavHost(
                 route = AppDestination.ActiveWorkout.route,
                 arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
             ) {
-                PlaceholderScreen(title = stringResource(R.string.screen_active_workout))
+                ActiveWorkoutRoute(
+                    onClose = { navController.popBackStack() },
+                    onFinishWorkout = { workoutId ->
+                        navController.navigate(AppDestination.WorkoutComplete.createRoute(workoutId))
+                    }
+                )
+            }
+
+            composable(
+                route = AppDestination.WorkoutComplete.route,
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+            ) {
+                PlaceholderScreen(title = stringResource(R.string.screen_workout_complete))
             }
 
             composable(AppDestination.Nutrition.route) {

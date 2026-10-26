@@ -28,4 +28,8 @@ sealed class AppDestination(val route: String) {
     data object ActiveWorkout : AppDestination("workout/{$WORKOUT_ID_ARG}/active") {
         fun createRoute(workoutId: String) = "workout/$workoutId/active"
     }
+
+    data object WorkoutComplete : AppDestination("workout/{$WORKOUT_ID_ARG}/complete") {
+        fun createRoute(workoutId: String) = "workout/$workoutId/complete"
+    }
 }
