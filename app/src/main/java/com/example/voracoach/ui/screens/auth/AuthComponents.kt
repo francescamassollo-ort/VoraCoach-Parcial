@@ -107,60 +107,6 @@ fun AuthHeader(description: String? = null) {
     }
 }
 
-// Campo de texto con la etiqueta arriba
-// Si isPassword es true, oculta el texto y muestra el ojito para verlo.
-@Composable
-fun AuthTextField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    leadingIcon: ImageVector,
-    keyboardType: KeyboardType,
-    errorMessage: String? = null,
-    isPassword: Boolean = false,
-    passwordVisible: Boolean = false,
-    onTogglePasswordVisible: () -> Unit = {},
-    labelAction: (@Composable () -> Unit)? = null
-) {
-    Column(Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = label, style = MaterialTheme.typography.labelLarge)
-            // Espacio opcional a la derecha de la etiqueta, por ejemplo "Forgot your password?"
-            labelAction?.invoke()
-        }
-        Spacer(Modifier.height(6.dp))
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = { Text(placeholder) },
-            leadingIcon = { Icon(leadingIcon, contentDescription = null) },
-            trailingIcon = if (isPassword) {
-                {
-                    IconButton(onClick = onTogglePasswordVisible) {
-                        Icon(
-                            imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                            contentDescription = stringResource(
-                                if (passwordVisible) R.string.auth_hide_password else R.string.auth_show_password
-                            )
-                        )
-                    }
-                }
-            } else null,
-            visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            isError = errorMessage != null,
-            supportingText = errorMessage?.let { { Text(it) } },
-            singleLine = true,
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
 
 // Separador con texto en el medio ("Or continue with") y los tres botones de acceso alternativo.
 // Sin Firebase no hay inicio de sesión real con Apple, Google o biometría: los botones
