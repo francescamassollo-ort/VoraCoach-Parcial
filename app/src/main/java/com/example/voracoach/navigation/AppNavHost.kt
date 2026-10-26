@@ -9,6 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -17,6 +19,8 @@ import com.example.voracoach.R
 import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
+import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
+import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
 @Composable
 fun AppNavHost(
@@ -83,7 +87,32 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Workout.route) {
-                WorkoutCatalogRoute()
+                WorkoutCatalogRoute(
+                    onWorkoutClick = { workoutId ->
+                        navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
+                    }
+                )
+            }
+
+            // navArgument declara el parámetro de la ruta. El ViewModel del detalle lo lee
+            // con SavedStateHandle, así que la pantalla no necesita recibir el id.
+            composable(
+                route = AppDestination.WorkoutDetail.route,
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+            ) {
+                WorkoutDetailRoute(
+                    onBack = { navController.popBackStack() },
+                    onStartWorkout = { workoutId ->
+                        navController.navigate(AppDestination.PreWorkout.createRoute(workoutId))
+                    }
+                )
+            }
+
+            composable(
+                route = AppDestination.PreWorkout.route,
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+            ) {
+                PlaceholderScreen(title = stringResource(R.string.screen_pre_workout))
             }
 
             composable(AppDestination.Nutrition.route) {
