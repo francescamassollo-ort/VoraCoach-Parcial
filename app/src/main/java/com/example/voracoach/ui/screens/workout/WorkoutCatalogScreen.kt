@@ -1,5 +1,6 @@
 package com.example.voracoach.ui.screens.workout
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,18 +45,22 @@ import com.example.voracoach.viewmodel.WorkoutCatalogViewModel
 // - WorkoutCatalogScreen: solo dibuja el estado que recibe. No conoce el ViewModel, así se puede previsualizar con datos de ejemplo y probar cada estado por separado.
 @Composable
 fun WorkoutCatalogRoute(
+    onWorkoutClick: (workoutId: String) -> Unit,
     viewModel: WorkoutCatalogViewModel = hiltViewModel()
 ) {
     // collectAsStateWithLifecycle deja de observar cuando la app pasa a segundo plano,
     // así no se procesan cambios que nadie está viendo
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    WorkoutCatalogScreen(uiState = uiState, onRetry = viewModel::retry)
+    WorkoutCatalogScreen(uiState = uiState, onRetry = viewModel::retry, onWorkoutClick = onWorkoutClick)
 }
 
+// onWorkoutClick recibe el id del entrenamiento tocado: la pantalla no sabe a dónde se navega,
+// solo avisa cuál se eligió y el NavHost abre su detalle
 @Composable
 fun WorkoutCatalogScreen(
     uiState: WorkoutCatalogUiState,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onWorkoutClick: (workoutId: String) -> Unit
 ) {
     // La pantalla no tiene Scaffold propio, así que deja lugar para la barra de estado del celular
     Column(
@@ -95,13 +100,17 @@ fun WorkoutCatalogScreen(
                 }
             }
 
-            is WorkoutCatalogUiState.Content -> CatalogContent(uiState, onRetry)
+            is WorkoutCatalogUiState.Content -> CatalogContent(uiState, onRetry, onWorkoutClick)
         }
     }
 }
 
 @Composable
-private fun CatalogContent(state: WorkoutCatalogUiState.Content, onRetry: () -> Unit) {
+private fun CatalogContent(
+    state: WorkoutCatalogUiState.Content,
+    onRetry: () -> Unit,
+    onWorkoutClick: (workoutId: String) -> Unit
+) {
     // Barra fina mientras se actualiza, sin tapar la lista que ya se ve
     if (state.isRefreshing) {
         LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -133,15 +142,20 @@ private fun CatalogContent(state: WorkoutCatalogUiState.Content, onRetry: () -> 
     // cada tarjeta cuando la lista cambia, en vez de redibujarlas todas.
     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         items(state.workouts, key = { it.id }) { workout ->
-            WorkoutCard(workout)
+            WorkoutCard(workout, onClick = { onWorkoutClick(workout.id) })
         }
     }
 }
 
 @Composable
-private fun WorkoutCard(workout: WorkoutSummary) {
+private fun WorkoutCard(workout: WorkoutSummary, onClick: () -> Unit) {
+    // Card con onClick: toda la tarjeta es tocable y muestra el efecto al presionarla.
+    // Blanca con borde gris como en Figma (por defecto Material la pinta con un violeta claro).
     Card(
+        onClick = onClick,
         shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(Modifier.padding(20.dp)) {
@@ -181,7 +195,8 @@ private fun CatalogContentPreview() {
     MaterialTheme {
         WorkoutCatalogScreen(
             uiState = WorkoutCatalogUiState.Content(sampleWorkouts, isRefreshing = false, refreshError = null),
-            onRetry = {}
+            onRetry = {},
+            onWorkoutClick = {}
         )
     }
 }
@@ -192,7 +207,8 @@ private fun CatalogCachedWithErrorPreview() {
     MaterialTheme {
         WorkoutCatalogScreen(
             uiState = WorkoutCatalogUiState.Content(sampleWorkouts, isRefreshing = false, refreshError = DataError.NoConnection),
-            onRetry = {}
+            onRetry = {},
+            onWorkoutClick = {}
         )
     }
 }
@@ -201,7 +217,7 @@ private fun CatalogCachedWithErrorPreview() {
 @Composable
 private fun CatalogErrorPreview() {
     MaterialTheme {
-        WorkoutCatalogScreen(uiState = WorkoutCatalogUiState.Error(DataError.Server(503)), onRetry = {})
+        WorkoutCatalogScreen(uiState = WorkoutCatalogUiState.Error(DataError.Server(503)), onRetry = {}, onWorkoutClick = {})
     }
 }
 
@@ -209,6 +225,6 @@ private fun CatalogErrorPreview() {
 @Composable
 private fun CatalogEmptyPreview() {
     MaterialTheme {
-        WorkoutCatalogScreen(uiState = WorkoutCatalogUiState.Empty, onRetry = {})
+        WorkoutCatalogScreen(uiState = WorkoutCatalogUiState.Empty, onRetry = {}, onWorkoutClick = {})
     }
 }

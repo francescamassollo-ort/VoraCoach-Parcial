@@ -60,6 +60,7 @@
     <string name="screen_progress">Progress</string>
     <string name="screen_profile">Profile</string>
     <string name="screen_coach">VORA Coach</string>
+    <string name="screen_pre_workout">Pre Workout</string>
 
     <!-- Errores de datos (compartidos por las pantallas que consultan la API) -->
     <string name="error_no_connection">No hay conexión con el servidor</string>
