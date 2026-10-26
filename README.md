@@ -64,7 +64,7 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
 | Home / 01 — Dashboard | `home` | 🎭 Demostración (perfil y métricas de ejemplo; entrenamiento recomendado real desde Room) |
-| Home / 02 — Notifications | `notifications` | 🚧 Provisoria |
+| Home / 02 — Notifications | `notifications` | 🎭 Demostración (notificaciones de ejemplo; "Mark all as read" funcional) |
 
 ### Asistente VORA
 Una pantalla con 6 estados simulados.

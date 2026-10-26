@@ -106,7 +106,7 @@ fun HomeScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        GreetingRow(uiState.userName, uiState.partOfDay, onNotificationsClick)
+        GreetingRow(uiState.userName, uiState.partOfDay, uiState.hasUnreadNotifications, onNotificationsClick)
         CoachCard(onStartVoiceSession, onStartMyWorkout, onLogBreakfast)
         InsightBanner(message = stringResource(R.string.home_on_track))
         SectionHeader(title = stringResource(R.string.home_overview))
@@ -120,7 +120,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun GreetingRow(userName: String, partOfDay: PartOfDay, onNotificationsClick: () -> Unit) {
+private fun GreetingRow(userName: String, partOfDay: PartOfDay, hasUnread: Boolean, onNotificationsClick: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         // no hay foto de perfil en el perfil de demostración
         val initials = userName.split(" ").mapNotNull { it.firstOrNull()?.uppercase() }.take(2).joinToString("")
@@ -151,7 +151,7 @@ private fun GreetingRow(userName: String, partOfDay: PartOfDay, onNotificationsC
             icon = Icons.Outlined.Notifications,
             contentDescription = stringResource(R.string.home_open_notifications),
             onClick = onNotificationsClick,
-            showBadge = true
+            showBadge = hasUnread
         )
     }
 }
@@ -346,7 +346,8 @@ private fun HomePreview() {
                 userName = "Alex Morgan",
                 partOfDay = PartOfDay.MORNING,
                 summary = DailySummary(72, 1420, 2100, 104, 140, 152, 220, 7842, 5.6, 312),
-                recommendedWorkout = WorkoutSummary("w01", "Fuerza inicial", WorkoutLevel.BEGINNER, 25, 3)
+                recommendedWorkout = WorkoutSummary("w01", "Fuerza inicial", WorkoutLevel.BEGINNER, 25, 3),
+                hasUnreadNotifications = true
             ),
             onNotificationsClick = {}, onStartVoiceSession = {}, onStartMyWorkout = {},
             onLogBreakfast = {}, onWorkoutClick = {}

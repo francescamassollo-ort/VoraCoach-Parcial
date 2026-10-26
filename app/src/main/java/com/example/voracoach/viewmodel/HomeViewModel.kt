@@ -2,12 +2,13 @@ package com.example.voracoach.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.voracoach.data.repository.NotificationsRepository
 import com.example.voracoach.data.repository.WorkoutRepository
 import com.example.voracoach.model.WorkoutSummary
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import java.util.Calendar
 import javax.inject.Inject
@@ -35,7 +36,9 @@ data class HomeUiState(
     val partOfDay: PartOfDay,
     val summary: DailySummary,
     // Real: el primer entrenamiento del catálogo guardado en Room. Null si todavía no se descargó.
-    val recommendedWorkout: WorkoutSummary?
+    val recommendedWorkout: WorkoutSummary?,
+    // Decide si la campana muestra el punto de aviso
+    val hasUnreadNotifications: Boolean
 )
 
 // Datos del perfil y del día de demostración, en un solo lugar para no repartirlos por la pantalla.
@@ -57,25 +60,28 @@ private val DEMO_SUMMARY = DailySummary(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    repository: WorkoutRepository
+    workoutRepository: WorkoutRepository,
+    notificationsRepository: NotificationsRepository
 ) : ViewModel() {
 
     // Home no consulta la API: observa lo que ya hay en Room. Cuando se descarga el catálogo
     // (desde la pestaña Workout), la tarjeta de entrenamiento recomendado aparece sola.
+    // combine junta las dos fuentes: si cambia cualquiera, se recalcula el estado.
     val uiState: StateFlow<HomeUiState> =
-        repository.observeCatalog()
-            .map { workouts -> buildState(recommended = workouts.firstOrNull()) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = buildState(recommended = null)
-            )
+        combine(workoutRepository.observeCatalog(), notificationsRepository.allRead) { workouts, allRead ->
+            buildState(recommended = workouts.firstOrNull(), hasUnread = !allRead)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = buildState(recommended = null, hasUnread = !notificationsRepository.allRead.value)
+        )
 
-    private fun buildState(recommended: WorkoutSummary?) = HomeUiState(
+    private fun buildState(recommended: WorkoutSummary?, hasUnread: Boolean) = HomeUiState(
         userName = DEMO_USER_NAME,
         partOfDay = currentPartOfDay(),
         summary = DEMO_SUMMARY,
-        recommendedWorkout = recommended
+        recommendedWorkout = recommended,
+        hasUnreadNotifications = hasUnread
     )
 
     private fun currentPartOfDay(): PartOfDay {

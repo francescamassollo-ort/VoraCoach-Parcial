@@ -208,4 +208,27 @@
     <string name="home_today">TODAY</string>
     <string name="home_recommended_meta">%1$d min • %2$d exercises • %3$s</string>
     <string name="home_start_workout">Start workout</string>
+
+    <!-- Home: Notifications (lista de demostración) -->
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_mark_all_read">Mark all as read</string>
+    <string name="notifications_today">TODAY</string>
+    <string name="notifications_yesterday">YESTERDAY</string>
+    <string name="notifications_unread">Unread</string>
+    <string name="notifications_coach_category">VORA Coach</string>
+    <string name="notifications_coach_time">2h ago</string>
+    <string name="notifications_coach_title">Your weekly health review is ready.</string>
+    <string name="notifications_coach_body">We noticed your training consistency improved by 14% over the last week.</string>
+    <string name="notifications_plan_category">Workout Plan</string>
+    <string name="notifications_plan_time">4h ago</string>
+    <string name="notifications_plan_title">Upper Body Strength is ready.</string>
+    <string name="notifications_plan_body">Equipped for home/gym. Approx. 42 minutes.</string>
+    <string name="notifications_nutrition_category">Nutrition Goal</string>
+    <string name="notifications_nutrition_time">6h ago</string>
+    <string name="notifications_nutrition_title">Protein target milestone alert.</string>
+    <string name="notifications_nutrition_body">You require 36g more of protein to hit today\'s performance baseline.</string>
+    <string name="notifications_milestone_category">Milestone Reached</string>
+    <string name="notifications_milestone_time">1d ago</string>
+    <string name="notifications_milestone_title">4-day workout streak logged!</string>
+    <string name="notifications_milestone_body">Outstanding work, Alex. Let\'s make it 5 today.</string>
 </resources>

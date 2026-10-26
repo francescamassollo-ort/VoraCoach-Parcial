@@ -22,6 +22,7 @@ import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
 import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
 import com.example.voracoach.ui.screens.home.HomeRoute
+import com.example.voracoach.ui.screens.home.NotificationsRoute
 import com.example.voracoach.ui.screens.workout.ExerciseGuideRoute
 import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
 import com.example.voracoach.ui.screens.workout.WeeklyPlanRoute
@@ -108,7 +109,7 @@ fun AppNavHost(
             // Las tres rutas quedan registradas aunque todavía no haya pantalla real,
             // así ningún botón que navegue hacia ellas hace crashear la app.
             composable(AppDestination.Notifications.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_notifications))
+                NotificationsRoute(onBack = { navController.popBackStack() })
             }
 
             composable(AppDestination.Workout.route) {
