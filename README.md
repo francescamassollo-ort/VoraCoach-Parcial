@@ -84,8 +84,8 @@ Una pantalla con 6 estados simulados.
 | Workout / 01 — Dashboard | `workout` | ✅ Funcional (catálogo con Retrofit y caché en Room) |
 | Workout / 02 — Weekly Plan | a definir | ⏳ Pendiente |
 | Workout / 03 — Workout Details | `workout/{workoutId}` | ✅ Funcional (detalle con Retrofit y caché en Room) |
-| Workout / 04 — Pre Workout | `workout/{workoutId}/pre` | 🚧 Provisoria |
-| Workout / 05 — Active Workout | a definir | ⏳ Pendiente |
+| Workout / 04 — Pre Workout | `workout/{workoutId}/pre` | 🎭 Demostración (nombre, duración y consejo del entrenamiento real) |
+| Workout / 05 — Active Workout | `workout/{workoutId}/active` | 🚧 Provisoria |
 | Workout / 06 — Exercise Details | a definir | ⏳ Pendiente |
 | Workout / 07 — Workout Complete | a definir | ⏳ Pendiente |
 

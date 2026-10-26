@@ -19,6 +19,7 @@ import com.example.voracoach.R
 import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
+import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
@@ -112,7 +113,20 @@ fun AppNavHost(
                 route = AppDestination.PreWorkout.route,
                 arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
             ) {
-                PlaceholderScreen(title = stringResource(R.string.screen_pre_workout))
+                PreWorkoutRoute(
+                    // La X vuelve al detalle, igual que el botón atrás del sistema
+                    onClose = { navController.popBackStack() },
+                    onStartWorkout = { workoutId ->
+                        navController.navigate(AppDestination.ActiveWorkout.createRoute(workoutId))
+                    }
+                )
+            }
+
+            composable(
+                route = AppDestination.ActiveWorkout.route,
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+            ) {
+                PlaceholderScreen(title = stringResource(R.string.screen_active_workout))
             }
 
             composable(AppDestination.Nutrition.route) {

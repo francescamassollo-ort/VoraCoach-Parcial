@@ -61,6 +61,7 @@
     <string name="screen_profile">Profile</string>
     <string name="screen_coach">VORA Coach</string>
     <string name="screen_pre_workout">Pre Workout</string>
+    <string name="screen_active_workout">Active Workout</string>
 
     <!-- Errores de datos (compartidos por las pantallas que consultan la API) -->
     <string name="error_no_connection">No hay conexión con el servidor</string>
@@ -93,4 +94,20 @@
     <string name="workout_detail_not_found">Este entrenamiento no existe</string>
     <string name="workout_detail_refresh_failed">No se pudo actualizar. Mostrando la versión guardada.</string>
     <string name="demo_only_message">Función de demostración: no disponible en esta versión</string>
+    <string name="action_close">Close</string>
+
+    <!-- Workout: Pre Workout. Los textos de foco y última sesión son de demostración -->
+    <string name="pre_workout_get_ready">GET READY</string>
+    <string name="pre_workout_meta">%1$d min • %2$d exercises</string>
+    <string name="pre_workout_focus_label">TODAY\'S FOCUS</string>
+    <string name="pre_workout_focus_title">Controlled Repetitions</string>
+    <string name="pre_workout_focus_body">Keep concentric lifts explosive and focus on a slow, 2-second eccentric return for maximal hypertrophy stimulus.</string>
+    <string name="pre_workout_last_session_label">YOUR LAST SESSION</string>
+    <string name="pre_workout_last_session_title">%1$s Volume</string>
+    <string name="pre_workout_last_session_sets">Set 1: 40 kg × 10 • Set 2: 40 kg × 9 • Set 3: 37.5 kg × 10</string>
+    <string name="pre_workout_tip_label">VORA\'S COACH TIP</string>
+    <string name="pre_workout_tip_fallback">Start slightly lighter on your first set. If your form feels exceptionally robust, increase the load.</string>
+    <string name="pre_workout_need_anything">Need anything?</string>
+    <string name="pre_workout_need_anything_hint">\"Recommend a chest warm-up\"</string>
+    <string name="pre_workout_talk_to_vora">Talk to VORA</string>
 </resources>
