@@ -79,4 +79,17 @@
     <string name="workout_level_intermediate">Intermediate</string>
     <string name="workout_level_advanced">Advanced</string>
     <string name="workout_level_unknown">—</string>
+
+    <!-- Workout: detalle -->
+    <string name="workout_detail_header">Workout Overview</string>
+    <string name="workout_detail_meta">%1$d min • %2$s • %3$d exercises</string>
+    <string name="workout_detail_focus">Focus: %1$s</string>
+    <string name="workout_detail_coach_note">VORA COACH NOTE</string>
+    <string name="workout_exercise_sets">%1$d × %2$d • Rest %3$ds</string>
+    <string name="workout_detail_start">Start Workout</string>
+    <string name="workout_detail_edit">Edit workout</string>
+    <string name="workout_detail_unavailable">Este entrenamiento todavía no está disponible sin conexión</string>
+    <string name="workout_detail_not_found">Este entrenamiento no existe</string>
+    <string name="workout_detail_refresh_failed">No se pudo actualizar. Mostrando la versión guardada.</string>
+    <string name="demo_only_message">Función de demostración: no disponible en esta versión</string>
 </resources>
