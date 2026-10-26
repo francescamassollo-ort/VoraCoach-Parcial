@@ -60,4 +60,23 @@
     <string name="screen_progress">Progress</string>
     <string name="screen_profile">Profile</string>
     <string name="screen_coach">VORA Coach</string>
+
+    <!-- Errores de datos (compartidos por las pantallas que consultan la API) -->
+    <string name="error_no_connection">No hay conexión con el servidor</string>
+    <string name="error_server">El servidor no está disponible (error %1$d)</string>
+    <string name="error_invalid_response">El servidor respondió con datos inválidos</string>
+    <string name="error_not_found">No se encontró lo que buscabas</string>
+    <string name="error_unknown">Ocurrió un error inesperado</string>
+    <string name="action_retry">Reintentar</string>
+
+    <!-- Workout: catálogo -->
+    <string name="workout_catalog_subtitle">Workout Goal</string>
+    <string name="workout_catalog_title">Workouts</string>
+    <string name="workout_catalog_empty">No hay entrenamientos disponibles por ahora</string>
+    <string name="workout_catalog_refresh_failed">No se pudo actualizar. Mostrando los entrenamientos guardados.</string>
+    <string name="workout_catalog_meta">%1$s • %2$d min • %3$d exercises</string>
+    <string name="workout_level_beginner">Beginner</string>
+    <string name="workout_level_intermediate">Intermediate</string>
+    <string name="workout_level_advanced">Advanced</string>
+    <string name="workout_level_unknown">—</string>
 </resources>
