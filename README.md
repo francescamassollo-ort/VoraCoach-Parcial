@@ -63,7 +63,7 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 ### Home
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Home / 01 — Dashboard | `home` | 🚧 Provisoria |
+| Home / 01 — Dashboard | `home` | 🎭 Demostración (perfil y métricas de ejemplo; entrenamiento recomendado real desde Room) |
 | Home / 02 — Notifications | `notifications` | 🚧 Provisoria |
 
 ### Asistente VORA

@@ -21,6 +21,7 @@ import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
 import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
+import com.example.voracoach.ui.screens.home.HomeRoute
 import com.example.voracoach.ui.screens.workout.ExerciseGuideRoute
 import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
 import com.example.voracoach.ui.screens.workout.WeeklyPlanRoute
@@ -91,7 +92,17 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Home.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_home))
+                HomeRoute(
+                    onNotificationsClick = { navController.navigate(AppDestination.Notifications.route) },
+                    onStartVoiceSession = { navController.navigate(AppDestination.Coach.route) },
+                    // Los chips llevan a otras pestañas con navigateToTab para que la barra
+                    // quede marcada en la pestaña correcta y no se apilen pantallas
+                    onStartMyWorkout = { navController.navigateToTab(BottomBarItem.Workout) },
+                    onLogBreakfast = { navController.navigateToTab(BottomBarItem.Nutrition) },
+                    onWorkoutClick = { workoutId ->
+                        navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
+                    }
+                )
             }
 
             // Las tres rutas quedan registradas aunque todavía no haya pantalla real,
