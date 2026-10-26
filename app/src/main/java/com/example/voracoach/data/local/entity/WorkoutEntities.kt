@@ -26,6 +26,9 @@ data class WorkoutEntity(
     val exerciseCount: Int,
     // Orden en que lo devolvió la API, para mostrar el catálogo igual que el servidor
     val catalogPosition: Int,
+    // Si está en el último catálogo descargado. Si el servidor deja de devolverlo (o devuelve
+    // una lista vacía), sale de la lista pero su detalle sigue en caché por si vuelve.
+    val inCatalog: Boolean,
     // Null hasta que se descargue el detalle
     val description: String?,
     // Distingue un detalle en caché de uno nunca descargado (RF02: "no disponible sin conexión")
@@ -77,18 +80,21 @@ fun WorkoutSummary.toEntity(catalogPosition: Int) = WorkoutEntity(
     durationMinutes = durationMinutes,
     exerciseCount = exerciseCount,
     catalogPosition = catalogPosition,
+    inCatalog = true,
     description = null,
     hasDetail = false
 )
 
-// Al guardar un detalle se conserva la posición que el entrenamiento tenía en el catálogo
-fun Workout.toEntity(catalogPosition: Int) = WorkoutEntity(
+// Al guardar un detalle, el DAO solo actualiza los campos del detalle: la posición e inCatalog
+// de acá se usan únicamente si el entrenamiento todavía no existía en la base.
+fun Workout.toEntity() = WorkoutEntity(
     id = id,
     name = name,
     level = level.name,
     durationMinutes = durationMinutes,
     exerciseCount = exercises.size,
-    catalogPosition = catalogPosition,
+    catalogPosition = Int.MAX_VALUE,
+    inCatalog = false,
     description = description,
     hasDetail = true
 )
