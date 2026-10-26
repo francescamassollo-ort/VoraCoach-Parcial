@@ -46,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.voracoach.R
 import kotlinx.coroutines.launch
+import com.example.voracoach.ui.components.VoraTextField
+
 
 private const val MIN_PASSWORD_LENGTH = 8
 
@@ -100,7 +102,7 @@ fun SignUpScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column(Modifier.padding(24.dp)) {
-                    AuthTextField(
+                    VoraTextField(
                         label = stringResource(R.string.signup_name_label),
                         value = name,
                         onValueChange = { name = it },
@@ -110,7 +112,7 @@ fun SignUpScreen(
                         errorMessage = if (showErrors && name.isBlank()) requiredError else null
                     )
                     Spacer(Modifier.height(16.dp))
-                    AuthTextField(
+                    VoraTextField(
                         label = stringResource(R.string.auth_email_label),
                         value = email,
                         onValueChange = { email = it },
@@ -120,7 +122,7 @@ fun SignUpScreen(
                         errorMessage = if (showErrors && email.isBlank()) requiredError else null
                     )
                     Spacer(Modifier.height(16.dp))
-                    AuthTextField(
+                    VoraTextField(
                         label = stringResource(R.string.auth_password_label),
                         value = password,
                         onValueChange = { password = it },

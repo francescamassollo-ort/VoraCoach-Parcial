@@ -14,6 +14,21 @@ Desarrollo de Aplicaciones Móviles — ORT 2026.
 ## Cómo ejecutar
 Abrir en Android Studio, sincronizar Gradle y ejecutar `app` (API 24+).
 
+### Servidor de la API
+Por defecto la app usa la API publicada: `https://tp3.martinrivas.ar/`.
+
+Para usar el mock local del paquete del docente:
+1. Con Python 3.9 o posterior, desde la carpeta del paquete: `python mock/server.py` (en macOS/Linux, `python3`).
+2. Verificar que responde en `http://localhost:8000/`.
+3. Agregar en `local.properties` (no se sube al repositorio):
+   ```
+   vora.apiUrl=http://10.0.2.2:8000/
+   ```
+   `10.0.2.2` es la dirección de la compu vista desde el emulador.
+4. Sincronizar Gradle y volver a ejecutar la app.
+
+La conexión `http` (sin cifrar) se permite solo en la versión debug y solo hacia `10.0.2.2` y `localhost`.
+
 ## Estructura del proyecto
 Paquete base: `app/src/main/java/com/example/voracoach/`
 
@@ -66,13 +81,13 @@ Una pantalla con 6 estados simulados.
 ### Workout
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Workout / 01 — Dashboard | `workout` | 🚧 Provisoria |
-| Workout / 02 — Weekly Plan | a definir | ⏳ Pendiente |
-| Workout / 03 — Workout Details | a definir | ⏳ Pendiente |
-| Workout / 04 — Pre Workout | a definir | ⏳ Pendiente |
-| Workout / 05 — Active Workout | a definir | ⏳ Pendiente |
-| Workout / 06 — Exercise Details | a definir | ⏳ Pendiente |
-| Workout / 07 — Workout Complete | a definir | ⏳ Pendiente |
+| Workout / 01 — Dashboard | `workout` | ✅ Funcional (catálogo con Retrofit y caché en Room) |
+| Workout / 02 — Weekly Plan | `workout_weekly` | 🎭 Demostración (plan armado con el catálogo real; sugerencias simuladas) |
+| Workout / 03 — Workout Details | `workout/{workoutId}` | ✅ Funcional (detalle con Retrofit y caché en Room) |
+| Workout / 04 — Pre Workout | `workout/{workoutId}/pre` | 🎭 Demostración (nombre, duración y consejo del entrenamiento real) |
+| Workout / 05 — Active Workout | `workout/{workoutId}/active` | 🎭 Demostración (ejercicios reales; series, peso y descanso simulados) |
+| Workout / 06 — Exercise Details | `workout/{workoutId}/exercise/{exerciseId}` | 🎭 Demostración (instrucciones y consejo reales del ejercicio) |
+| Workout / 07 — Workout Complete | `workout/{workoutId}/complete` | 🎭 Demostración (duración y ejercicios reales; volumen e insight de ejemplo) |
 
 ### Nutrition
 | Pantalla (Figma) | Ruta | Estado |

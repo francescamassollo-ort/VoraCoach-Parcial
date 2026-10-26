@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.voracoach.navigation.AppNavHost
-import com.example.voracoach.ui.theme.VoraCoachParcialTheme
+import com.example.voracoach.ui.theme.VoraCoachTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 // @AndroidEntryPoint permite que Hilt inyecte dependencias en esta Activity
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             // La Activity solo aplica el tema y monta la navegación; no tiene lógica de pantallas.
-            VoraCoachParcialTheme {
+            VoraCoachTheme {
                 AppNavHost()
             }
         }
