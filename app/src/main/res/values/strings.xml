@@ -133,4 +133,23 @@
     <string name="active_coach_fallback">Keep your chest elevated, brace your core and control the return.</string>
     <string name="active_complete_set">Complete Set</string>
     <string name="screen_workout_complete">Workout Complete</string>
+
+    <!-- Workout: Workout Complete (volumen e insight de demostración) -->
+    <string name="complete_label">COMPLETED</string>
+    <string name="complete_title">You did well!</string>
+    <string name="complete_subtitle">Strong session. Your consistency is improving.</string>
+    <string name="complete_duration_value">%1$d min</string>
+    <string name="complete_duration_label">DURATION</string>
+    <string name="complete_exercises_value">%1$d/%2$d</string>
+    <string name="complete_exercises_label">EXERCISES</string>
+    <string name="complete_volume_value">2,340 kg</string>
+    <string name="complete_volume_label">VOLUME</string>
+    <string name="complete_insight_label">VORA INSIGHT</string>
+    <string name="complete_insight_body">You increased your %1$s volume by 8%% compared with your previous session. Keep this controlled tempo next time.</string>
+    <string name="complete_rate_title">Rate this workout difficulty</string>
+    <string name="complete_rate_great">Great</string>
+    <string name="complete_rate_good">Good</string>
+    <string name="complete_rate_tough">Tough</string>
+    <string name="complete_rate_too_easy">Too Easy</string>
+    <string name="complete_done">Done</string>
 </resources>

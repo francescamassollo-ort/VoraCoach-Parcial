@@ -22,6 +22,7 @@ import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
 import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
 import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
+import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
@@ -148,7 +149,11 @@ fun AppNavHost(
                 route = AppDestination.WorkoutComplete.route,
                 arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
             ) {
-                PlaceholderScreen(title = stringResource(R.string.screen_workout_complete))
+                WorkoutCompleteRoute(
+                    // Vuelve al catálogo sacando del historial detalle, Pre y Active:
+                    // así atrás desde el catálogo no reabre un entrenamiento ya terminado
+                    onDone = { navController.popBackStack(AppDestination.Workout.route, inclusive = false) }
+                )
             }
 
             composable(AppDestination.Nutrition.route) {
