@@ -47,7 +47,9 @@ import com.example.voracoach.data.repository.DataError
 import com.example.voracoach.model.Exercise
 import com.example.voracoach.model.Workout
 import com.example.voracoach.model.WorkoutLevel
+import com.example.voracoach.ui.components.InsightBanner
 import com.example.voracoach.ui.components.ScreenHeader
+import com.example.voracoach.ui.components.VoraOrb
 import com.example.voracoach.ui.components.SecondaryButton
 import com.example.voracoach.ui.components.SecondaryButtonStyle
 import com.example.voracoach.ui.theme.VoraCoachTheme
@@ -61,6 +63,7 @@ import kotlinx.coroutines.launch
 fun WorkoutDetailRoute(
     onBack: () -> Unit,
     onStartWorkout: (workoutId: String) -> Unit,
+    onExerciseClick: (workoutId: String, exerciseId: String) -> Unit,
     viewModel: WorkoutDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,7 +71,8 @@ fun WorkoutDetailRoute(
         uiState = uiState,
         onBack = onBack,
         onRetry = viewModel::retry,
-        onStartWorkout = onStartWorkout
+        onStartWorkout = onStartWorkout,
+        onExerciseClick = onExerciseClick
     )
 }
 
@@ -77,7 +81,8 @@ fun WorkoutDetailScreen(
     uiState: WorkoutDetailUiState,
     onBack: () -> Unit,
     onRetry: () -> Unit,
-    onStartWorkout: (workoutId: String) -> Unit
+    onStartWorkout: (workoutId: String) -> Unit,
+    onExerciseClick: (workoutId: String, exerciseId: String) -> Unit = { _, _ -> }
 ) {
     // "Edit workout" no tiene destino, avisa que es de demostración
 
@@ -118,6 +123,7 @@ fun WorkoutDetailScreen(
                     state = uiState,
                     onRetry = onRetry,
                     onStartWorkout = { onStartWorkout(uiState.workout.id) },
+                    onExerciseClick = { exerciseId -> onExerciseClick(uiState.workout.id, exerciseId) },
                     onEditWorkout = { scope.launch { snackbarHostState.showSnackbar(demoMessage) } }
                 )
             }
@@ -130,6 +136,7 @@ private fun DetailContent(
     state: WorkoutDetailUiState.Content,
     onRetry: () -> Unit,
     onStartWorkout: () -> Unit,
+    onExerciseClick: (exerciseId: String) -> Unit,
     onEditWorkout: () -> Unit
 ) {
     val workout = state.workout
@@ -175,11 +182,17 @@ private fun DetailContent(
         }
 
         if (workout.description.isNotBlank()) {
-            item { CoachNote(workout.description) }
+            item {
+                InsightBanner(
+                    title = stringResource(R.string.workout_detail_coach_note),
+                    message = workout.description,
+                    leading = { VoraOrb(diameter = 16.dp) }
+                )
+            }
         }
 
         itemsIndexed(workout.exercises, key = { _, exercise -> exercise.id }) { index, exercise ->
-            ExerciseRow(number = index + 1, exercise = exercise)
+            ExerciseRow(number = index + 1, exercise = exercise, onClick = { onExerciseClick(exercise.id) })
         }
 
         item {
@@ -201,31 +214,13 @@ private fun DetailContent(
     }
 }
 
-// Caja menta con la nota del coach. Queda acá hasta que exista el InsightBanner de componentes.
-@Composable
-private fun CoachNote(text: String) {
-    Surface(
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(Modifier.padding(16.dp)) {
-            Text(
-                text = stringResource(R.string.workout_detail_coach_note),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(text = text, style = MaterialTheme.typography.bodyMedium)
-        }
-    }
-}
-
 // Fila de un ejercicio: número, nombre, series × repeticiones, descanso e instrucciones (RF01).
 // Es propia de Workout, por eso vive en esta pantalla y no en ui/components.
 @Composable
-private fun ExerciseRow(number: Int, exercise: Exercise) {
+private fun ExerciseRow(number: Int, exercise: Exercise, onClick: () -> Unit) {
+    // Tocar el ejercicio abre su guía (Exercise Details)
     Surface(
+        onClick = onClick,
         color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),

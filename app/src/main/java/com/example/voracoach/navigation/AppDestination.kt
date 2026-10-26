@@ -2,6 +2,9 @@ package com.example.voracoach.navigation
 
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
+// Nombre del argumento con el id del ejercicio en la ruta de la guía
+const val EXERCISE_ID_ARG = "exerciseId"
+
 //Ruteo
 sealed class AppDestination(val route: String) {
     data object SignIn : AppDestination("sign_in")
@@ -32,4 +35,10 @@ sealed class AppDestination(val route: String) {
     data object WorkoutComplete : AppDestination("workout/{$WORKOUT_ID_ARG}/complete") {
         fun createRoute(workoutId: String) = "workout/$workoutId/complete"
     }
+
+    data object ExerciseGuide : AppDestination("workout/{$WORKOUT_ID_ARG}/exercise/{$EXERCISE_ID_ARG}") {
+        fun createRoute(workoutId: String, exerciseId: String) = "workout/$workoutId/exercise/$exerciseId"
+    }
+
+    data object WeeklyPlan : AppDestination("workout_weekly")
 }

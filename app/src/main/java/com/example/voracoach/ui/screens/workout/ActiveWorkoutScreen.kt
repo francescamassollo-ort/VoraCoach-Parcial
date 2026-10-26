@@ -2,6 +2,7 @@ package com.example.voracoach.ui.screens.workout
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -77,6 +79,7 @@ private const val EXTRA_REST_SECONDS = 30
 fun ActiveWorkoutRoute(
     onClose: () -> Unit,
     onFinishWorkout: (workoutId: String) -> Unit,
+    onExerciseInfoClick: (workoutId: String, exerciseId: String) -> Unit,
     viewModel: WorkoutDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -84,7 +87,8 @@ fun ActiveWorkoutRoute(
         uiState = uiState,
         onClose = onClose,
         onRetry = viewModel::retry,
-        onFinishWorkout = onFinishWorkout
+        onFinishWorkout = onFinishWorkout,
+        onExerciseInfoClick = onExerciseInfoClick
     )
 }
 
@@ -93,7 +97,8 @@ fun ActiveWorkoutScreen(
     uiState: WorkoutDetailUiState,
     onClose: () -> Unit,
     onRetry: () -> Unit,
-    onFinishWorkout: (workoutId: String) -> Unit
+    onFinishWorkout: (workoutId: String) -> Unit,
+    onExerciseInfoClick: (workoutId: String, exerciseId: String) -> Unit = { _, _ -> }
 ) {
     Box(
         modifier = Modifier
@@ -118,14 +123,19 @@ fun ActiveWorkoutScreen(
 
             is WorkoutDetailUiState.Content -> ActiveWorkoutContent(
                 workout = uiState.workout,
-                onFinishWorkout = { onFinishWorkout(uiState.workout.id) }
+                onFinishWorkout = { onFinishWorkout(uiState.workout.id) },
+                onExerciseInfoClick = { exerciseId -> onExerciseInfoClick(uiState.workout.id, exerciseId) }
             )
         }
     }
 }
 
 @Composable
-private fun ActiveWorkoutContent(workout: Workout, onFinishWorkout: () -> Unit) {
+private fun ActiveWorkoutContent(
+    workout: Workout,
+    onFinishWorkout: () -> Unit,
+    onExerciseInfoClick: (exerciseId: String) -> Unit
+) {
     // Progreso de la sesión. rememberSaveable lo conserva al rotar la pantalla (RF07):
     // con remember se volvería al primer ejercicio cada vez que se gira el celular.
     var exerciseIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -182,7 +192,8 @@ private fun ActiveWorkoutContent(workout: Workout, onFinishWorkout: () -> Unit) 
             exerciseNumber = exerciseIndex + 1,
             exerciseTotal = exercises.size,
             exerciseName = exercise.name,
-            onFinishWorkout = onFinishWorkout
+            onFinishWorkout = onFinishWorkout,
+            onExerciseInfoClick = { onExerciseInfoClick(exercise.id) }
         )
         VolumeCard(exercise)
         WeightCard(
@@ -213,7 +224,13 @@ private fun ActiveWorkoutContent(workout: Workout, onFinishWorkout: () -> Unit) 
 }
 
 @Composable
-private fun Header(exerciseNumber: Int, exerciseTotal: Int, exerciseName: String, onFinishWorkout: () -> Unit) {
+private fun Header(
+    exerciseNumber: Int,
+    exerciseTotal: Int,
+    exerciseName: String,
+    onFinishWorkout: () -> Unit,
+    onExerciseInfoClick: () -> Unit
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
             Text(
@@ -221,7 +238,20 @@ private fun Header(exerciseNumber: Int, exerciseTotal: Int, exerciseName: String
                 style = MaterialTheme.typography.labelMedium,
                 color = Mint
             )
-            Text(text = exerciseName, style = MaterialTheme.typography.titleLarge, color = Color.White)
+            // Tocar el nombre (o el ícono de info) abre la guía del ejercicio
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable(onClick = onExerciseInfoClick)
+            ) {
+                Text(text = exerciseName, style = MaterialTheme.typography.titleLarge, color = Color.White)
+                Spacer(Modifier.width(6.dp))
+                Icon(
+                    Icons.Outlined.Info,
+                    contentDescription = stringResource(R.string.guide_open),
+                    tint = White60,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
         Surface(onClick = onFinishWorkout, color = White12, shape = CircleShape) {
             Text(

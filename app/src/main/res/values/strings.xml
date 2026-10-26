@@ -152,4 +152,29 @@
     <string name="complete_rate_tough">Tough</string>
     <string name="complete_rate_too_easy">Too Easy</string>
     <string name="complete_done">Done</string>
+
+    <!-- Workout: Exercise Guide -->
+    <string name="guide_header">Exercise Guide</string>
+    <string name="guide_help">Help</string>
+    <string name="guide_target">Target: %1$s</string>
+    <string name="guide_steps_title">Performance Steps</string>
+    <string name="guide_step">%1$d. %2$s.</string>
+    <string name="guide_form_cues">PRO FORM CUES</string>
+    <string name="guide_bullet">• %1$s</string>
+    <string name="guide_ask_vora">Ask Vora: \"How do I improve my %1$s?\"</string>
+    <string name="guide_back_to_workout">Back to Workout</string>
+    <string name="guide_open">Open exercise guide</string>
+
+    <!-- Workout: Weekly Plan (plan armado con el catálogo; sugerencias de demostración) -->
+    <string name="weekly_title">Your Plan</string>
+    <string name="weekly_subtitle">Designed around your goals and recovery.</string>
+    <string name="weekly_today_label">TODAY\'S WORKOUT</string>
+    <string name="weekly_ready">READY</string>
+    <string name="weekly_today_meta">%1$d min • %2$d exercises • %3$s</string>
+    <string name="weekly_upcoming_meta">%1$d min • %2$d exercises</string>
+    <string name="weekly_adjust_title">NEED TO ADJUST YOUR WEEK?</string>
+    <string name="weekly_adjust_body">Tell VORA what changed (e.g., sleep, muscle soreness, or schedule cuts) and your coach will realign the week dynamically.</string>
+    <string name="weekly_adjust_tired">I\'m tired today</string>
+    <string name="weekly_adjust_move">Move Wed workout to Fri</string>
+    <string name="weekly_open_plan">Weekly plan</string>
 </resources>

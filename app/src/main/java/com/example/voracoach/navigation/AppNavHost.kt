@@ -21,7 +21,9 @@ import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
 import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
+import com.example.voracoach.ui.screens.workout.ExerciseGuideRoute
 import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
+import com.example.voracoach.ui.screens.workout.WeeklyPlanRoute
 import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
@@ -102,6 +104,16 @@ fun AppNavHost(
                 WorkoutCatalogRoute(
                     onWorkoutClick = { workoutId ->
                         navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
+                    },
+                    onWeeklyPlanClick = { navController.navigate(AppDestination.WeeklyPlan.route) }
+                )
+            }
+
+            composable(AppDestination.WeeklyPlan.route) {
+                WeeklyPlanRoute(
+                    onBack = { navController.popBackStack() },
+                    onWorkoutClick = { workoutId ->
+                        navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
                     }
                 )
             }
@@ -116,7 +128,24 @@ fun AppNavHost(
                     onBack = { navController.popBackStack() },
                     onStartWorkout = { workoutId ->
                         navController.navigate(AppDestination.PreWorkout.createRoute(workoutId))
+                    },
+                    onExerciseClick = { workoutId, exerciseId ->
+                        navController.navigate(AppDestination.ExerciseGuide.createRoute(workoutId, exerciseId))
                     }
+                )
+            }
+
+            // La guía recibe dos argumentos, el entrenamiento (lo lee el ViewModel) y el ejercicio
+            composable(
+                route = AppDestination.ExerciseGuide.route,
+                arguments = listOf(
+                    navArgument(WORKOUT_ID_ARG) { type = NavType.StringType },
+                    navArgument(EXERCISE_ID_ARG) { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                ExerciseGuideRoute(
+                    exerciseId = backStackEntry.arguments?.getString(EXERCISE_ID_ARG).orEmpty(),
+                    onBack = { navController.popBackStack() }
                 )
             }
 
@@ -141,6 +170,9 @@ fun AppNavHost(
                     onClose = { navController.popBackStack() },
                     onFinishWorkout = { workoutId ->
                         navController.navigate(AppDestination.WorkoutComplete.createRoute(workoutId))
+                    },
+                    onExerciseInfoClick = { workoutId, exerciseId ->
+                        navController.navigate(AppDestination.ExerciseGuide.createRoute(workoutId, exerciseId))
                     }
                 )
             }
