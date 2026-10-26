@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.voracoach.R
 import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
+import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
 
 @Composable
 fun AppNavHost(
@@ -82,7 +83,7 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Workout.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_workout))
+                WorkoutCatalogRoute()
             }
 
             composable(AppDestination.Nutrition.route) {
