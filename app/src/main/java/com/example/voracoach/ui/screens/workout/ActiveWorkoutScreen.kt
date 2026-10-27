@@ -58,9 +58,6 @@ import com.example.voracoach.R
 import com.example.voracoach.model.Exercise
 import com.example.voracoach.model.Workout
 import com.example.voracoach.model.WorkoutLevel
-import com.example.voracoach.ui.theme.DarkGreen
-import com.example.voracoach.ui.theme.LimeGreen
-import com.example.voracoach.ui.theme.Mint
 import com.example.voracoach.ui.theme.VoraCoachTheme
 import com.example.voracoach.ui.theme.White12
 import com.example.voracoach.ui.theme.White60
@@ -103,11 +100,11 @@ fun ActiveWorkoutScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkGreen)
+            .background(MaterialTheme.colorScheme.inverseSurface)
     ) {
         when (uiState) {
             WorkoutDetailUiState.Loading ->
-                CircularProgressIndicator(color = Mint, modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary, modifier = Modifier.align(Alignment.Center))
 
             WorkoutDetailUiState.NotFound -> DarkMessage(
                 message = stringResource(R.string.workout_detail_not_found),
@@ -213,7 +210,7 @@ private fun ActiveWorkoutContent(
         Button(
             onClick = onCompleteSet,
             shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = LimeGreen, contentColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onSecondary),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
@@ -236,14 +233,14 @@ private fun Header(
             Text(
                 text = stringResource(R.string.active_exercise_counter, exerciseNumber, exerciseTotal),
                 style = MaterialTheme.typography.labelMedium,
-                color = Mint
+                color = MaterialTheme.colorScheme.secondary
             )
             // Tocar el nombre (o el ícono de info) abre la guía del ejercicio
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.clickable(onClick = onExerciseInfoClick)
             ) {
-                Text(text = exerciseName, style = MaterialTheme.typography.titleLarge, color = Color.White)
+                Text(text = exerciseName, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.inverseOnSurface)
                 Spacer(Modifier.width(6.dp))
                 Icon(
                     Icons.Outlined.Info,
@@ -257,7 +254,7 @@ private fun Header(
             Text(
                 text = stringResource(R.string.active_finish_workout),
                 style = MaterialTheme.typography.labelLarge,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.inverseOnSurface,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
             )
         }
@@ -273,7 +270,7 @@ private fun VolumeCard(exercise: Exercise) {
                 .padding(vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(stringResource(R.string.active_volume_label), style = MaterialTheme.typography.labelMedium, color = Mint)
+            Text(stringResource(R.string.active_volume_label), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.secondary)
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 BigStat(value = exercise.reps.toString(), label = stringResource(R.string.active_reps_target))
@@ -290,7 +287,7 @@ private fun VolumeCard(exercise: Exercise) {
 @Composable
 private fun BigStat(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = value, fontSize = 34.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+        Text(text = value, fontSize = 34.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.inverseOnSurface)
         Text(text = label, style = MaterialTheme.typography.labelSmall, color = White60)
     }
 }
@@ -307,21 +304,21 @@ private fun WeightCard(reps: Int, weightKg: Double, onDecrease: () -> Unit, onIn
                 Text(
                     text = stringResource(R.string.active_last_session_value, DEMO_START_WEIGHT_KG.formatKg(), reps),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.inverseOnSurface
                 )
             }
             RoundIconButton(onClick = onDecrease) {
-                Icon(Icons.Filled.Remove, contentDescription = stringResource(R.string.active_weight_decrease), tint = Color.White)
+                Icon(Icons.Filled.Remove, contentDescription = stringResource(R.string.active_weight_decrease), tint = MaterialTheme.colorScheme.inverseOnSurface)
             }
             Text(
                 text = stringResource(R.string.active_weight, weightKg.formatKg()),
                 style = MaterialTheme.typography.titleLarge,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.inverseOnSurface,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.widthIn(min = 80.dp)
             )
             RoundIconButton(onClick = onIncrease) {
-                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.active_weight_increase), tint = Color.White)
+                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.active_weight_increase), tint = MaterialTheme.colorScheme.inverseOnSurface)
             }
         }
     }
@@ -343,7 +340,7 @@ private fun SetsRow(totalSets: Int, completedSets: Int) {
             Surface(
                 color = if (isCurrent) White12 else Color.Transparent,
                 shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, if (isCurrent) LimeGreen else White12),
+                border = BorderStroke(1.dp, if (isCurrent) MaterialTheme.colorScheme.primaryContainer else White12),
                 modifier = Modifier.widthIn(min = 96.dp)
             ) {
                 Row(
@@ -356,8 +353,8 @@ private fun SetsRow(totalSets: Int, completedSets: Int) {
                             .size(26.dp)
                             .background(
                                 color = when {
-                                    isDone -> Mint
-                                    isCurrent -> LimeGreen
+                                    isDone -> MaterialTheme.colorScheme.secondary
+                                    isCurrent -> MaterialTheme.colorScheme.primaryContainer
                                     else -> White12
                                 },
                                 shape = CircleShape
@@ -366,14 +363,14 @@ private fun SetsRow(totalSets: Int, completedSets: Int) {
                         Text(
                             text = set.toString(),
                             style = MaterialTheme.typography.labelMedium,
-                            color = if (isDone || isCurrent) DarkGreen else White60
+                            color = if (isDone || isCurrent) MaterialTheme.colorScheme.onSecondary else White60
                         )
                     }
                     Spacer(Modifier.width(10.dp))
                     Text(
                         text = stringResource(R.string.active_set, set),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = if (isDone || isCurrent) Color.White else White60
+                        color = if (isDone || isCurrent) MaterialTheme.colorScheme.inverseOnSurface else White60
                     )
                 }
             }
@@ -392,20 +389,20 @@ private fun RestRow(secondsLeft: Int, onAddTime: () -> Unit, onSkip: () -> Unit)
                 text = if (secondsLeft > 0) stringResource(R.string.active_resting, secondsLeft.formatMinutesSeconds())
                 else stringResource(R.string.active_ready_next_set),
                 style = MaterialTheme.typography.titleSmall,
-                color = Mint,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(1f)
             )
             // Durante el descanso se puede sumar tiempo o saltearlo
             if (secondsLeft > 0) {
                 OutlinedButton(
                     onClick = onAddTime,
-                    border = BorderStroke(1.dp, Mint),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Mint)
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.secondary)
                 ) { Text(stringResource(R.string.active_add_30s)) }
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = onSkip,
-                    colors = ButtonDefaults.buttonColors(containerColor = Mint, contentColor = DarkGreen)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.onSecondary)
                 ) { Text(stringResource(R.string.active_skip)) }
             }
         }
@@ -421,13 +418,13 @@ private fun CoachCard(tip: String) {
                 Box(
                     Modifier
                         .size(22.dp)
-                        .background(Mint, CircleShape)
+                        .background(MaterialTheme.colorScheme.secondary, CircleShape)
                 )
                 Spacer(Modifier.width(10.dp))
                 Text(
                     text = stringResource(R.string.active_coach_label),
                     style = MaterialTheme.typography.labelLarge,
-                    color = Mint,
+                    color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.weight(1f)
                 )
                 Text(stringResource(R.string.active_voice_on), style = MaterialTheme.typography.bodySmall, color = White60)
@@ -437,7 +434,7 @@ private fun CoachCard(tip: String) {
             Text(
                 text = "\"${tip.ifBlank { stringResource(R.string.active_coach_fallback) }}\"",
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White
+                color = MaterialTheme.colorScheme.inverseOnSurface
             )
         }
     }

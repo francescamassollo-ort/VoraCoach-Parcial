@@ -49,9 +49,6 @@ import com.example.voracoach.R
 import com.example.voracoach.model.Exercise
 import com.example.voracoach.model.Workout
 import com.example.voracoach.model.WorkoutLevel
-import com.example.voracoach.ui.theme.DarkGreen
-import com.example.voracoach.ui.theme.LimeGreen
-import com.example.voracoach.ui.theme.Mint
 import com.example.voracoach.ui.theme.VoraCoachTheme
 import com.example.voracoach.ui.theme.White12
 import com.example.voracoach.ui.theme.White60
@@ -92,11 +89,11 @@ fun PreWorkoutScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkGreen)
+            .background(MaterialTheme.colorScheme.inverseSurface)
     ) {
         when (uiState) {
             WorkoutDetailUiState.Loading ->
-                CircularProgressIndicator(color = Mint, modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary, modifier = Modifier.align(Alignment.Center))
 
             WorkoutDetailUiState.NotFound -> DarkMessage(
                 message = stringResource(R.string.workout_detail_not_found),
@@ -149,23 +146,23 @@ private fun PreWorkoutContent(
             Text(
                 text = stringResource(R.string.pre_workout_get_ready),
                 style = MaterialTheme.typography.labelMedium,
-                color = Mint,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(1f)
             )
             IconButton(onClick = onClose) {
-                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.action_close), tint = Color.White)
+                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.action_close), tint = MaterialTheme.colorScheme.inverseOnSurface)
             }
         }
 
         Text(
             text = workout.name,
             style = MaterialTheme.typography.headlineMedium,
-            color = Color.White
+            color = MaterialTheme.colorScheme.inverseOnSurface
         )
         Text(
             text = stringResource(R.string.pre_workout_meta, workout.durationMinutes, workout.exercises.size),
             style = MaterialTheme.typography.bodyMedium,
-            color = Mint
+            color = MaterialTheme.colorScheme.secondary
         )
         Spacer(Modifier.height(20.dp))
 
@@ -187,7 +184,7 @@ private fun PreWorkoutContent(
                 label = stringResource(R.string.pre_workout_tip_label),
                 body = firstExercise?.tip?.takeIf { it.isNotBlank() }
                     ?: stringResource(R.string.pre_workout_tip_fallback),
-                bodyColor = Mint
+                bodyColor = MaterialTheme.colorScheme.secondary
             )
             NeedAnythingRow(onMicClick)
         }
@@ -197,7 +194,7 @@ private fun PreWorkoutContent(
         Button(
             onClick = onStartWorkout,
             shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = Mint, contentColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.onSecondary),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
@@ -222,10 +219,10 @@ private fun DarkInfoCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(Modifier.padding(16.dp)) {
-            Text(text = label, style = MaterialTheme.typography.labelSmall, color = LimeGreen)
+            Text(text = label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primaryContainer)
             if (title != null) {
                 Spacer(Modifier.height(6.dp))
-                Text(text = title, style = MaterialTheme.typography.titleSmall, color = Color.White)
+                Text(text = title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.inverseOnSurface)
             }
             Spacer(Modifier.height(6.dp))
             Text(text = body, style = MaterialTheme.typography.bodySmall, color = bodyColor)
@@ -248,14 +245,14 @@ private fun NeedAnythingRow(onMicClick: () -> Unit) {
             Box(
                 Modifier
                     .size(32.dp)
-                    .background(Mint, CircleShape)
+                    .background(MaterialTheme.colorScheme.secondary, CircleShape)
             )
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text(
                     text = stringResource(R.string.pre_workout_need_anything),
                     style = MaterialTheme.typography.titleSmall,
-                    color = Mint
+                    color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
                     text = stringResource(R.string.pre_workout_need_anything_hint),
@@ -265,12 +262,12 @@ private fun NeedAnythingRow(onMicClick: () -> Unit) {
             }
             IconButton(
                 onClick = onMicClick,
-                modifier = Modifier.background(LimeGreen, CircleShape)
+                modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
             ) {
                 Icon(
                     Icons.Outlined.Mic,
                     contentDescription = stringResource(R.string.pre_workout_talk_to_vora),
-                    tint = DarkGreen
+                    tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
         }
@@ -288,13 +285,13 @@ internal fun DarkMessage(message: String, onClose: () -> Unit, onRetry: (() -> U
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = message, color = Color.White, textAlign = TextAlign.Center)
+        Text(text = message, color = MaterialTheme.colorScheme.inverseOnSurface, textAlign = TextAlign.Center)
         Spacer(Modifier.height(12.dp))
         if (onRetry != null) {
             Button(onClick = onRetry) { Text(stringResource(R.string.action_retry)) }
         }
         IconButton(onClick = onClose) {
-            Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.action_close), tint = Color.White)
+            Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.action_close), tint = MaterialTheme.colorScheme.inverseOnSurface)
         }
     }
 }

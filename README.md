@@ -63,20 +63,20 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 ### Home
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Home / 01 — Dashboard | `home` | 🚧 Provisoria |
-| Home / 02 — Notifications | `notifications` | 🚧 Provisoria |
+| Home / 01 — Dashboard | `home` | 🎭 Demostración (perfil y métricas de ejemplo; entrenamiento recomendado real desde Room) |
+| Home / 02 — Notifications | `notifications` | 🎭 Demostración (notificaciones de ejemplo; "Mark all as read" funcional) |
 
 ### Asistente VORA
 Una pantalla con 6 estados simulados.
 
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Voice / 01 — Idle | `coach` | 🚧 Provisoria |
-| Voice / 02 — Listening | `coach` | ⏳ Pendiente |
-| Voice / 03 — Processing | `coach` | ⏳ Pendiente |
-| Voice / 04 — Speaking | `coach` | ⏳ Pendiente |
-| Voice / 05 — Conversation | `coach` | ⏳ Pendiente |
-| Voice / 06 — Error | `coach` | ⏳ Pendiente |
+| Voice / 01 — Idle | `coach` | 🎭 Demostración |
+| Voice / 02 — Listening | `coach` | 🎭 Demostración (transcripción simulada) |
+| Voice / 03 — Processing | `coach` | 🎭 Demostración |
+| Voice / 04 — Speaking | `coach` | 🎭 Demostración (respuesta y reproducción simuladas) |
+| Voice / 05 — Conversation | `coach` | 🎭 Demostración (historial de la sesión; respuestas de ejemplo) |
+| Voice / 06 — Error | `coach` | 🎭 Demostración (se llega tocando el mic antes de terminar la escucha; no pide permisos) |
 
 ### Workout
 | Pantalla (Figma) | Ruta | Estado |
@@ -120,6 +120,14 @@ Una pantalla con 6 estados simulados.
 | Profile / 04 — Nutrition Preferences | a definir | ⏳ Pendiente |
 | Profile / 05 — Voice & AI Settings | a definir | ⏳ Pendiente |
 | Profile / 06 — Settings | a definir | ⏳ Pendiente |
+
+### Funciones simuladas del asistente
+El asistente no usa reconocimiento de voz, IA ni audio reales, y nunca pide permiso de micrófono ni de cámara:
+- **Escucha:** muestra una frase de ejemplo palabra por palabra. Tocar el mic antes de que termine lleva al estado de error.
+- **Respuestas:** cada pregunta sugerida tiene una respuesta fija; lo que se escribe recibe respuestas de ejemplo que se van alternando.
+- **Reproducción:** la barra de progreso avanza con un temporizador; pausa, repetir y detener funcionan sobre ese temporizador.
+- **"Allow Access" y adjuntar (+):** muestran un aviso de función de demostración.
+- La conversación vive en el ViewModel: sobrevive a la rotación, pero se pierde al salir de Coach.
 
 **Para actualizar el inventario:** al agregar una pantalla, completar su ruta y estado en esta tabla en el mismo PR.
 
