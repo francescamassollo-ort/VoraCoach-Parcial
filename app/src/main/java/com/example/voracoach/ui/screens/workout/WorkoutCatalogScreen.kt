@@ -34,6 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.voracoach.R
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.example.voracoach.ui.components.CircleIconButton
 import com.example.voracoach.data.repository.DataError
 import com.example.voracoach.model.WorkoutLevel
 import com.example.voracoach.model.WorkoutSummary
@@ -46,12 +49,18 @@ import com.example.voracoach.viewmodel.WorkoutCatalogViewModel
 @Composable
 fun WorkoutCatalogRoute(
     onWorkoutClick: (workoutId: String) -> Unit,
+    onWeeklyPlanClick: () -> Unit,
     viewModel: WorkoutCatalogViewModel = hiltViewModel()
 ) {
     // collectAsStateWithLifecycle deja de observar cuando la app pasa a segundo plano,
     // así no se procesan cambios que nadie está viendo
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    WorkoutCatalogScreen(uiState = uiState, onRetry = viewModel::retry, onWorkoutClick = onWorkoutClick)
+    WorkoutCatalogScreen(
+        uiState = uiState,
+        onRetry = viewModel::retry,
+        onWorkoutClick = onWorkoutClick,
+        onWeeklyPlanClick = onWeeklyPlanClick
+    )
 }
 
 // onWorkoutClick recibe el id del entrenamiento tocado: la pantalla no sabe a dónde se navega,
@@ -60,7 +69,8 @@ fun WorkoutCatalogRoute(
 fun WorkoutCatalogScreen(
     uiState: WorkoutCatalogUiState,
     onRetry: () -> Unit,
-    onWorkoutClick: (workoutId: String) -> Unit
+    onWorkoutClick: (workoutId: String) -> Unit,
+    onWeeklyPlanClick: () -> Unit = {}
 ) {
     // La pantalla no tiene Scaffold propio, así que deja lugar para la barra de estado del celular
     Column(
@@ -70,15 +80,25 @@ fun WorkoutCatalogScreen(
             .padding(horizontal = 24.dp)
     ) {
         Spacer(Modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.workout_catalog_subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = stringResource(R.string.workout_catalog_title),
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.workout_catalog_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = stringResource(R.string.workout_catalog_title),
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            }
+            // Calendario de Figma (ícono exportado en res/drawable/calendar.xml): abre el plan semanal
+            CircleIconButton(
+                icon = ImageVector.vectorResource(R.drawable.calendar),
+                contentDescription = stringResource(R.string.weekly_open_plan),
+                onClick = onWeeklyPlanClick
+            )
+        }
         Spacer(Modifier.height(16.dp))
 
         // Un "when" sobre el estado sealed: el compilador obliga a contemplar los 4 casos de RF05

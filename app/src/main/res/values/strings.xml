@@ -61,6 +61,7 @@
     <string name="screen_profile">Profile</string>
     <string name="screen_coach">VORA Coach</string>
     <string name="screen_pre_workout">Pre Workout</string>
+    <string name="screen_active_workout">Active Workout</string>
 
     <!-- Errores de datos (compartidos por las pantallas que consultan la API) -->
     <string name="error_no_connection">No hay conexión con el servidor</string>
@@ -93,4 +94,141 @@
     <string name="workout_detail_not_found">Este entrenamiento no existe</string>
     <string name="workout_detail_refresh_failed">No se pudo actualizar. Mostrando la versión guardada.</string>
     <string name="demo_only_message">Función de demostración: no disponible en esta versión</string>
+    <string name="action_close">Close</string>
+
+    <!-- Workout: Pre Workout. Los textos de foco y última sesión son de demostración -->
+    <string name="pre_workout_get_ready">GET READY</string>
+    <string name="pre_workout_meta">%1$d min • %2$d exercises</string>
+    <string name="pre_workout_focus_label">TODAY\'S FOCUS</string>
+    <string name="pre_workout_focus_title">Controlled Repetitions</string>
+    <string name="pre_workout_focus_body">Keep concentric lifts explosive and focus on a slow, 2-second eccentric return for maximal hypertrophy stimulus.</string>
+    <string name="pre_workout_last_session_label">YOUR LAST SESSION</string>
+    <string name="pre_workout_last_session_title">%1$s Volume</string>
+    <string name="pre_workout_last_session_sets">Set 1: 40 kg × 10 • Set 2: 40 kg × 9 • Set 3: 37.5 kg × 10</string>
+    <string name="pre_workout_tip_label">VORA\'S COACH TIP</string>
+    <string name="pre_workout_tip_fallback">Start slightly lighter on your first set. If your form feels exceptionally robust, increase the load.</string>
+    <string name="pre_workout_need_anything">Need anything?</string>
+    <string name="pre_workout_need_anything_hint">\"Recommend a chest warm-up\"</string>
+    <string name="pre_workout_talk_to_vora">Talk to VORA</string>
+
+    <!-- Workout: Active Workout (series, peso y descanso simulados) -->
+    <string name="active_exercise_counter">EXERCISE %1$d OF %2$d</string>
+    <string name="active_finish_workout">Finish Workout</string>
+    <string name="active_volume_label">CURRENT VOLUME WORK</string>
+    <string name="active_reps_target">REPS TARGET</string>
+    <string name="active_set_matrix">SET MATRIX</string>
+    <string name="active_sets_by_reps">%1$d × %2$d</string>
+    <string name="active_last_session_label">LAST SESSION</string>
+    <string name="active_last_session_value">%1$s kg × %2$d reps</string>
+    <string name="active_weight">%1$s kg</string>
+    <string name="active_weight_decrease">Decrease weight</string>
+    <string name="active_weight_increase">Increase weight</string>
+    <string name="active_set">Set %1$d</string>
+    <string name="active_resting">Resting • %1$s</string>
+    <string name="active_ready_next_set">Ready for the next set</string>
+    <string name="active_add_30s">+30s</string>
+    <string name="active_skip">Skip</string>
+    <string name="active_coach_label">VORA COACH</string>
+    <string name="active_voice_on">Voice On</string>
+    <string name="active_coach_fallback">Keep your chest elevated, brace your core and control the return.</string>
+    <string name="active_complete_set">Complete Set</string>
+    <string name="screen_workout_complete">Workout Complete</string>
+
+    <!-- Workout: Workout Complete (volumen e insight de demostración) -->
+    <string name="complete_label">COMPLETED</string>
+    <string name="complete_title">You did well!</string>
+    <string name="complete_subtitle">Strong session. Your consistency is improving.</string>
+    <string name="complete_duration_value">%1$d min</string>
+    <string name="complete_duration_label">DURATION</string>
+    <string name="complete_exercises_value">%1$d/%2$d</string>
+    <string name="complete_exercises_label">EXERCISES</string>
+    <string name="complete_volume_value">2,340 kg</string>
+    <string name="complete_volume_label">VOLUME</string>
+    <string name="complete_insight_label">VORA INSIGHT</string>
+    <string name="complete_insight_body">You increased your %1$s volume by 8%% compared with your previous session. Keep this controlled tempo next time.</string>
+    <string name="complete_rate_title">Rate this workout difficulty</string>
+    <string name="complete_rate_great">Great</string>
+    <string name="complete_rate_good">Good</string>
+    <string name="complete_rate_tough">Tough</string>
+    <string name="complete_rate_too_easy">Too Easy</string>
+    <string name="complete_done">Done</string>
+
+    <!-- Workout: Exercise Guide -->
+    <string name="guide_header">Exercise Guide</string>
+    <string name="guide_help">Help</string>
+    <string name="guide_target">Target: %1$s</string>
+    <string name="guide_steps_title">Performance Steps</string>
+    <string name="guide_step">%1$d. %2$s.</string>
+    <string name="guide_form_cues">PRO FORM CUES</string>
+    <string name="guide_bullet">• %1$s</string>
+    <string name="guide_ask_vora">Ask Vora: \"How do I improve my %1$s?\"</string>
+    <string name="guide_back_to_workout">Back to Workout</string>
+    <string name="guide_open">Open exercise guide</string>
+
+    <!-- Workout: Weekly Plan (plan armado con el catálogo; sugerencias de demostración) -->
+    <string name="weekly_title">Your Plan</string>
+    <string name="weekly_subtitle">Designed around your goals and recovery.</string>
+    <string name="weekly_today_label">TODAY\'S WORKOUT</string>
+    <string name="weekly_ready">READY</string>
+    <string name="weekly_today_meta">%1$d min • %2$d exercises • %3$s</string>
+    <string name="weekly_upcoming_meta">%1$d min • %2$d exercises</string>
+    <string name="weekly_adjust_title">NEED TO ADJUST YOUR WEEK?</string>
+    <string name="weekly_adjust_body">Tell VORA what changed (e.g., sleep, muscle soreness, or schedule cuts) and your coach will realign the week dynamically.</string>
+    <string name="weekly_adjust_tired">I\'m tired today</string>
+    <string name="weekly_adjust_move">Move Wed workout to Fri</string>
+    <string name="weekly_open_plan">Weekly plan</string>
+
+    <!-- Home (perfil y métricas de demostración; entrenamiento recomendado real) -->
+    <string name="home_greeting_morning">Good morning</string>
+    <string name="home_greeting_afternoon">Good afternoon</string>
+    <string name="home_greeting_evening">Good evening</string>
+    <string name="home_open_notifications">Notifications</string>
+    <string name="home_coach_name">VORA Coach</string>
+    <string name="home_ai_online">AI ONLINE</string>
+    <string name="home_coach_question">\"How can I support your fitness targets today?\"</string>
+    <string name="home_coach_hint">Tap the mic to talk naturally. I\'ll plan or log for you.</string>
+    <string name="home_start_voice">Start voice session</string>
+    <string name="home_start_my_workout">Start my workout</string>
+    <string name="home_log_breakfast">Log breakfast</string>
+    <string name="home_on_track">You\'re on track. A protein-rich dinner would help you reach your daily target.</string>
+    <string name="home_overview">Today\'s Overview</string>
+    <string name="home_daily_goal">Daily Goal</string>
+    <string name="home_percent">%1$d%%</string>
+    <string name="home_nutrition">Nutrition</string>
+    <string name="home_calories_goal">/ %1$s kcal</string>
+    <string name="home_protein">Protein</string>
+    <string name="home_carbs">Carbs</string>
+    <string name="home_grams_progress">%1$dg / %2$dg</string>
+    <string name="home_steps">STEPS</string>
+    <string name="home_distance">DISTANCE</string>
+    <string name="home_active_kcal">ACTIVE KCAL</string>
+    <string name="home_distance_value">%1$s km</string>
+    <string name="home_kcal_value">%1$d kcal</string>
+    <string name="home_recommended">RECOMMENDED WORKOUT</string>
+    <string name="home_today">TODAY</string>
+    <string name="home_recommended_meta">%1$d min • %2$d exercises • %3$s</string>
+    <string name="home_start_workout">Start workout</string>
+
+    <!-- Home: Notifications (lista de demostración) -->
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_mark_all_read">Mark all as read</string>
+    <string name="notifications_today">TODAY</string>
+    <string name="notifications_yesterday">YESTERDAY</string>
+    <string name="notifications_unread">Unread</string>
+    <string name="notifications_coach_category">VORA Coach</string>
+    <string name="notifications_coach_time">2h ago</string>
+    <string name="notifications_coach_title">Your weekly health review is ready.</string>
+    <string name="notifications_coach_body">We noticed your training consistency improved by 14% over the last week.</string>
+    <string name="notifications_plan_category">Workout Plan</string>
+    <string name="notifications_plan_time">4h ago</string>
+    <string name="notifications_plan_title">Upper Body Strength is ready.</string>
+    <string name="notifications_plan_body">Equipped for home/gym. Approx. 42 minutes.</string>
+    <string name="notifications_nutrition_category">Nutrition Goal</string>
+    <string name="notifications_nutrition_time">6h ago</string>
+    <string name="notifications_nutrition_title">Protein target milestone alert.</string>
+    <string name="notifications_nutrition_body">You require 36g more of protein to hit today\'s performance baseline.</string>
+    <string name="notifications_milestone_category">Milestone Reached</string>
+    <string name="notifications_milestone_time">1d ago</string>
+    <string name="notifications_milestone_title">4-day workout streak logged!</string>
+    <string name="notifications_milestone_body">Outstanding work, Alex. Let\'s make it 5 today.</string>
 </resources>
