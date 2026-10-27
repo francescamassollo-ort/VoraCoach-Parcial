@@ -231,4 +231,29 @@
     <string name="notifications_milestone_time">1d ago</string>
     <string name="notifications_milestone_title">4-day workout streak logged!</string>
     <string name="notifications_milestone_body">Outstanding work, Alex. Let\'s make it 5 today.</string>
+
+    <!-- Coach (asistente simulado: sin voz, IA ni permisos reales) -->
+    <string name="coach_title">VORA Coach</string>
+    <string name="coach_online">ONLINE</string>
+    <string name="coach_idle_title">How can I help?</string>
+    <string name="coach_idle_subtitle">Talk naturally about your workout, nutrition or progress.</string>
+    <string name="coach_suggested_questions">SUGGESTED QUESTIONS</string>
+    <string name="coach_suggestion_start_workout">Start my workout</string>
+    <string name="coach_suggestion_log_breakfast">Log my breakfast</string>
+    <string name="coach_suggestion_eat_tonight">What should I eat tonight?</string>
+    <string name="coach_suggestion_how_am_i_doing">How am I doing?</string>
+    <string name="coach_last_conversation">LAST CONVERSATION</string>
+    <string name="coach_last_conversation_time">2 hours ago</string>
+    <string name="coach_last_conversation_demo">Create a 30-minute workout for me.</string>
+    <string name="coach_quote">\"%1$s\"</string>
+    <string name="coach_tap_to_talk">TAP TO TALK</string>
+    <string name="coach_type_instead">Type instead</string>
+    <string name="coach_error_header">System Alert</string>
+    <string name="coach_error_title">Sorry, I didn\'t catch that</string>
+    <string name="coach_error_body">Try speaking again or type your request instead. Make sure your microphone is enabled.</string>
+    <string name="coach_mic_access_title">Microphone access needed</string>
+    <string name="coach_mic_access_body">VORA uses your microphone to listen to your voice commands and provide real-time hands-free coaching.</string>
+    <string name="coach_allow_access">Allow Access</string>
+    <string name="coach_not_now">Not Now</string>
+    <string name="coach_try_again">Try again</string>
 </resources>
