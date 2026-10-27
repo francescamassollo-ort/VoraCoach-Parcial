@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.voracoach.R
+import com.example.voracoach.ui.components.AppBottomBar
 import com.example.voracoach.ui.components.StatusBarIconsFor
 import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
@@ -226,5 +227,13 @@ fun AppNavHost(
 private fun NavHostController.goToHomeClearingAuth() {
     navigate(AppDestination.Home.route) {
         popUpTo(AppDestination.SignIn.route) { inclusive = true }// Al entrar a Home se borran Sign In y Sign Up del historial para que el botón atrás desde Home cierre la app en vez de volver al login
+    }
+}
+
+fun NavHostController.navigateToTab(item: BottomBarItem) {
+    navigate(item.destination.route) {
+        popUpTo(AppDestination.Home.route) { saveState = true }// - saveState / restoreState: cada pestaña recuerda dónde quedaste al volver a ella.
+        launchSingleTop = true // - launchSingleTop: tocar la pestaña en la que ya estás no crea otra copia.
+        restoreState = true
     }
 }
