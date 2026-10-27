@@ -4,10 +4,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -103,10 +101,6 @@ fun CoachScreen(uiState: CoachUiState, actions: CoachActions) {
             isPaused = state.isPaused,
             actions = actions
         )
-        // Provisorio: la conversación se dibuja en el paso siguiente
-        CoachState.Conversation ->
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(state::class.simpleName.orEmpty(), style = MaterialTheme.typography.titleLarge)
-            }
+        CoachState.Conversation -> CoachConversation(messages = uiState.messages, actions = actions)
     }
 }

@@ -274,4 +274,9 @@
     <string name="coach_tap_to_interrupt">Tap to Interrupt</string>
     <string name="coach_time_elapsed">%1$d:%2$02d</string>
     <string name="coach_time_remaining">-%1$d:%2$02d</string>
+    <string name="coach_vora_label">VORA</string>
+    <string name="coach_conversation_empty">Ask me anything about your training or nutrition.</string>
+    <string name="coach_input_hint">Ask VORA anything…</string>
+    <string name="coach_attach">Attach</string>
+    <string name="coach_send">Send</string>
 </resources>
