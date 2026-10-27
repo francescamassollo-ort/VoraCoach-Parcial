@@ -21,6 +21,7 @@ import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
 import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
 import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
+import com.example.voracoach.ui.screens.coach.CoachRoute
 import com.example.voracoach.ui.screens.home.HomeRoute
 import com.example.voracoach.ui.screens.home.NotificationsRoute
 import com.example.voracoach.ui.screens.workout.ExerciseGuideRoute
@@ -53,7 +54,10 @@ fun AppNavHost(
         AppDestination.PreWorkout.route,
         AppDestination.ActiveWorkout.route
     )
-    StatusBarIconsFor(darkBackground = currentDestination?.route in darkBackgroundRoutes)
+    // Coach se excluye: cambia de fondo claro a oscuro sin cambiar de ruta, y lo decide su propia pantalla
+    if (currentDestination?.route != AppDestination.Coach.route) {
+        StatusBarIconsFor(darkBackground = currentDestination?.route in darkBackgroundRoutes)
+    }
 
     Scaffold(
         modifier = modifier,
@@ -213,7 +217,7 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Coach.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_coach))
+                CoachRoute(onExit = { navController.popBackStack() })
             }
         }
     }
