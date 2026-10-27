@@ -72,9 +72,9 @@ Una pantalla con 6 estados simulados.
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
 | Voice / 01 — Idle | `coach` | 🎭 Demostración |
-| Voice / 02 — Listening | `coach` | ⏳ Pendiente |
-| Voice / 03 — Processing | `coach` | ⏳ Pendiente |
-| Voice / 04 — Speaking | `coach` | ⏳ Pendiente |
+| Voice / 02 — Listening | `coach` | 🎭 Demostración (transcripción simulada) |
+| Voice / 03 — Processing | `coach` | 🎭 Demostración |
+| Voice / 04 — Speaking | `coach` | 🎭 Demostración (respuesta y reproducción simuladas) |
 | Voice / 05 — Conversation | `coach` | ⏳ Pendiente |
 | Voice / 06 — Error | `coach` | 🎭 Demostración (se llega tocando el mic antes de terminar la escucha; no pide permisos) |
 

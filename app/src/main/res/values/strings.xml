@@ -256,4 +256,22 @@
     <string name="coach_allow_access">Allow Access</string>
     <string name="coach_not_now">Not Now</string>
     <string name="coach_try_again">Try again</string>
+    <string name="coach_listening_header">Listening</string>
+    <string name="coach_live_audio">LIVE AUDIO</string>
+    <string name="coach_live_transcript">LIVE TRANSCRIPT</string>
+    <string name="coach_listening_hint">Speak naturally. I\'m listening.</string>
+    <string name="coach_stop_listening">Stop listening</string>
+    <string name="coach_cancel">Cancel</string>
+    <string name="coach_processing_header">Processing</string>
+    <string name="coach_thinking">THINKING…</string>
+    <string name="coach_processing_hint">Checking your nutrition target…</string>
+    <string name="coach_speaking_header">VORA Speaking</string>
+    <string name="coach_speaking_badge">SPEAKING</string>
+    <string name="coach_replay">Replay</string>
+    <string name="coach_pause">Pause</string>
+    <string name="coach_resume">Resume</string>
+    <string name="coach_stop">Stop</string>
+    <string name="coach_tap_to_interrupt">Tap to Interrupt</string>
+    <string name="coach_time_elapsed">%1$d:%2$02d</string>
+    <string name="coach_time_remaining">-%1$d:%2$02d</string>
 </resources>

@@ -94,8 +94,17 @@ fun CoachScreen(uiState: CoachUiState, actions: CoachActions) {
     when (state) {
         CoachState.Idle -> CoachIdle(lastUserMessage = uiState.messages.lastOrNull { it.fromUser }?.text, actions = actions)
         is CoachState.Error -> CoachError(showPermissionCard = state.showPermissionCard, actions = actions)
-        // Provisorio: estos estados se dibujan en los pasos siguientes
-        is CoachState.Listening, is CoachState.Processing, is CoachState.Speaking, CoachState.Conversation ->
+        is CoachState.Listening -> CoachListening(transcript = state.transcript, actions = actions)
+        is CoachState.Processing -> CoachProcessing(userText = state.userText, actions = actions)
+        is CoachState.Speaking -> CoachSpeaking(
+            reply = state.reply,
+            elapsedSeconds = state.elapsedSeconds,
+            totalSeconds = state.totalSeconds,
+            isPaused = state.isPaused,
+            actions = actions
+        )
+        // Provisorio: la conversación se dibuja en el paso siguiente
+        CoachState.Conversation ->
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(state::class.simpleName.orEmpty(), style = MaterialTheme.typography.titleLarge)
             }
