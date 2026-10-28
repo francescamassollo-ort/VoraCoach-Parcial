@@ -353,4 +353,33 @@
     <string name="coaching_direct">Direct</string>
     <string name="coaching_direct_desc">Straight to the point, no fluff</string>
     <string name="profile_workout_value">%1$s training</string>
+
+    <!-- Profile: Nutrition Preferences -->
+    <string name="nutrition_title">Nutrition preferences</string>
+    <string name="nutrition_intro">Help VORA make food recommendations that actually fit your lifestyle.</string>
+    <string name="nutrition_section_diet">Dietary preference</string>
+    <string name="nutrition_section_enjoy">Foods you enjoy</string>
+    <string name="nutrition_section_avoid">Foods to avoid</string>
+    <string name="nutrition_section_meals">Meal preferences</string>
+    <string name="nutrition_section_priorities">What matters most to you?</string>
+    <string name="nutrition_add_ingredient">Add an ingredient...</string>
+    <string name="nutrition_meals_per_day">Meals per day</string>
+    <string name="nutrition_preferred_breakfast">Preferred breakfast</string>
+    <string name="nutrition_preferred_dinner">Preferred dinner</string>
+    <string name="nutrition_save">Save preferences</string>
+    <string name="diet_everything">Everything</string>
+    <string name="diet_vegetarian">Vegetarian</string>
+    <string name="diet_vegan">Vegan</string>
+    <string name="diet_pescatarian">Pescatarian</string>
+    <string name="diet_other">Other</string>
+    <string name="food_chicken">Chicken</string>
+    <string name="food_eggs">Eggs</string>
+    <string name="food_fish">Fish</string>
+    <string name="food_rice">Rice</string>
+    <string name="food_pasta">Pasta</string>
+    <string name="food_greek_yoghurt">Greek yoghurt</string>
+    <string name="food_vegetables">Vegetables</string>
+    <string name="food_fruit">Fruit</string>
+    <string name="priority_hit_protein">Hit protein targets</string>
+    <string name="priority_eat_consistently">Eat more consistently</string>
 </resources>

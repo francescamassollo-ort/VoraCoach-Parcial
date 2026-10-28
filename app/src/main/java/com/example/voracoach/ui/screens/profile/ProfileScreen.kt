@@ -46,6 +46,7 @@ import com.example.voracoach.model.WorkoutType
 import com.example.voracoach.ui.components.AppBottomBar
 import com.example.voracoach.ui.components.AppCardStyle
 import com.example.voracoach.ui.components.AppChip
+import com.example.voracoach.ui.components.AppInfoRow
 import com.example.voracoach.ui.components.AppListRow
 import com.example.voracoach.ui.components.CircleIconButton
 import com.example.voracoach.ui.components.PrimaryButton
@@ -180,29 +181,16 @@ private fun SnapshotCard(uiState: ProfileUiState) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(12.dp))
-        SnapshotRow(stringResource(R.string.profile_goal), goalsSummary(uiState.goals))
+        AppInfoRow(stringResource(R.string.profile_goal), goalsSummary(uiState.goals))
         Spacer(Modifier.height(10.dp))
-        SnapshotRow(stringResource(R.string.profile_experience), uiState.experience)
+        AppInfoRow(stringResource(R.string.profile_experience), uiState.experience)
         Spacer(Modifier.height(10.dp))
-        SnapshotRow(stringResource(R.string.profile_training), stringResource(R.string.profile_days_per_week, uiState.trainingDaysPerWeek))
+        AppInfoRow(stringResource(R.string.profile_training), stringResource(R.string.profile_days_per_week, uiState.trainingDaysPerWeek))
         Spacer(Modifier.height(10.dp))
-        SnapshotRow(
+        AppInfoRow(
             stringResource(R.string.profile_preferred_workout),
             stringResource(R.string.profile_workout_value, stringResource(uiState.preferredWorkout.labelRes()))
         )
-    }
-}
-
-@Composable
-private fun SnapshotRow(label: String, value: String) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.weight(1f)
-        )
-        Text(value, style = MaterialTheme.typography.labelMedium)
     }
 }
 

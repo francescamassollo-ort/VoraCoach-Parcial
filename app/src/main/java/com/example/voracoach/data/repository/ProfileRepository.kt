@@ -1,9 +1,13 @@
 package com.example.voracoach.data.repository
 
 import com.example.voracoach.model.CoachingStyle
+import com.example.voracoach.model.DietType
+import com.example.voracoach.model.FavoriteFood
 import com.example.voracoach.model.FitnessGoal
 import com.example.voracoach.model.Gender
 import com.example.voracoach.model.GoalsPreferences
+import com.example.voracoach.model.NutritionPreferences
+import com.example.voracoach.model.NutritionPriority
 import com.example.voracoach.model.TrainingFrequency
 import com.example.voracoach.model.UserProfile
 import com.example.voracoach.model.WorkoutType
@@ -29,6 +33,13 @@ private val DEMO_PREFERENCES = GoalsPreferences(
     coachingStyle = CoachingStyle.BALANCED
 )
 
+private val DEMO_NUTRITION = NutritionPreferences(
+    diet = DietType.EVERYTHING,
+    favoriteFoods = FavoriteFood.entries.toSet(),
+    avoidedFoods = listOf("Peanuts", "Shellfish", "Mushrooms"),
+    priorities = NutritionPriority.entries.toSet()
+)
+
 // Guarda el perfil y las preferencias en memoria (sin cuentas reales). Es singleton: las pantallas
 // de edición lo modifican y el Dashboard de Profile lo observa, así se actualiza solo al guardar.
 @Singleton
@@ -40,11 +51,18 @@ class ProfileRepository @Inject constructor() {
     private val _preferences = MutableStateFlow(DEMO_PREFERENCES)
     val preferences: StateFlow<GoalsPreferences> = _preferences.asStateFlow()
 
+    private val _nutrition = MutableStateFlow(DEMO_NUTRITION)
+    val nutrition: StateFlow<NutritionPreferences> = _nutrition.asStateFlow()
+
     fun update(profile: UserProfile) {
         _profile.value = profile
     }
 
     fun updatePreferences(preferences: GoalsPreferences) {
         _preferences.value = preferences
+    }
+
+    fun updateNutrition(nutrition: NutritionPreferences) {
+        _nutrition.value = nutrition
     }
 }

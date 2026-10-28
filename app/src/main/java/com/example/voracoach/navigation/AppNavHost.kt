@@ -34,6 +34,7 @@ import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_
 import com.example.voracoach.ui.screens.profile.ProfileRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
+import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
 
 @Composable
 fun AppNavHost(
@@ -233,6 +234,10 @@ fun AppNavHost(
 
             composable(AppDestination.Goals.route) {
                 GoalsRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.NutritionPreferences.route) {
+                NutritionPreferencesRoute(onBack = { navController.popBackStack() })
             }
 
             composable(AppDestination.Coach.route) {

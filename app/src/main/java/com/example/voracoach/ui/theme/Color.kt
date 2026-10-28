@@ -15,8 +15,11 @@ val TextPrimary = Color(0xFF17211F)      // texto principal
 val TextSecondary = Color(0xFF68736F)    // texto secundario
 val TextMuted = Color(0xFF9AA39F)        // texto/íconos apagados (ítems inactivos de la barra)
 
+// ── Estados ──────────────────────────────────────────────────────
+val ErrorRed = Color(0xFFD95D5D)         // rojo de error y acciones destructivas (cruz de "Foods to avoid", Log out)
+
 // ── Transparencias usadas en Figma ───────────────────────────────
 val MintTint = Color(0x1F65D6B0)         // menta al 12 %: fondo del aviso "You're on track"
 val MintTintBorder = Color(0x4065D6B0)   // menta al 25 %: borde de ese aviso
 val White12 = Color(0x1FFFFFFF)          // blanco al 12 %: chips sobre fondo verde oscuro
-val White60 = Color(0x99FFFFFF)          // blanco al 60 %: texto secundario sobre verde oscuro
+val White60 = Color(0x99FFFFFF)          // blanco al 60 %: texto secundario sobre verde oscuro0x99FFFFFF)          // blanco al 60 %: texto secundario sobre verde oscuro

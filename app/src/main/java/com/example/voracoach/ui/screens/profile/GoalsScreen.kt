@@ -168,7 +168,7 @@ fun GoalsScreen(
 }
 
 @Composable
-private fun Section(title: String, content: @Composable () -> Unit) {
+internal fun Section(title: String, content: @Composable () -> Unit) {
     Column {
         AppSectionLabel(title)
         Spacer(Modifier.height(10.dp))
