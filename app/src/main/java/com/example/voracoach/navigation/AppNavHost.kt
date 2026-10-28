@@ -32,8 +32,10 @@ import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 import com.example.voracoach.ui.screens.profile.ProfileRoute
+import com.example.voracoach.ui.screens.progress.HealthTrendsRoute
 import com.example.voracoach.ui.screens.progress.NutritionProgressRoute
 import com.example.voracoach.ui.screens.progress.ProgressDashboardRoute
+import com.example.voracoach.ui.screens.progress.TodayOverviewRoute
 import com.example.voracoach.ui.screens.progress.WorkoutProgressRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
@@ -114,7 +116,8 @@ fun AppNavHost(
                     onLogBreakfast = { navController.navigateToTab(BottomBarItem.Nutrition) },
                     onWorkoutClick = { workoutId ->
                         navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
-                    }
+                    },
+                    onTodayOverviewClick = { navController.navigate(AppDestination.TodayOverview.route) }
                 )
             }
 
@@ -225,9 +228,13 @@ fun AppNavHost(
                 )
             }
 
-            // Provisorias: las sub-pantallas de Progress se dibujan en los pasos siguientes
             composable(AppDestination.TodayOverview.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_progress_today))
+                TodayOverviewRoute(
+                    onBack = { navController.popBackStack() },
+                    onWorkoutClick = { workoutId ->
+                        navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
+                    }
+                )
             }
 
             composable(AppDestination.WorkoutProgress.route) {
@@ -239,9 +246,10 @@ fun AppNavHost(
             }
 
             composable(AppDestination.HealthTrends.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_progress_health))
+                HealthTrendsRoute(onBack = { navController.popBackStack() })
             }
 
+            // Provisoria: la revisión semanal se dibuja en el paso siguiente
             composable(AppDestination.WeeklyReview.route) {
                 PlaceholderScreen(title = stringResource(R.string.screen_progress_weekly_review))
             }

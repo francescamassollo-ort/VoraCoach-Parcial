@@ -40,6 +40,36 @@ data class WorkoutProgressData(
     val exercises: List<ExerciseProgress>
 )
 
+// --- Progress / 01 — Today's Overview ---
+
+data class TodayProgress(
+    val completionPercent: Int,
+    val workoutPercent: Int,
+    val caloriesConsumed: Int,
+    val caloriesGoal: Int,
+    val steps: Int,
+    val stepsGoal: Int,
+    val waterLitres: Double,
+    val waterGoalLitres: Double,
+    val workoutsThisWeek: Int
+)
+
+// --- Progress / 05 — Health trends ---
+
+enum class HabitSignal { SLEEP_QUALITY, DAILY_MOVEMENT, WORKOUT_FREQUENCY, PROTEIN_INTAKE }
+
+enum class Trend { IMPROVING, CONSISTENT }
+
+data class HealthTrendsData(
+    val avgSteps: Int,
+    val avgDistanceKm: Double,
+    val activeKcal: Int,
+    val stepsGoal: Int,
+    // Pasos de cada día de la semana, de lunes a domingo
+    val dailySteps: List<Int>,
+    val signals: List<Pair<HabitSignal, Trend>>
+)
+
 // --- Progress / 04 — Nutrition progress ---
 
 enum class Macro { CALORIES, PROTEIN, CARBS, FAT }
