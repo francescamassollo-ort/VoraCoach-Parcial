@@ -1,7 +1,12 @@
 package com.example.voracoach.data.repository
 
+import com.example.voracoach.model.CoachingStyle
+import com.example.voracoach.model.FitnessGoal
 import com.example.voracoach.model.Gender
+import com.example.voracoach.model.GoalsPreferences
+import com.example.voracoach.model.TrainingFrequency
 import com.example.voracoach.model.UserProfile
+import com.example.voracoach.model.WorkoutType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,15 +22,29 @@ private val DEMO_USER = UserProfile(
     gender = Gender.PREFER_NOT_TO_SAY
 )
 
-// Guarda el perfil en memoria (sin cuentas reales). Es singleton: Edit Profile lo modifica y
-// el Dashboard de Profile lo observa, así el nombre se actualiza solo al guardar.
+private val DEMO_PREFERENCES = GoalsPreferences(
+    goals = setOf(FitnessGoal.BUILD_STRENGTH, FitnessGoal.IMPROVE_FITNESS),
+    frequency = TrainingFrequency.FOUR,
+    workoutType = WorkoutType.STRENGTH,
+    coachingStyle = CoachingStyle.BALANCED
+)
+
+// Guarda el perfil y las preferencias en memoria (sin cuentas reales). Es singleton: las pantallas
+// de edición lo modifican y el Dashboard de Profile lo observa, así se actualiza solo al guardar.
 @Singleton
 class ProfileRepository @Inject constructor() {
 
     private val _profile = MutableStateFlow(DEMO_USER)
     val profile: StateFlow<UserProfile> = _profile.asStateFlow()
 
+    private val _preferences = MutableStateFlow(DEMO_PREFERENCES)
+    val preferences: StateFlow<GoalsPreferences> = _preferences.asStateFlow()
+
     fun update(profile: UserProfile) {
         _profile.value = profile
+    }
+
+    fun updatePreferences(preferences: GoalsPreferences) {
+        _preferences.value = preferences
     }
 }

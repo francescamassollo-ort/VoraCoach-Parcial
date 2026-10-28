@@ -43,4 +43,6 @@ sealed class AppDestination(val route: String) {
     data object WeeklyPlan : AppDestination("workout_weekly")
 
     data object EditProfile : AppDestination("profile_edit")
+
+    data object Goals : AppDestination("profile_goals")
 }

@@ -1,6 +1,5 @@
 package com.example.voracoach.ui.screens.profile
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +41,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.voracoach.R
 import com.example.voracoach.ui.components.AppCard
+import com.example.voracoach.model.FitnessGoal
+import com.example.voracoach.model.WorkoutType
 import com.example.voracoach.ui.components.AppBottomBar
 import com.example.voracoach.ui.components.AppCardStyle
 import com.example.voracoach.ui.components.AppChip
@@ -104,7 +105,7 @@ fun ProfileScreen(
         AppListRow(
             icon = Icons.Outlined.GpsFixed,
             title = stringResource(R.string.profile_your_goals),
-            subtitle = uiState.goal,
+            subtitle = goalsSummary(uiState.goals),
             onClick = onGoalsClick
         )
         AppListRow(
@@ -179,13 +180,16 @@ private fun SnapshotCard(uiState: ProfileUiState) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(12.dp))
-        SnapshotRow(stringResource(R.string.profile_goal), uiState.goal)
+        SnapshotRow(stringResource(R.string.profile_goal), goalsSummary(uiState.goals))
         Spacer(Modifier.height(10.dp))
         SnapshotRow(stringResource(R.string.profile_experience), uiState.experience)
         Spacer(Modifier.height(10.dp))
         SnapshotRow(stringResource(R.string.profile_training), stringResource(R.string.profile_days_per_week, uiState.trainingDaysPerWeek))
         Spacer(Modifier.height(10.dp))
-        SnapshotRow(stringResource(R.string.profile_preferred_workout), uiState.preferredWorkout)
+        SnapshotRow(
+            stringResource(R.string.profile_preferred_workout),
+            stringResource(R.string.profile_workout_value, stringResource(uiState.preferredWorkout.labelRes()))
+        )
     }
 }
 
@@ -256,10 +260,10 @@ private fun ProfilePreview() {
                     uiState = ProfileUiState(
                         userName = "Alex Morgan",
                         tagline = "Building strength & improving fitness",
-                        goal = "Build strength & improve fitness",
+                        goals = listOf(FitnessGoal.BUILD_STRENGTH, FitnessGoal.IMPROVE_FITNESS),
                         experience = "Intermediate",
                         trainingDaysPerWeek = 4,
-                        preferredWorkout = "Strength training",
+                        preferredWorkout = WorkoutType.STRENGTH,
                         dataSynced = true
                     ),
                     onSettingsClick = {}, onEditProfileClick = {}, onGoalsClick = {},

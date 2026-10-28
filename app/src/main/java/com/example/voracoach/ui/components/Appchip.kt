@@ -3,6 +3,7 @@ package com.example.voracoach.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.selected
@@ -33,6 +35,9 @@ enum class AppChipStyle {
 
     /** Para fondos verde oscuro: blanco translúcido al 12 %, texto blanco de 12 sp. */
     OnDark,
+
+    /** Para fondos claros con selección en menta: el chip elegido es menta con texto verde oscuro (preferencia de workout, dieta). */
+    Mint,
 }
 
 /**
@@ -53,14 +58,17 @@ fun AppChip(
 ) {
     val scheme = MaterialTheme.colorScheme
     val onDark = style == AppChipStyle.OnDark
+    val mint = style == AppChipStyle.Mint
 
     val containerColor: Color = when {
+        mint && selected -> scheme.secondary
         onDark && selected -> scheme.primaryContainer
         onDark -> White12
         selected -> scheme.primary
         else -> scheme.surface
     }
     val contentColor: Color = when {
+        mint && selected -> scheme.onSecondary
         onDark && selected -> scheme.onPrimaryContainer
         onDark -> Color.White
         selected -> scheme.onPrimary
@@ -68,6 +76,7 @@ fun AppChip(
     }
     val border = when {
         onDark -> null
+        mint && selected -> BorderStroke(1.dp, scheme.secondary)
         selected -> BorderStroke(1.dp, scheme.primary)
         else -> BorderStroke(1.dp, scheme.outline)
     }
@@ -82,8 +91,11 @@ fun AppChip(
     )
 
     val chipModifier = modifier.semantics { this.selected = selected }
+    // El Box centra el texto cuando el chip se estira (por ejemplo con weight en una fila)
     val label: @Composable () -> Unit = {
-        Text(text = text, style = textStyle, modifier = Modifier.padding(padding))
+        Box(contentAlignment = Alignment.Center) {
+            Text(text = text, style = textStyle, modifier = Modifier.padding(padding))
+        }
     }
 
     if (onClick != null) {
