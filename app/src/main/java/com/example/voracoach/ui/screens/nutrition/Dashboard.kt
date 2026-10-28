@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.example.voracoach.ui.components.InsightBanner
 import com.example.voracoach.ui.components.SectionHeader
 import com.example.voracoach.ui.screens.nutrition.components.dashboard.Consume
+import com.example.voracoach.ui.screens.nutrition.components.dashboard.Meal
 import com.example.voracoach.ui.screens.nutrition.components.dashboard.TitleDate
 import com.example.voracoach.ui.screens.nutrition.components.dashboard.Vora
 import com.example.voracoach.ui.theme.VoraCoachTheme
@@ -43,7 +44,21 @@ fun Dashboard(){
           actionText = "View history",
           onActionClick = {},
         )
-
+        Meal(
+          calories = "428",
+          mealType = "Breakfast",
+          food = "Chicken"
+        )
+        Meal(
+          calories = "428",
+          mealType = "Breakfast",
+          food = "Chicken"
+        )
+        Meal(
+          calories = "428",
+          mealType = "Breakfast",
+          food = "Chicken"
+        )
         Vora()
 
       }
