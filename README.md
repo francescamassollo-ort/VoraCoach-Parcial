@@ -11,16 +11,46 @@ Desarrollo de Aplicaciones Móviles — ORT 2026.
 - Francesca Rocío Massollo
 - Nahuel Ezequiel Di Paolo
 
-## Cómo ejecutar
-Abrir en Android Studio, sincronizar Gradle y ejecutar `app` (API 24+).
+## Video de demostración
+🎬 [Ver video](https://youtu.be/GmS6xGp9-aU)
 
-### Servidor de la API
-Por defecto la app usa la API publicada: `https://tp3.martinrivas.ar/`.
+## Cómo ejecutar desde cero
+
+### Requisitos
+| | Recomendado |
+|---|---|
+| Android Studio | Última versión estable, con soporte para Android Gradle Plugin 9.3 |
+| JDK | El que trae Android Studio (no hace falta instalar otro) |
+| Dispositivo de prueba | Emulador **Pixel 8** con **Android 15 (API 35)**, imagen *Google APIs* |
+| Versión mínima de Android | Android 7.0 (API 24) |
+| Python (solo para el mock) | 3.9 o posterior |
+
+### 1. Clonar el repositorio
+1. En Android Studio: **File → New → Project from Version Control…** (o **Get from VCS** en la pantalla de bienvenida).
+2. URL: `https://github.com/francescamassollo-ort/VoraCoach-Parcial.git`
+3. Elegir una carpeta y tocar **Clone**. Si pregunta, confiar en el proyecto (**Trust Project**).
+
+### 2. Sincronizar Gradle
+- Al abrir, Android Studio sincroniza solo (barra de progreso abajo). La primera vez descarga Gradle y las dependencias: puede tardar varios minutos.
+- Si no lo hace, o después de cambiar de rama: **File → Sync Project with Gradle Files** (ícono del elefante).
+- Si aparece *"Unable to find Gradle tasks to build"* o algo parecido: volver a sincronizar; si sigue, **File → Invalidate Caches… → Invalidate and Restart**.
+
+### 3. Crear el emulador
+1. **Tools → Device Manager → Create Virtual Device** (o el **+**).
+2. Elegir **Pixel 8**, imagen **API 35**, y terminar.
+3. Arrancarlo con ▶ desde el Device Manager.
+
+### 4. Ejecutar la app
+En la barra de arriba, elegir la configuración **app** y el emulador, y tocar **Run** ▶ (`Shift+F10`).
+La app arranca en **Sign In**: cualquier email y contraseña no vacíos sirven para entrar (el acceso es de demostración).
+
+### 5. Servidor de la API
+Por defecto la app usa la API publicada: `https://tp3.martinrivas.ar/`. No hace falta configurar nada.
 
 Para usar el mock local del paquete del docente:
 1. Con Python 3.9 o posterior, desde la carpeta del paquete: `python mock/server.py` (en macOS/Linux, `python3`).
-2. Verificar que responde en `http://localhost:8000/`.
-3. Agregar en `local.properties` (no se sube al repositorio):
+2. Verificar en el navegador que responde en `http://localhost:8000/health`.
+3. Agregar en `local.properties`, en la raíz del proyecto (es personal y no se sube al repositorio):
    ```
    vora.apiUrl=http://10.0.2.2:8000/
    ```
@@ -28,6 +58,24 @@ Para usar el mock local del paquete del docente:
 4. Sincronizar Gradle y volver a ejecutar la app.
 
 La conexión `http` (sin cifrar) se permite solo en la versión debug y solo hacia `10.0.2.2` y `localhost`.
+
+Sin servidor, la pestaña Workout muestra lo que ya está guardado en Room. Si nunca se descargó, muestra un error con opción de reintentar.
+
+### Versiones
+| Componente | Versión |
+|---|---|
+| Gradle | 9.5.0 |
+| Android Gradle Plugin | 9.3.3 |
+| Kotlin | 2.2.10 |
+| KSP | 2.3.12 |
+| Compose BOM | 2026.02.01 |
+| Navigation Compose | 2.9.0 |
+| Hilt | 2.60.1 |
+| Room | 2.7.1 |
+| Retrofit | 2.11.0 |
+| compileSdk / targetSdk | 35 |
+| minSdk | 24 |
+| Java | 11 |
 
 ## Estructura del proyecto
 Paquete base: `app/src/main/java/com/example/voracoach/`
@@ -49,7 +97,22 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 - La app arranca en **Sign In**. Al entrar se borra el acceso del historial: el botón atrás desde Home cierra la app.
 - **Barra inferior** con 5 pestañas: Home, Workout, Nutrition, Progress y Profile. Cambiar de pestaña no apila pantallas: el botón atrás desde cualquiera vuelve a Home.
 - La barra solo se muestra en las pestañas. Sign In, Sign Up, Notifications, Coach y las sub-pantallas (detalle, agregar, etc.) ocupan la pantalla completa.
-- Las rutas que todavía no tienen pantalla real muestran una pantalla provisoria, para que todo el recorrido sea navegable.
+
+### Decisiones de navegación (el Figma no define estos destinos)
+Se eligieron según el contenido de cada pantalla:
+- **Progress / 01 — Today's Overview:** se abre desde "View details" en la sección "Today's Overview" de Home. Tiene botón atrás porque no es una pestaña.
+- **Progress / 02 — Dashboard:** "View" de Workout, Nutrition y Activity abre Workout Progress, Nutrition Progress y Health Trends; "See weekly review" abre Weekly Review.
+- **Progress / 06 — Weekly Review:** "Get dinner ideas" lleva a la pestaña Nutrition, "View next week's plan" a Weekly Plan, "Ask VORA" a Coach y "Done" vuelve al Dashboard.
+- **Profile / 01 — Dashboard:** "Your Goals" abre Goals & Preferences; "Your Preferences" abre Nutrition Preferences; "Review preferences" (tarjeta VORA Personalisation) abre Voice & AI Settings; el engranaje, "Account" y "Connected Data" abren Settings.
+- **Profile / 05 — Voice & AI Settings:** "Privacy & permissions" abre Settings.
+- **Profile / 03 — Goals:** "Coaching style" muestra las 3 opciones de Voice & AI (Supportive, Balanced, Direct), porque el mockup muestra solo la seleccionada.
+- Las sub-pantallas de Progress se muestran sin barra inferior, como las de Workout.
+- El botón "•••" de las sub-pantallas de Progress no tiene menú en el Figma: muestra un aviso de función de demostración.
+
+### Datos compartidos entre pantallas
+- El nombre del perfil se ve en Home y los objetivos en Progress (Dashboard y Today's Overview). Los dos se leen de `ProfileRepository`: si se editan en Profile, se actualizan solos.
+- El entrenamiento recomendado de Home y de Today's Overview es el primero del catálogo guardado en Room.
+- El período elegido (Week, Month, 3 Months) y el macro de Nutrition Progress se guardan en el ViewModel, así que sobreviven a la rotación.
 
 ## Inventario de pantallas
 🎭 Demostración: funciona sin servicio real · 🚧 Provisoria: ruta creada, pantalla en construcción · ⏳ Pendiente: sin ruta todavía · ✅ Funcional: con Retrofit o Room
@@ -63,7 +126,7 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 ### Home
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Home / 01 — Dashboard | `home` | 🎭 Demostración (perfil y métricas de ejemplo; entrenamiento recomendado real desde Room) |
+| Home / 01 — Dashboard | `home` | 🎭 Demostración (métricas de ejemplo; nombre del perfil; entrenamiento recomendado real desde Room) |
 | Home / 02 — Notifications | `notifications` | 🎭 Demostración (notificaciones de ejemplo; "Mark all as read" funcional) |
 
 ### Asistente VORA
@@ -92,34 +155,34 @@ Una pantalla con 6 estados simulados.
 ### Nutrition
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Nutrition / 01 — Dashboard | `nutrition` | 🚧 Provisoria |
-| Nutrition / 02 — Today's Meals | a definir | ⏳ Pendiente |
-| Nutrition / 03 — Add Food | a definir | ⏳ Pendiente |
-| Nutrition / 04 — Voice Food Logging | a definir | ⏳ Pendiente |
-| Nutrition / 05 — Food Analysis | a definir | ⏳ Pendiente |
-| Nutrition / 06 — Photo Analysis | a definir | ⏳ Pendiente |
-| Nutrition / 07 — Food Confirmation | a definir | ⏳ Pendiente |
-| Nutrition / 08 — Meal Details | a definir | ⏳ Pendiente |
+| Nutrition / 01 — Dashboard | `nutrition` | 🎭 Demostración (comidas y totales de ejemplo, sin persistencia) |
+| Nutrition / 02 — Today's Meals | — | ⏳ No implementada |
+| Nutrition / 03 — Add Food | — | ⏳ No implementada |
+| Nutrition / 04 — Voice Food Logging | — | ⏳ No implementada |
+| Nutrition / 05 — Food Analysis | — | ⏳ No implementada |
+| Nutrition / 06 — Photo Analysis | — | ⏳ No implementada |
+| Nutrition / 07 — Food Confirmation | — | ⏳ No implementada |
+| Nutrition / 08 — Meal Details | — | ⏳ No implementada |
 
 ### Progress
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Progress / 01 — Today's Overview | a definir | ⏳ Pendiente |
-| Progress / 02 — Dashboard | `progress` | 🚧 Provisoria |
-| Progress / 03 — Workout Progress | a definir | ⏳ Pendiente |
-| Progress / 04 — Nutrition Progress | a definir | ⏳ Pendiente |
-| Progress / 05 — Health Trends | a definir | ⏳ Pendiente |
-| Progress / 06 — Weekly Review | a definir | ⏳ Pendiente |
+| Progress / 01 — Today's Overview | `progress_today` | 🎭 Demostración (métricas del día de ejemplo; entrenamiento real desde Room; objetivo y meta semanal del perfil) |
+| Progress / 02 — Dashboard | `progress` | 🎭 Demostración (métricas de ejemplo por período; "Active goal" del perfil) |
+| Progress / 03 — Workout Progress | `progress_workout` | 🎭 Demostración (volumen y ejercicios de ejemplo por período) |
+| Progress / 04 — Nutrition Progress | `progress_nutrition` | 🎭 Demostración (objetivos por macro y hábitos de ejemplo) |
+| Progress / 05 — Health Trends | `progress_health` | 🎭 Demostración (pasos y señales de hábito de ejemplo) |
+| Progress / 06 — Weekly Review | `progress_weekly_review` | 🎭 Demostración (revisión de ejemplo; accesos reales a Nutrition, Weekly Plan y Coach) |
 
 ### Profile
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Profile / 01 — Dashboard | `profile` | 🚧 Provisoria |
-| Profile / 02 — Edit Profile | a definir | ⏳ Pendiente |
-| Profile / 03 — Goals & Preferences | a definir | ⏳ Pendiente |
-| Profile / 04 — Nutrition Preferences | a definir | ⏳ Pendiente |
-| Profile / 05 — Voice & AI Settings | a definir | ⏳ Pendiente |
-| Profile / 06 — Settings | a definir | ⏳ Pendiente |
+| Profile / 01 — Dashboard | `profile` | 🎭 Demostración (perfil de ejemplo; refleja lo editado en 02 y 03) |
+| Profile / 02 — Edit Profile | `profile_edit` | 🎭 Demostración (los cambios duran mientras la app está abierta) |
+| Profile / 03 — Goals & Preferences | `profile_goals` | 🎭 Demostración (los objetivos se ven también en Progress) |
+| Profile / 04 — Nutrition Preferences | `profile_nutrition` | 🎭 Demostración |
+| Profile / 05 — Voice & AI Settings | `voice_settings` | 🎭 Demostración (no reproduce audio ni pide permisos) |
+| Profile / 06 — Settings | `settings` | 🎭 Demostración ("Log out" vuelve a Sign In vaciando el historial) |
 
 ### Funciones simuladas del asistente
 El asistente no usa reconocimiento de voz, IA ni audio reales, y nunca pide permiso de micrófono ni de cámara:
@@ -129,7 +192,67 @@ El asistente no usa reconocimiento de voz, IA ni audio reales, y nunca pide perm
 - **"Allow Access" y adjuntar (+):** muestran un aviso de función de demostración.
 - La conversación vive en el ViewModel: sobrevive a la rotación, pero se pierde al salir de Coach.
 
-**Para actualizar el inventario:** al agregar una pantalla, completar su ruta y estado en esta tabla en el mismo PR.
+## Estado de las funcionalidades
+
+### Funcionales (con servicio o persistencia reales)
+- **Catálogo y detalle de entrenamientos:** Retrofit contra la API, con caché en Room (offline-first). Room es la única fuente de datos y la red solo la actualiza.
+- **Errores tipados de red:** sin conexión, error del servidor y respuesta inválida, cada uno con su mensaje y la opción de reintentar.
+- **Navegación completa:** barra inferior, sub-pantallas, botón atrás, y rutas con parámetros (`workoutId`, `exerciseId`).
+- **Estado que sobrevive a la rotación:** ViewModels con `StateFlow` y `rememberSaveable` para lo que se escribe.
+- **Notificaciones:** "Mark all as read" apaga el aviso de la campana de Home.
+- **Datos compartidos:** el nombre y los objetivos del perfil se ven en Home y en Progress.
+
+### Simuladas (funcionan sin servicio real)
+- **Acceso (Sign In / Sign Up):** no hay cuentas. Los campos se validan (obligatorios y largo mínimo de contraseña), pero cualquier dato válido permite entrar.
+- **Asistente VORA:** ver "Funciones simuladas del asistente".
+- **Métricas** de Home, Progress, Nutrition y Workout Complete: datos de ejemplo, porque la app no mide pasos, calorías ni sueño.
+- **Botones sin destino en el Figma** ("•••", "Allow Access", adjuntar): muestran un aviso de función de demostración.
+- **Permisos:** la app nunca pide permiso de micrófono ni de cámara.
+
+### No implementadas
+- **Registro de comidas** (carga manual, validación, listado por fecha, eliminación y total diario, con persistencia en Room) y las pantallas Nutrition 02 a 08.
+- **Persistencia del perfil:** Edit Profile, Goals y las preferencias se guardan en memoria; se pierden al cerrar la app.
+- **Sesión recordada:** cada vez que se abre la app pide Sign In.
+- **Firebase:** el acceso es de demostración y los datos privados no se sincronizan con la nube.
+
+## Comparaciones Figma vs. app
+| Pantalla | Figma | App | Diferencias |
+|---|---|---|---|
+| Home / 01 — Dashboard | ![Figma](docs/comparaciones/home-figma.png) | ![App](docs/comparaciones/home-app.png) | Iniciales en lugar de foto (el perfil de demostración no tiene foto). El saludo cambia según la hora real. La tarjeta del entrenamiento recomendado (real, de Room) queda más abajo, con scroll. |
+| Workout / 03 — Workout Details | ![Figma](docs/comparaciones/workout-detail-figma.png) | ![App](docs/comparaciones/workout-detail-app.png) | Nombre, ejercicios y nota de VORA son los reales que devuelve la API, no el ejemplo del Figma. Cada ejercicio suma su instrucción breve. |
+| Workout / 05 — Active Workout | ![Figma](docs/comparaciones/active-workout-figma.png) | ![App](docs/comparaciones/active-workout-app.png) | Ejercicios y consejo del coach reales de la API. El peso se ajusta con − / + (demostración). El ícono ⓘ abre la guía del ejercicio. |
 
 ## Uso de IA
-Se utilizó Claude como asistente para la configuración inicial del proyecto y como apoyo en la navegación y las pantallas de acceso (explicación de conceptos, revisión de errores y propuestas de código, revisadas y adaptadas por el equipo).
+Usamos Claude (Anthropic) como asistente durante todo el desarrollo. Todo lo que propuso
+se revisó, se probó en el emulador y se adaptó antes de subirlo. El manejo de Git
+(ramas, commits, pull requests y merges) lo hicimos nosotros.
+
+### Cómo lo usamos
+1. **Contexto inicial.** Le pasamos la consigna, el contrato de la API (`openapi.json`), las
+   capturas del Figma y las buenas prácticas vistas en clase, para que sus propuestas las respetaran:
+   - textos y colores en recursos (`strings.xml`, tema), nada hardcodeado;
+   - navegación con callbacks: las pantallas no conocen el `NavController`;
+   - estado en el ViewModel con `StateFlow` y flujo unidireccional (la pantalla avisa eventos, el ViewModel decide);
+   - separación Route/Screen: la Screen no tiene estado y se puede previsualizar;
+   - un repositorio como única fuente de datos para los ViewModels.
+2. **Decisiones de arquitectura.** Le consultamos cuándo conviene cada forma de guardar datos, por ejemplo:
+   - Room para registros y caché de datos de la API (catálogo de entrenamientos);
+   - DataStore para preferencias simples (por ejemplo, recordar la sesión iniciada);
+   - estado en memoria para lo que solo dura la sesión (conversación del Coach, perfil de demostración).
+   Las decisiones las tomamos en equipo; en algunos casos elegimos lo más simple por el tiempo de entrega
+   (por ejemplo, el perfil quedó en memoria en lugar de Room).
+3. **Desarrollo por pasos chicos.** Cada pantalla o módulo se pidió por separado, con un plan
+   previo de qué archivos cambiaban. Después de cada paso:
+   - compilamos y probamos en el emulador (rotación, botón atrás, sin servidor);
+   - revisamos el diff antes de hacer el commit;
+   - un commit por paso, para poder volver atrás si algo se rompía.
+4. **Errores y configuración.** Ayudó a diagnosticar errores de Gradle y de compatibilidad de
+   versiones (Hilt y KSP con AGP 9), del emulador y de navegación (por ejemplo, el botón "Done"
+   que no funcionaba al entrar desde Home).
+5. **Aprendizaje.** Le pedimos que explicara el porqué de cada decisión y los patrones usados
+   (Repository, Observer con Flow, State con sealed interface, Singleton e inyección de dependencias con Hilt).
+
+### Qué no hizo la IA
+- No tomó decisiones de alcance ni de diseño sin consultarnos.
+- No subió código ni manejó el repositorio.
+- No generó datos personales ni credenciales.

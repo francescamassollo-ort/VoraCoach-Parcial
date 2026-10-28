@@ -72,7 +72,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // Navegación entre pantallas
+  // Navegación entre pantallas
     implementation(libs.androidx.navigation.compose)
 
     // Hilt: evita crear a mano repositorios, Retrofit y DAOs; los recibe cada clase por constructor
