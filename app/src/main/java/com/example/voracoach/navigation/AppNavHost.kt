@@ -32,6 +32,7 @@ import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 import com.example.voracoach.ui.screens.profile.ProfileRoute
+import com.example.voracoach.ui.screens.progress.ProgressDashboardRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
 import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
@@ -214,7 +215,33 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Progress.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_progress))
+                ProgressDashboardRoute(
+                    onWorkoutClick = { navController.navigate(AppDestination.WorkoutProgress.route) },
+                    onNutritionClick = { navController.navigate(AppDestination.NutritionProgress.route) },
+                    onActivityClick = { navController.navigate(AppDestination.HealthTrends.route) },
+                    onWeeklyReviewClick = { navController.navigate(AppDestination.WeeklyReview.route) }
+                )
+            }
+
+            // Provisorias: las sub-pantallas de Progress se dibujan en los pasos siguientes
+            composable(AppDestination.TodayOverview.route) {
+                PlaceholderScreen(title = stringResource(R.string.screen_progress_today))
+            }
+
+            composable(AppDestination.WorkoutProgress.route) {
+                PlaceholderScreen(title = stringResource(R.string.screen_progress_workout))
+            }
+
+            composable(AppDestination.NutritionProgress.route) {
+                PlaceholderScreen(title = stringResource(R.string.screen_progress_nutrition))
+            }
+
+            composable(AppDestination.HealthTrends.route) {
+                PlaceholderScreen(title = stringResource(R.string.screen_progress_health))
+            }
+
+            composable(AppDestination.WeeklyReview.route) {
+                PlaceholderScreen(title = stringResource(R.string.screen_progress_weekly_review))
             }
 
             composable(AppDestination.Profile.route) {

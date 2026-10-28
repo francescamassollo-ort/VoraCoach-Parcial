@@ -382,4 +382,43 @@
     <string name="food_fruit">Fruit</string>
     <string name="priority_hit_protein">Hit protein targets</string>
     <string name="priority_eat_consistently">Eat more consistently</string>
+
+    <!-- Progress -->
+    <string name="screen_progress_today">Today\'s Overview</string>
+    <string name="screen_progress_workout">Workout progress</string>
+    <string name="screen_progress_nutrition">Nutrition progress</string>
+    <string name="screen_progress_health">Health trends</string>
+    <string name="screen_progress_weekly_review">Your weekly review</string>
+    <string name="progress_title">Your progress</string>
+    <string name="progress_subtitle">Small improvements add up.</string>
+    <string name="progress_period_week">Week</string>
+    <string name="progress_period_month">Month</string>
+    <string name="progress_period_three_months">3 Months</string>
+    <string name="progress_overview_week">THIS WEEK OVERVIEW</string>
+    <string name="progress_overview_month">THIS MONTH OVERVIEW</string>
+    <string name="progress_overview_three_months">LAST 3 MONTHS OVERVIEW</string>
+    <string name="progress_workouts_completed">Workouts completed</string>
+    <string name="progress_workouts_value">%1$d workouts</string>
+    <string name="progress_avg_daily_steps">Avg Daily Steps</string>
+    <string name="progress_daily_avg_protein">Daily Avg Protein</string>
+    <string name="progress_active_streak">Active Streak</string>
+    <string name="progress_streak_value">%1$d days 🔥</string>
+    <string name="progress_number">%1$,d</string>
+    <string name="progress_grams">%1$dg</string>
+    <string name="progress_delta_count">↑ %1$d</string>
+    <string name="progress_delta_percent">↑ %1$d%%</string>
+    <string name="progress_vora_insight">VORA Insight</string>
+    <string name="progress_consistent">CONSISTENT</string>
+    <string name="progress_insight_text">\"You\'ve completed %1$d workouts and increased your training volume by %2$d%%. Your consistency is trending in the right direction.\"</string>
+    <string name="progress_see_weekly_review">See weekly review</string>
+    <string name="progress_workout">Workout</string>
+    <string name="progress_workout_sub">%1$d sessions • %2$,d kg volume</string>
+    <string name="progress_nutrition">Nutrition</string>
+    <string name="progress_nutrition_sub">%1$dg protein • %2$d%% avg target</string>
+    <string name="progress_activity">Activity</string>
+    <string name="progress_activity_sub">%1$,d steps • %2$.1f km daily avg</string>
+    <string name="progress_view">View</string>
+    <string name="progress_active_goal">ACTIVE GOAL</string>
+    <string name="progress_goal_complete">%1$d%% complete</string>
+    <string name="progress_goal_hint">You\'re building consistency across workouts and nutrition.</string>
 </resources>
