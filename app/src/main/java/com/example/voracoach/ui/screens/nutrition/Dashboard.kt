@@ -26,6 +26,7 @@ fun Dashboard(){
         modifier = Modifier
           .padding(innerPadding)
           .padding(horizontal = 16.dp)
+
       ) {
         TitleDate()
         Consume()
