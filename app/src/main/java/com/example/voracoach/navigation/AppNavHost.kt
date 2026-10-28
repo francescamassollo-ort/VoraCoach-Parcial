@@ -41,6 +41,8 @@ import com.example.voracoach.ui.screens.progress.WorkoutProgressRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
 import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
+import com.example.voracoach.ui.screens.profile.VoiceSettingsRoute
+import com.example.voracoach.ui.screens.profile.SettingsRoute
 
 @Composable
 fun AppNavHost(
@@ -266,9 +268,10 @@ fun AppNavHost(
                     onSettingsClick = { /* Settings (pantalla 06) */ },
                     onEditProfileClick = { navController.navigate(AppDestination.EditProfile.route) },
                     onGoalsClick = { navController.navigate(AppDestination.Goals.route) },
-                    onPreferencesClick = { /* a definir */ },
+                    onPreferencesClick = { navController.navigate(AppDestination.NutritionPreferences.route) },
                     onConnectedDataClick = { /* Settings (pantalla 06) */ },
-                    onAccountClick = { /* Settings (pantalla 06) */ }
+                    onAccountClick = { navController.navigate(AppDestination.Settings.route) },
+                    onReviewPreferencesClick = { navController.navigate(AppDestination.VoiceSettings.route) }
                 )
             }
 
@@ -278,6 +281,26 @@ fun AppNavHost(
 
             composable(AppDestination.Goals.route) {
                 GoalsRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.VoiceSettings.route){
+                VoiceSettingsRoute(
+                    onBack = { navController.popBackStack() }, // Se conecta a Settings cuando exista la pantalla 06
+                    onPrivacyClick = {}
+                )
+            }
+
+            composable(AppDestination.Settings.route){
+                SettingsRoute(
+                    onBack = { navController.popBackStack() },
+                    onItemClick = { /* destino de cada fila: a definir */ },
+                    // Log out vuelve a Sign In vaciando todo el historial, así el botón atrás no reabre la app con la sesión cerrada
+                    onLogout = {
+                        navController.navigate(AppDestination.SignIn.route) {
+                            popUpTo(navController.graph.id) { inclusive = true }
+                        }
+                    }
+                )
             }
 
             composable(AppDestination.NutritionPreferences.route) {

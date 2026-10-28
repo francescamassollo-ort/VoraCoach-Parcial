@@ -63,6 +63,7 @@ fun ProfileRoute(
     onEditProfileClick: () -> Unit,
     onGoalsClick: () -> Unit,
     onPreferencesClick: () -> Unit,
+    onReviewPreferencesClick: () -> Unit,
     onConnectedDataClick: () -> Unit,
     onAccountClick: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
@@ -74,6 +75,7 @@ fun ProfileRoute(
         onEditProfileClick = onEditProfileClick,
         onGoalsClick = onGoalsClick,
         onPreferencesClick = onPreferencesClick,
+        onReviewPreferencesClick = onReviewPreferencesClick,
         onConnectedDataClick = onConnectedDataClick,
         onAccountClick = onAccountClick
     )
@@ -87,7 +89,8 @@ fun ProfileScreen(
     onGoalsClick: () -> Unit,
     onPreferencesClick: () -> Unit,
     onConnectedDataClick: () -> Unit,
-    onAccountClick: () -> Unit
+    onAccountClick: () -> Unit,
+    onReviewPreferencesClick: () -> Unit
 ) {
     // verticalScroll: la pantalla es más alta que el alto disponible, se desplaza (UI03)
     Column(
@@ -102,7 +105,7 @@ fun ProfileScreen(
         TitleRow(onSettingsClick)
         ProfileCard(uiState, onEditProfileClick)
         SnapshotCard(uiState)
-        PersonalisationCard(onPreferencesClick)
+        PersonalisationCard(onReviewPreferencesClick)
         AppListRow(
             icon = Icons.Outlined.GpsFixed,
             title = stringResource(R.string.profile_your_goals),
@@ -255,7 +258,8 @@ private fun ProfilePreview() {
                         dataSynced = true
                     ),
                     onSettingsClick = {}, onEditProfileClick = {}, onGoalsClick = {},
-                    onPreferencesClick = {}, onConnectedDataClick = {}, onAccountClick = {}
+                    onPreferencesClick = {}, onConnectedDataClick = {}, onAccountClick = {},
+                    onReviewPreferencesClick = {}
                 )
             }
         }

@@ -46,6 +46,8 @@ sealed class AppDestination(val route: String) {
 
     data object Goals : AppDestination("profile_goals")
 
+    data object VoiceSettings : AppDestination("voice_settings")
+
     data object NutritionPreferences : AppDestination("profile_nutrition")
 
     // Sub-pantallas de Progress: se abren desde el Dashboard (la pestaña) y Today's Overview desde Home
@@ -54,6 +56,8 @@ sealed class AppDestination(val route: String) {
     data object WorkoutProgress : AppDestination("progress_workout")
 
     data object NutritionProgress : AppDestination("progress_nutrition")
+
+    data object Settings : AppDestination("settings")
 
     data object HealthTrends : AppDestination("progress_health")
 
