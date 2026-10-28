@@ -57,6 +57,8 @@ sealed class AppDestination(val route: String) {
 
     data object NutritionProgress : AppDestination("progress_nutrition")
 
+    data object Settings : AppDestination("settings")
+
     data object HealthTrends : AppDestination("progress_health")
 
     data object WeeklyReview : AppDestination("progress_weekly_review")
