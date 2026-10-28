@@ -36,6 +36,7 @@ import com.example.voracoach.ui.screens.progress.HealthTrendsRoute
 import com.example.voracoach.ui.screens.progress.NutritionProgressRoute
 import com.example.voracoach.ui.screens.progress.ProgressDashboardRoute
 import com.example.voracoach.ui.screens.progress.TodayOverviewRoute
+import com.example.voracoach.ui.screens.progress.WeeklyReviewScreen
 import com.example.voracoach.ui.screens.progress.WorkoutProgressRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
@@ -62,7 +63,8 @@ fun AppNavHost(
     // Al sumar otra pantalla oscura (por ejemplo, estados de Coach), agregar su ruta acá.
     val darkBackgroundRoutes = setOf(
         AppDestination.PreWorkout.route,
-        AppDestination.ActiveWorkout.route
+        AppDestination.ActiveWorkout.route,
+        AppDestination.WeeklyReview.route
     )
     // Coach se excluye: cambia de fondo claro a oscuro sin cambiar de ruta, y lo decide su propia pantalla
     if (currentDestination?.route != AppDestination.Coach.route) {
@@ -249,9 +251,13 @@ fun AppNavHost(
                 HealthTrendsRoute(onBack = { navController.popBackStack() })
             }
 
-            // Provisoria: la revisión semanal se dibuja en el paso siguiente
             composable(AppDestination.WeeklyReview.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_progress_weekly_review))
+                WeeklyReviewScreen(
+                    onBack = { navController.popBackStack() },
+                    onDinnerIdeasClick = { navController.navigateToTab(BottomBarItem.Nutrition) },
+                    onNextWeekPlanClick = { navController.navigate(AppDestination.WeeklyPlan.route) },
+                    onAskVoraClick = { navController.navigate(AppDestination.Coach.route) }
+                )
             }
 
             composable(AppDestination.Profile.route) {
