@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.Search
@@ -72,16 +73,20 @@ fun Vora(){
           leadingIcon = Icons.Outlined.Mic,
           text = "Voice",
         )
-        PrimaryButton(
-          onClick = {},
-          leadingIcon = Icons.Outlined.Photo,
+
+        SecVoraButton(
           text = "Photo",
+          leadingIcon = Icons.Outlined.CameraAlt,
+          textColor = MaterialTheme.colorScheme.onPrimary,
+          backColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        PrimaryButton(
-          onClick = {},
-          leadingIcon = Icons.Outlined.Search,
+        SecVoraButton(
           text = "Search",
+          leadingIcon = Icons.Outlined.Search,
+          textColor = MaterialTheme.colorScheme.onPrimary,
+          backColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
       }
     }
   }
