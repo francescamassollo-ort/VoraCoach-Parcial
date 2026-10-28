@@ -1,6 +1,7 @@
 package com.example.voracoach.ui.components
 
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,8 +39,9 @@ import com.example.voracoach.ui.theme.VoraCoachTheme // ← cambialo si tu tema 
  * - [contentColor] (flecha, título y acciones) toma por defecto el color de contenido del
  *   contenedor padre (Scaffold, Surface, etc.), que es oscuro sobre fondo claro y blanco sobre
  *   un fondo verde oscuro.
- * - [backButtonContainerColor] (el círculo detrás de la flecha) es ese mismo color al 12 %,
- *   así que siempre contrasta con el fondo.
+ * - El círculo de la flecha también se adapta: sobre fondo claro es blanco con borde gris fino
+ *   ([backButtonContainerColor] y [backButtonBorderColor]); sobre fondo oscuro (cuando
+ *   [contentColor] es claro) es ese color al 12 % y sin borde, así siempre contrasta.
  * Si una pantalla necesita colores distintos, se pasan por parámetro.
  *
  * Ocupa todo el ancho y deja 8 dp de margen, de modo que el ícono de 24 dp queda a 20 dp del
@@ -49,7 +53,10 @@ fun ScreenHeader(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentColor: Color = LocalContentColor.current,
-    backButtonContainerColor: Color = contentColor.copy(alpha = 0.12f),
+    backButtonContainerColor: Color =
+        if (contentColor.luminance() > 0.5f) contentColor.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surface,
+    backButtonBorderColor: Color? =
+        if (contentColor.luminance() > 0.5f) null else MaterialTheme.colorScheme.outline,
     backContentDescription: String = "Volver",
     actions: @Composable RowScope.() -> Unit = {},
 ) {
@@ -60,12 +67,15 @@ fun ScreenHeader(
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(
+        // OutlinedIconButton dibuja el borde sobre el círculo de 40 dp (un Modifier.border
+        // afuera lo dibujaría alrededor del área táctil de 48 dp). Sin borde (null) queda liso.
+        OutlinedIconButton(
             onClick = onBackClick,
-            colors = IconButtonDefaults.iconButtonColors(
+            colors = IconButtonDefaults.outlinedIconButtonColors(
                 containerColor = backButtonContainerColor, // círculo detrás de la flecha
                 contentColor = contentColor,               // color de la flecha
             ),
+            border = backButtonBorderColor?.let { BorderStroke(1.dp, it) },
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,

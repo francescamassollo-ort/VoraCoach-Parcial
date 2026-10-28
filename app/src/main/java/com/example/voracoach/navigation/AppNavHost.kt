@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.voracoach.R
+import com.example.voracoach.ui.components.AppBottomBar
 import com.example.voracoach.ui.components.StatusBarIconsFor
 import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
@@ -30,6 +31,11 @@ import com.example.voracoach.ui.screens.workout.WeeklyPlanRoute
 import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
+import com.example.voracoach.ui.screens.profile.ProfileRoute
+import com.example.voracoach.ui.screens.profile.EditProfileRoute
+import com.example.voracoach.ui.screens.profile.GoalsRoute
+import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
+import com.example.voracoach.ui.screens.profile.VoiceSettingsRoute
 
 @Composable
 fun AppNavHost(
@@ -213,7 +219,34 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Profile.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_profile))
+                ProfileRoute(
+                    onSettingsClick = { /* Settings (pantalla 06) */ },
+                    onEditProfileClick = { navController.navigate(AppDestination.EditProfile.route) },
+                    onGoalsClick = { navController.navigate(AppDestination.Goals.route) },
+                    onPreferencesClick = { navController.navigate(AppDestination.NutritionPreferences.route) },
+                    onConnectedDataClick = { /* Settings (pantalla 06) */ },
+                    onAccountClick = { /* Settings (pantalla 06) */ },
+                    onReviewPreferencesClick = { navController.navigate(AppDestination.VoiceSettings.route) }
+                )
+            }
+
+            composable(AppDestination.EditProfile.route) {
+                EditProfileRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.Goals.route) {
+                GoalsRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.VoiceSettings.route){
+                VoiceSettingsRoute(
+                    onBack = { navController.popBackStack() }, // Se conecta a Settings cuando exista la pantalla 06
+                    onPrivacyClick = {}
+                )
+            }
+
+            composable(AppDestination.NutritionPreferences.route) {
+                NutritionPreferencesRoute(onBack = { navController.popBackStack() })
             }
 
             composable(AppDestination.Coach.route) {
@@ -226,5 +259,13 @@ fun AppNavHost(
 private fun NavHostController.goToHomeClearingAuth() {
     navigate(AppDestination.Home.route) {
         popUpTo(AppDestination.SignIn.route) { inclusive = true }// Al entrar a Home se borran Sign In y Sign Up del historial para que el botón atrás desde Home cierre la app en vez de volver al login
+    }
+}
+
+fun NavHostController.navigateToTab(item: BottomBarItem) {
+    navigate(item.destination.route) {
+        popUpTo(AppDestination.Home.route) { saveState = true }// - saveState / restoreState: cada pestaña recuerda dónde quedaste al volver a ella.
+        launchSingleTop = true // - launchSingleTop: tocar la pestaña en la que ya estás no crea otra copia.
+        restoreState = true
     }
 }
