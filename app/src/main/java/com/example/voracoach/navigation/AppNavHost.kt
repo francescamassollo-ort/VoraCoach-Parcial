@@ -211,9 +211,10 @@ fun AppNavHost(
                 arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
             ) {
                 WorkoutCompleteRoute(
-                    // Vuelve al catálogo sacando del historial detalle, Pre y Active:
-                    // así atrás desde el catálogo no reabre un entrenamiento ya terminado
-                    onDone = { navController.popBackStack(AppDestination.Workout.route, inclusive = false) }
+                    // Saca del historial detalle, Pre, Active y Complete, y vuelve a donde se abrió el
+                    // entrenamiento (catálogo, Home, Today's Overview o Weekly Plan). Así atrás no
+                    // reabre un entrenamiento ya terminado.
+                    onDone = { navController.popBackStack(AppDestination.WorkoutDetail.route, inclusive = true) }
                 )
             }
 
