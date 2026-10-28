@@ -32,6 +32,12 @@ import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 import com.example.voracoach.ui.screens.profile.ProfileRoute
+import com.example.voracoach.ui.screens.progress.HealthTrendsRoute
+import com.example.voracoach.ui.screens.progress.NutritionProgressRoute
+import com.example.voracoach.ui.screens.progress.ProgressDashboardRoute
+import com.example.voracoach.ui.screens.progress.TodayOverviewRoute
+import com.example.voracoach.ui.screens.progress.WeeklyReviewScreen
+import com.example.voracoach.ui.screens.progress.WorkoutProgressRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
 import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
@@ -58,7 +64,8 @@ fun AppNavHost(
     // Al sumar otra pantalla oscura (por ejemplo, estados de Coach), agregar su ruta acá.
     val darkBackgroundRoutes = setOf(
         AppDestination.PreWorkout.route,
-        AppDestination.ActiveWorkout.route
+        AppDestination.ActiveWorkout.route,
+        AppDestination.WeeklyReview.route
     )
     // Coach se excluye: cambia de fondo claro a oscuro sin cambiar de ruta, y lo decide su propia pantalla
     if (currentDestination?.route != AppDestination.Coach.route) {
@@ -112,7 +119,8 @@ fun AppNavHost(
                     onLogBreakfast = { navController.navigateToTab(BottomBarItem.Nutrition) },
                     onWorkoutClick = { workoutId ->
                         navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
-                    }
+                    },
+                    onTodayOverviewClick = { navController.navigate(AppDestination.TodayOverview.route) }
                 )
             }
 
@@ -215,7 +223,42 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Progress.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_progress))
+                ProgressDashboardRoute(
+                    onWorkoutClick = { navController.navigate(AppDestination.WorkoutProgress.route) },
+                    onNutritionClick = { navController.navigate(AppDestination.NutritionProgress.route) },
+                    onActivityClick = { navController.navigate(AppDestination.HealthTrends.route) },
+                    onWeeklyReviewClick = { navController.navigate(AppDestination.WeeklyReview.route) }
+                )
+            }
+
+            composable(AppDestination.TodayOverview.route) {
+                TodayOverviewRoute(
+                    onBack = { navController.popBackStack() },
+                    onWorkoutClick = { workoutId ->
+                        navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
+                    }
+                )
+            }
+
+            composable(AppDestination.WorkoutProgress.route) {
+                WorkoutProgressRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.NutritionProgress.route) {
+                NutritionProgressRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.HealthTrends.route) {
+                HealthTrendsRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.WeeklyReview.route) {
+                WeeklyReviewScreen(
+                    onBack = { navController.popBackStack() },
+                    onDinnerIdeasClick = { navController.navigateToTab(BottomBarItem.Nutrition) },
+                    onNextWeekPlanClick = { navController.navigate(AppDestination.WeeklyPlan.route) },
+                    onAskVoraClick = { navController.navigate(AppDestination.Coach.route) }
+                )
             }
 
             composable(AppDestination.Profile.route) {
