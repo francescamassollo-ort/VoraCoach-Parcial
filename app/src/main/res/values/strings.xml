@@ -382,4 +382,30 @@
     <string name="food_fruit">Fruit</string>
     <string name="priority_hit_protein">Hit protein targets</string>
     <string name="priority_eat_consistently">Eat more consistently</string>
+
+    <!-- Profile / 05 — Voice & AI Settings -->
+    <string name="voice_settings_subtitle">Choose how VORA communicates and coaches you.</string>
+    <string name="voice_settings_coaching_style">COACHING STYLE</string>
+    <string name="voice_settings_supportive">Supportive</string>
+    <string name="voice_settings_balanced">Balanced</string>
+    <string name="voice_settings_direct">Direct</string>
+    <string name="voice_settings_active_voice">ACTIVE VOICE</string>
+    <string name="voice_settings_voice_name">VORA Voice 01</string>
+    <string name="voice_settings_preview">Preview</string>
+    <string name="voice_settings_speaking">SPEAKING BEHAVIOUR</string>
+    <string name="voice_settings_speak_aloud">Speak responses aloud</string>
+    <string name="voice_settings_auto_play">Auto-play coaching</string>
+    <string name="voice_settings_interruptions">Allow interruptions</string>
+    <string name="voice_settings_interruptions_hint">Interrupt VORA anytime while it\'s speaking.</string>
+    <string name="voice_settings_response_style">RESPONSE STYLE</string>
+    <string name="voice_settings_concise">Concise</string>
+    <string name="voice_settings_concise_desc">Quick answers</string>
+    <string name="voice_settings_balanced_desc">Useful detail without overwhelming</string>
+    <string name="voice_settings_detailed">Detailed</string>
+    <string name="voice_settings_detailed_desc">More explanation and context</string>
+    <string name="voice_settings_voice_feedback">Voice feedback</string>
+    <string name="voice_settings_haptic_feedback">Haptic feedback</string>
+    <string name="voice_settings_control_title">Your control matters</string>
+    <string name="voice_settings_control_body">Manage microphone permissions and connected data from Settings.</string>
+    <string name="voice_settings_privacy_link">Privacy &amp; permissions</string>
 </resources>

@@ -35,6 +35,7 @@ import com.example.voracoach.ui.screens.profile.ProfileRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
 import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
+import com.example.voracoach.ui.screens.profile.VoiceSettingsRoute
 
 @Composable
 fun AppNavHost(
@@ -222,9 +223,10 @@ fun AppNavHost(
                     onSettingsClick = { /* Settings (pantalla 06) */ },
                     onEditProfileClick = { navController.navigate(AppDestination.EditProfile.route) },
                     onGoalsClick = { navController.navigate(AppDestination.Goals.route) },
-                    onPreferencesClick = { /* a definir */ },
+                    onPreferencesClick = { navController.navigate(AppDestination.NutritionPreferences.route) },
                     onConnectedDataClick = { /* Settings (pantalla 06) */ },
-                    onAccountClick = { /* Settings (pantalla 06) */ }
+                    onAccountClick = { /* Settings (pantalla 06) */ },
+                    onReviewPreferencesClick = { navController.navigate(AppDestination.VoiceSettings.route) }
                 )
             }
 
@@ -234,6 +236,13 @@ fun AppNavHost(
 
             composable(AppDestination.Goals.route) {
                 GoalsRoute(onBack = { navController.popBackStack() })
+            }
+
+            composable(AppDestination.VoiceSettings.route){
+                VoiceSettingsRoute(
+                    onBack = { navController.popBackStack() }, // Se conecta a Settings cuando exista la pantalla 06
+                    onPrivacyClick = {}
+                )
             }
 
             composable(AppDestination.NutritionPreferences.route) {
