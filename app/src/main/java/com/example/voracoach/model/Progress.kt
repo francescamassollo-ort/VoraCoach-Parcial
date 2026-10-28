@@ -18,3 +18,39 @@ data class ProgressSummary(
     val avgDistanceKm: Double,
     val goalCompletionPercent: Int
 )
+
+// --- Progress / 03 — Workout progress ---
+
+// gainKg = 0 significa que el peso se mantuvo ("Stable")
+data class ExerciseProgress(
+    val name: String,
+    val weightKg: Double,
+    val reps: Int,
+    val gainKg: Double
+)
+
+data class WorkoutProgressData(
+    val sessions: Int,
+    val volumeKg: Int,
+    val avgMinutes: Int,
+    val volumeChangePercent: Int,
+    // Volumen de cada barra del gráfico: días (semana), semanas (mes) o meses (3 meses)
+    val volumeBars: List<Int>,
+    val personalBest: ExerciseProgress,
+    val exercises: List<ExerciseProgress>
+)
+
+// --- Progress / 04 — Nutrition progress ---
+
+enum class Macro { CALORIES, PROTEIN, CARBS, FAT }
+
+data class NutritionProgressData(
+    val avgCalories: Int,
+    val avgProteinGrams: Int,
+    val daysOnTarget: Int,
+    val totalDays: Int,
+    val frequentLunch: String,
+    val topProteinSource: String,
+    val avgBreakfastKcal: Int,
+    val avgDinnerKcal: Int
+)

@@ -32,7 +32,9 @@ import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 import com.example.voracoach.ui.screens.profile.ProfileRoute
+import com.example.voracoach.ui.screens.progress.NutritionProgressRoute
 import com.example.voracoach.ui.screens.progress.ProgressDashboardRoute
+import com.example.voracoach.ui.screens.progress.WorkoutProgressRoute
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
 import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
@@ -229,11 +231,11 @@ fun AppNavHost(
             }
 
             composable(AppDestination.WorkoutProgress.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_progress_workout))
+                WorkoutProgressRoute(onBack = { navController.popBackStack() })
             }
 
             composable(AppDestination.NutritionProgress.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_progress_nutrition))
+                NutritionProgressRoute(onBack = { navController.popBackStack() })
             }
 
             composable(AppDestination.HealthTrends.route) {

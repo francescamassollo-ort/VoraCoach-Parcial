@@ -421,4 +421,62 @@
     <string name="progress_active_goal">ACTIVE GOAL</string>
     <string name="progress_goal_complete">%1$d%% complete</string>
     <string name="progress_goal_hint">You\'re building consistency across workouts and nutrition.</string>
+    <string name="progress_more_options">More options</string>
+    <string-array name="progress_weekdays_short">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="progress_weeks_short">
+        <item>W1</item>
+        <item>W2</item>
+        <item>W3</item>
+        <item>W4</item>
+    </string-array>
+    <string-array name="progress_months_short">
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+    </string-array>
+    <string name="progress_sessions">SESSIONS</string>
+    <string name="progress_volume">VOLUME</string>
+    <string name="progress_avg_time">AVG TIME</string>
+    <string name="progress_kg">%1$,d kg</string>
+    <string name="progress_minutes">%1$d min</string>
+    <string name="progress_training_volume">Training Volume</string>
+    <string name="progress_training_volume_sub">KILOGRAMS LIFTED PER SESSION</string>
+    <string name="progress_vs_last_period">+%1$d%% vs last period</string>
+    <string name="progress_personal_best">PERSONAL BEST</string>
+    <string name="progress_personal_best_detail">%1$.0f kg × %2$d reps (+%3$.0f kg vs prev best)</string>
+    <string name="progress_workout_insight">\"Your training volume increased without adding workout duration. That\'s efficiency improving.\"</string>
+    <string name="progress_exercise_progress">EXERCISE PROGRESS</string>
+    <string name="progress_weight_reps">%1$.0f kg × %2$d reps</string>
+    <string name="progress_gain_kg">↑ %1$.1f kg</string>
+    <string name="progress_stable">→ Stable</string>
+    <string name="progress_avg_calories">AVG CALORIES</string>
+    <string name="progress_avg_protein">AVG PROTEIN</string>
+    <string name="progress_target_hit">TARGET HIT</string>
+    <string name="progress_kcal">%1$,d kcal</string>
+    <string name="progress_days_of">%1$d / %2$d days</string>
+    <string name="progress_macro_calories">Calories</string>
+    <string name="progress_macro_protein">Protein</string>
+    <string name="progress_macro_carbs">Carbs</string>
+    <string name="progress_macro_fat">Fat</string>
+    <string name="progress_target_calories">DAILY AVG CALORIE TARGET (%1$,d kcal)</string>
+    <string name="progress_target_protein">DAILY AVG PROTEIN TARGET (%1$dg)</string>
+    <string name="progress_target_carbs">DAILY AVG CARBS TARGET (%1$dg)</string>
+    <string name="progress_target_fat">DAILY AVG FAT TARGET (%1$dg)</string>
+    <string name="progress_hit">HIT</string>
+    <string name="progress_miss">MISS</string>
+    <string name="progress_nutrition_analysis">Nutrition Analysis</string>
+    <string name="progress_nutrition_analysis_text">\"Your protein intake has improved this week, especially on workout days. Keeping this consistent will better support your strength goal.\"</string>
+    <string name="progress_food_habits">FOOD HABITS &amp; PATTERNS</string>
+    <string name="progress_frequent_lunch">Frequent lunch</string>
+    <string name="progress_top_protein">Top protein source</string>
+    <string name="progress_avg_breakfast">Avg breakfast</string>
+    <string name="progress_avg_dinner">Avg dinner</string>
 </resources>
