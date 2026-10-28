@@ -5,7 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.voracoach.R
 import com.example.voracoach.model.CoachingStyle
+import com.example.voracoach.model.DietType
+import com.example.voracoach.model.FavoriteFood
 import com.example.voracoach.model.FitnessGoal
+import com.example.voracoach.model.NutritionPriority
 import com.example.voracoach.model.TrainingFrequency
 import com.example.voracoach.model.WorkoutType
 
@@ -57,6 +60,33 @@ fun CoachingStyle.descriptionRes(): Int = when (this) {
     CoachingStyle.SUPPORTIVE -> R.string.coaching_supportive_desc
     CoachingStyle.BALANCED -> R.string.coaching_balanced_desc
     CoachingStyle.DIRECT -> R.string.coaching_direct_desc
+}
+
+@StringRes
+fun DietType.labelRes(): Int = when (this) {
+    DietType.EVERYTHING -> R.string.diet_everything
+    DietType.VEGETARIAN -> R.string.diet_vegetarian
+    DietType.VEGAN -> R.string.diet_vegan
+    DietType.PESCATARIAN -> R.string.diet_pescatarian
+    DietType.OTHER -> R.string.diet_other
+}
+
+@StringRes
+fun FavoriteFood.labelRes(): Int = when (this) {
+    FavoriteFood.CHICKEN -> R.string.food_chicken
+    FavoriteFood.EGGS -> R.string.food_eggs
+    FavoriteFood.FISH -> R.string.food_fish
+    FavoriteFood.RICE -> R.string.food_rice
+    FavoriteFood.PASTA -> R.string.food_pasta
+    FavoriteFood.GREEK_YOGHURT -> R.string.food_greek_yoghurt
+    FavoriteFood.VEGETABLES -> R.string.food_vegetables
+    FavoriteFood.FRUIT -> R.string.food_fruit
+}
+
+@StringRes
+fun NutritionPriority.labelRes(): Int = when (this) {
+    NutritionPriority.HIT_PROTEIN_TARGETS -> R.string.priority_hit_protein
+    NutritionPriority.EAT_MORE_CONSISTENTLY -> R.string.priority_eat_consistently
 }
 
 // Resumen de objetivos en una línea: "Build strength & improve fitness"

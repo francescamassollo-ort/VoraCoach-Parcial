@@ -23,6 +23,8 @@ private val LightColorScheme = lightColorScheme(
     outlineVariant = BorderGray,
     inverseSurface = DarkGreen,
     inverseOnSurface = SurfaceWhite,
+    error = ErrorRed,
+    onError = SurfaceWhite,
 
 
     /* Other default colors to override
