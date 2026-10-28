@@ -279,4 +279,78 @@
     <string name="coach_input_hint">Ask VORA anything…</string>
     <string name="coach_attach">Attach</string>
     <string name="coach_send">Send</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_open_settings">Settings</string>
+    <string name="profile_avatar_description">Profile photo</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="profile_snapshot">MY SNAPSHOT</string>
+    <string name="profile_goal">Goal</string>
+    <string name="profile_experience">Experience</string>
+    <string name="profile_training">Training</string>
+    <string name="profile_preferred_workout">Preferred Workout</string>
+    <string name="profile_days_per_week">%1$d days/week</string>
+    <string name="profile_personalisation">VORA Personalisation</string>
+    <string name="profile_knows_goals">VORA knows your goals</string>
+    <string name="profile_personalisation_hint">Your coaching adapts to your training, nutrition and activity preferences.</string>
+    <string name="profile_review_preferences">Review preferences</string>
+    <string name="profile_your_goals">Your Goals</string>
+    <string name="profile_your_preferences">Your Preferences</string>
+    <string name="profile_preferences_sub">Training, nutrition and coaching</string>
+    <string name="profile_connected_data">Connected Data</string>
+    <string name="profile_connected_data_sub">Health &amp; activity data</string>
+    <string name="profile_synced">Synced</string>
+    <string name="profile_account">Account</string>
+    <string name="profile_account_sub">Subscription, notifications &amp; privacy</string>
+
+    <!-- Profile: Edit Profile -->
+    <string name="edit_profile_title">Edit profile</string>
+    <string name="edit_profile_change_photo">Change photo</string>
+    <string name="edit_profile_first_name">First name</string>
+    <string name="edit_profile_last_name">Last name</string>
+    <string name="edit_profile_birth_date">Date of birth</string>
+    <string name="edit_profile_height">Height</string>
+    <string name="edit_profile_weight">Weight</string>
+    <string name="edit_profile_gender">Gender</string>
+    <string name="edit_profile_info">Used to personalise your recommendations.</string>
+    <string name="edit_profile_save">Save changes</string>
+    <string name="edit_profile_footer">Your information is used to personalise your VORA experience.</string>
+    <string name="unit_cm">cm</string>
+    <string name="unit_kg">kg</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_non_binary">Non-binary</string>
+    <string name="gender_prefer_not_to_say">Prefer not to say</string>
+
+    <!-- Profile: Goals & Preferences -->
+    <string name="goals_title">Your goals</string>
+    <string name="goals_intro">Tell VORA what you\'re working towards. Your coaching adapts around this.</string>
+    <string name="goals_section_primary">Primary goal — what\'s your main goal?</string>
+    <string name="goals_section_frequency">Training frequency</string>
+    <string name="goals_section_workout">Workout preference</string>
+    <string name="goals_section_coaching">Coaching style — how should VORA coach you?</string>
+    <string name="goals_save">Save preferences</string>
+    <string name="goal_build_strength">Build strength</string>
+    <string name="goal_build_strength_desc">Focus on weight training &amp; mechanical load</string>
+    <string name="goal_improve_fitness">Improve fitness</string>
+    <string name="goal_improve_fitness_desc">Condition cardiovascular &amp; energy systems</string>
+    <string name="goal_lose_body_fat">Lose body fat</string>
+    <string name="goal_build_healthy_habits">Build healthy habits</string>
+    <string name="frequency_3_days">3 days</string>
+    <string name="frequency_4_days">4 days</string>
+    <string name="frequency_5_days">5 days</string>
+    <string name="frequency_6_plus_days">6+ days</string>
+    <string name="workout_strength">Strength</string>
+    <string name="workout_cardio">Cardio</string>
+    <string name="workout_hiit">HIIT</string>
+    <string name="workout_mobility">Mobility</string>
+    <string name="workout_mixed">Mixed</string>
+    <string name="coaching_supportive">Supportive</string>
+    <string name="coaching_supportive_desc">Warm encouragement at every step</string>
+    <string name="coaching_balanced">Balanced</string>
+    <string name="coaching_balanced_desc">Practical guidance with gentle motivation</string>
+    <string name="coaching_direct">Direct</string>
+    <string name="coaching_direct_desc">Straight to the point, no fluff</string>
+    <string name="profile_workout_value">%1$s training</string>
 </resources>
