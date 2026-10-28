@@ -279,4 +279,47 @@
     <string name="coach_input_hint">Ask VORA anything…</string>
     <string name="coach_attach">Attach</string>
     <string name="coach_send">Send</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_open_settings">Settings</string>
+    <string name="profile_avatar_description">Profile photo</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="profile_snapshot">MY SNAPSHOT</string>
+    <string name="profile_goal">Goal</string>
+    <string name="profile_experience">Experience</string>
+    <string name="profile_training">Training</string>
+    <string name="profile_preferred_workout">Preferred Workout</string>
+    <string name="profile_days_per_week">%1$d days/week</string>
+    <string name="profile_personalisation">VORA Personalisation</string>
+    <string name="profile_knows_goals">VORA knows your goals</string>
+    <string name="profile_personalisation_hint">Your coaching adapts to your training, nutrition and activity preferences.</string>
+    <string name="profile_review_preferences">Review preferences</string>
+    <string name="profile_your_goals">Your Goals</string>
+    <string name="profile_your_preferences">Your Preferences</string>
+    <string name="profile_preferences_sub">Training, nutrition and coaching</string>
+    <string name="profile_connected_data">Connected Data</string>
+    <string name="profile_connected_data_sub">Health &amp; activity data</string>
+    <string name="profile_synced">Synced</string>
+    <string name="profile_account">Account</string>
+    <string name="profile_account_sub">Subscription, notifications &amp; privacy</string>
+
+    <!-- Profile: Edit Profile -->
+    <string name="edit_profile_title">Edit profile</string>
+    <string name="edit_profile_change_photo">Change photo</string>
+    <string name="edit_profile_first_name">First name</string>
+    <string name="edit_profile_last_name">Last name</string>
+    <string name="edit_profile_birth_date">Date of birth</string>
+    <string name="edit_profile_height">Height</string>
+    <string name="edit_profile_weight">Weight</string>
+    <string name="edit_profile_gender">Gender</string>
+    <string name="edit_profile_info">Used to personalise your recommendations.</string>
+    <string name="edit_profile_save">Save changes</string>
+    <string name="edit_profile_footer">Your information is used to personalise your VORA experience.</string>
+    <string name="unit_cm">cm</string>
+    <string name="unit_kg">kg</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_non_binary">Non-binary</string>
+    <string name="gender_prefer_not_to_say">Prefer not to say</string>
 </resources>

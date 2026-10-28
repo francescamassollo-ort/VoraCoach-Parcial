@@ -31,6 +31,8 @@ import com.example.voracoach.ui.screens.workout.WeeklyPlanRoute
 import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
 import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
+import com.example.voracoach.ui.screens.profile.ProfileRoute
+import com.example.voracoach.ui.screens.profile.EditProfileRoute
 
 @Composable
 fun AppNavHost(
@@ -214,7 +216,18 @@ fun AppNavHost(
             }
 
             composable(AppDestination.Profile.route) {
-                PlaceholderScreen(title = stringResource(R.string.screen_profile))
+                ProfileRoute(
+                    onSettingsClick = { /* Settings (pantalla 06) */ },
+                    onEditProfileClick = { navController.navigate(AppDestination.EditProfile.route) },
+                    onGoalsClick = { /* Goals & Preferences (pantalla 03) */ },
+                    onPreferencesClick = { /* a definir */ },
+                    onConnectedDataClick = { /* Settings (pantalla 06) */ },
+                    onAccountClick = { /* Settings (pantalla 06) */ }
+                )
+            }
+
+            composable(AppDestination.EditProfile.route) {
+                EditProfileRoute(onBack = { navController.popBackStack() })
             }
 
             composable(AppDestination.Coach.route) {
