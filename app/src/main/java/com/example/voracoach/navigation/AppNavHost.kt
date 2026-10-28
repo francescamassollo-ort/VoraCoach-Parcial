@@ -266,11 +266,12 @@ fun AppNavHost(
 
             composable(AppDestination.Profile.route) {
                 ProfileRoute(
-                    onSettingsClick = { /* Settings (pantalla 06) */ },
+                    onSettingsClick = { navController.navigate(AppDestination.Settings.route) },
                     onEditProfileClick = { navController.navigate(AppDestination.EditProfile.route) },
                     onGoalsClick = { navController.navigate(AppDestination.Goals.route) },
                     onPreferencesClick = { navController.navigate(AppDestination.NutritionPreferences.route) },
-                    onConnectedDataClick = { /* Settings (pantalla 06) */ },
+                    // Settings tiene la sección "Connected data" (Health & Activity)
+                    onConnectedDataClick = { navController.navigate(AppDestination.Settings.route) },
                     onAccountClick = { navController.navigate(AppDestination.Settings.route) },
                     onReviewPreferencesClick = { navController.navigate(AppDestination.VoiceSettings.route) }
                 )
@@ -286,8 +287,9 @@ fun AppNavHost(
 
             composable(AppDestination.VoiceSettings.route){
                 VoiceSettingsRoute(
-                    onBack = { navController.popBackStack() }, // Se conecta a Settings cuando exista la pantalla 06
-                    onPrivacyClick = {}
+                    onBack = { navController.popBackStack() },
+                    // "Privacy & permissions" abre Settings, que tiene la sección de privacidad
+                    onPrivacyClick = { navController.navigate(AppDestination.Settings.route) }
                 )
             }
 

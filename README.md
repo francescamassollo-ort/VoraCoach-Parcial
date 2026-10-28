@@ -12,7 +12,7 @@ Desarrollo de Aplicaciones Móviles — ORT 2026.
 - Nahuel Ezequiel Di Paolo
 
 ## Video de demostración
-🎬 [Ver video](PEGAR_ENLACE_AL_VIDEO)
+🎬 [Ver video](https://youtu.be/GmS6xGp9-aU)
 
 ## Cómo ejecutar desde cero
 
@@ -97,13 +97,15 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 - La app arranca en **Sign In**. Al entrar se borra el acceso del historial: el botón atrás desde Home cierra la app.
 - **Barra inferior** con 5 pestañas: Home, Workout, Nutrition, Progress y Profile. Cambiar de pestaña no apila pantallas: el botón atrás desde cualquiera vuelve a Home.
 - La barra solo se muestra en las pestañas. Sign In, Sign Up, Notifications, Coach y las sub-pantallas (detalle, agregar, etc.) ocupan la pantalla completa.
-- Las rutas que todavía no tienen pantalla real muestran una pantalla provisoria, para que todo el recorrido sea navegable.
 
 ### Decisiones de navegación (el Figma no define estos destinos)
 Se eligieron según el contenido de cada pantalla:
 - **Progress / 01 — Today's Overview:** se abre desde "View details" en la sección "Today's Overview" de Home. Tiene botón atrás porque no es una pestaña.
 - **Progress / 02 — Dashboard:** "View" de Workout, Nutrition y Activity abre Workout Progress, Nutrition Progress y Health Trends; "See weekly review" abre Weekly Review.
 - **Progress / 06 — Weekly Review:** "Get dinner ideas" lleva a la pestaña Nutrition, "View next week's plan" a Weekly Plan, "Ask VORA" a Coach y "Done" vuelve al Dashboard.
+- **Profile / 01 — Dashboard:** "Your Goals" abre Goals & Preferences; "Your Preferences" abre Nutrition Preferences; "Review preferences" (tarjeta VORA Personalisation) abre Voice & AI Settings; el engranaje, "Account" y "Connected Data" abren Settings.
+- **Profile / 05 — Voice & AI Settings:** "Privacy & permissions" abre Settings.
+- **Profile / 03 — Goals:** "Coaching style" muestra las 3 opciones de Voice & AI (Supportive, Balanced, Direct), porque el mockup muestra solo la seleccionada.
 - Las sub-pantallas de Progress se muestran sin barra inferior, como las de Workout.
 - El botón "•••" de las sub-pantallas de Progress no tiene menú en el Figma: muestra un aviso de función de demostración.
 
@@ -175,12 +177,12 @@ Una pantalla con 6 estados simulados.
 ### Profile
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Profile / 01 — Dashboard | `profile` | 🚧 Provisoria |
-| Profile / 02 — Edit Profile | a definir | ⏳ Pendiente |
-| Profile / 03 — Goals & Preferences | a definir | ⏳ Pendiente |
-| Profile / 04 — Nutrition Preferences | a definir | ⏳ Pendiente |
-| Profile / 05 — Voice & AI Settings | a definir | ⏳ Pendiente |
-| Profile / 06 — Settings | a definir | ⏳ Pendiente |
+| Profile / 01 — Dashboard | `profile` | 🎭 Demostración (perfil de ejemplo; refleja lo editado en 02 y 03) |
+| Profile / 02 — Edit Profile | `profile_edit` | 🎭 Demostración (los cambios duran mientras la app está abierta) |
+| Profile / 03 — Goals & Preferences | `profile_goals` | 🎭 Demostración (los objetivos se ven también en Progress) |
+| Profile / 04 — Nutrition Preferences | `profile_nutrition` | 🎭 Demostración |
+| Profile / 05 — Voice & AI Settings | `voice_settings` | 🎭 Demostración (no reproduce audio ni pide permisos) |
+| Profile / 06 — Settings | `settings` | 🎭 Demostración ("Log out" vuelve a Sign In vaciando el historial) |
 
 ### Funciones simuladas del asistente
 El asistente no usa reconocimiento de voz, IA ni audio reales, y nunca pide permiso de micrófono ni de cámara:
@@ -209,16 +211,16 @@ El asistente no usa reconocimiento de voz, IA ni audio reales, y nunca pide perm
 
 ### No implementadas
 - **Registro de comidas** (carga manual, validación, listado por fecha, eliminación y total diario, con persistencia en Room) y las pantallas Nutrition 02 a 08.
+- **Persistencia del perfil:** Edit Profile, Goals y las preferencias se guardan en memoria; se pierden al cerrar la app.
+- **Sesión recordada:** cada vez que se abre la app pide Sign In.
 - **Firebase:** el acceso es de demostración y los datos privados no se sincronizan con la nube.
 
 ## Comparaciones Figma vs. app
-| Pantalla | Figma | App |
-|---|---|---|
-| Home / 01 — Dashboard | ![Figma](docs/comparaciones/home-figma.png) | ![App](docs/comparaciones/home-app.png) |
-| Workout / 03 — Workout Details | ![Figma](docs/comparaciones/workout-detail-figma.png) | ![App](docs/comparaciones/workout-detail-app.png) |
-| Voice / 04 — Speaking | ![Figma](docs/comparaciones/coach-speaking-figma.png) | ![App](docs/comparaciones/coach-speaking-app.png) |
-| Progress / 02 — Dashboard | ![Figma](docs/comparaciones/progress-figma.png) | ![App](docs/comparaciones/progress-app.png) |
-| Progress / 06 — Weekly Review | ![Figma](docs/comparaciones/weekly-review-figma.png) | ![App](docs/comparaciones/weekly-review-app.png) |
+| Pantalla | Figma | App | Diferencias |
+|---|---|---|---|
+| Home / 01 — Dashboard | ![Figma](docs/comparaciones/home-figma.png) | ![App](docs/comparaciones/home-app.png) | Iniciales en lugar de foto (el perfil de demostración no tiene foto). El saludo cambia según la hora real. La tarjeta del entrenamiento recomendado (real, de Room) queda más abajo, con scroll. |
+| Workout / 03 — Workout Details | ![Figma](docs/comparaciones/workout-detail-figma.png) | ![App](docs/comparaciones/workout-detail-app.png) | Nombre, ejercicios y nota de VORA son los reales que devuelve la API, no el ejemplo del Figma. Cada ejercicio suma su instrucción breve. |
+| Workout / 05 — Active Workout | ![Figma](docs/comparaciones/active-workout-figma.png) | ![App](docs/comparaciones/active-workout-app.png) | Ejercicios y consejo del coach reales de la API. El peso se ajusta con − / + (demostración). El ícono ⓘ abre la guía del ejercicio. |
 
 ## Uso de IA
 Usamos Claude (Anthropic) como asistente durante todo el desarrollo. Todo lo que propuso
@@ -234,10 +236,11 @@ se revisó, se probó en el emulador y se adaptó antes de subirlo. El manejo de
    - separación Route/Screen: la Screen no tiene estado y se puede previsualizar;
    - un repositorio como única fuente de datos para los ViewModels.
 2. **Decisiones de arquitectura.** Le consultamos cuándo conviene cada forma de guardar datos, por ejemplo:
-   - Room para registros (catálogo de entrenamientos, perfil);
-   - DataStore para preferencias simples (sesión iniciada);
-   - estado en memoria para lo que solo dura la sesión (conversación del Coach).
-   Las decisiones las tomamos en equipo; en algunos casos elegimos lo más simple por el tiempo de entrega.
+   - Room para registros y caché de datos de la API (catálogo de entrenamientos);
+   - DataStore para preferencias simples (por ejemplo, recordar la sesión iniciada);
+   - estado en memoria para lo que solo dura la sesión (conversación del Coach, perfil de demostración).
+   Las decisiones las tomamos en equipo; en algunos casos elegimos lo más simple por el tiempo de entrega
+   (por ejemplo, el perfil quedó en memoria en lugar de Room).
 3. **Desarrollo por pasos chicos.** Cada pantalla o módulo se pidió por separado, con un plan
    previo de qué archivos cambiaban. Después de cada paso:
    - compilamos y probamos en el emulador (rotación, botón atrás, sin servidor);
