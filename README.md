@@ -51,6 +51,19 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 - La barra solo se muestra en las pestañas. Sign In, Sign Up, Notifications, Coach y las sub-pantallas (detalle, agregar, etc.) ocupan la pantalla completa.
 - Las rutas que todavía no tienen pantalla real muestran una pantalla provisoria, para que todo el recorrido sea navegable.
 
+### Decisiones de navegación (el Figma no define estos destinos)
+Se eligieron según el contenido de cada pantalla:
+- **Progress / 01 — Today's Overview:** se abre desde "View details" en la sección "Today's Overview" de Home. Tiene botón atrás porque no es una pestaña.
+- **Progress / 02 — Dashboard:** "View" de Workout, Nutrition y Activity abre Workout Progress, Nutrition Progress y Health Trends; "See weekly review" abre Weekly Review.
+- **Progress / 06 — Weekly Review:** "Get dinner ideas" lleva a la pestaña Nutrition, "View next week's plan" a Weekly Plan, "Ask VORA" a Coach y "Done" vuelve al Dashboard.
+- Las sub-pantallas de Progress se muestran sin barra inferior, como las de Workout.
+- El botón "•••" de las sub-pantallas de Progress no tiene menú en el Figma: muestra un aviso de función de demostración.
+
+### Datos compartidos entre pantallas
+- El nombre del perfil se ve en Home y los objetivos en Progress (Dashboard y Today's Overview). Los dos se leen de `ProfileRepository`: si se editan en Profile, se actualizan solos.
+- El entrenamiento recomendado de Home y de Today's Overview es el primero del catálogo guardado en Room.
+- El período elegido (Week, Month, 3 Months) y el macro de Nutrition Progress se guardan en el ViewModel, así que sobreviven a la rotación.
+
 ## Inventario de pantallas
 🎭 Demostración: funciona sin servicio real · 🚧 Provisoria: ruta creada, pantalla en construcción · ⏳ Pendiente: sin ruta todavía · ✅ Funcional: con Retrofit o Room
 
@@ -63,7 +76,7 @@ Paquete base: `app/src/main/java/com/example/voracoach/`
 ### Home
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Home / 01 — Dashboard | `home` | 🎭 Demostración (perfil y métricas de ejemplo; entrenamiento recomendado real desde Room) |
+| Home / 01 — Dashboard | `home` | 🎭 Demostración (métricas de ejemplo; nombre del perfil; entrenamiento recomendado real desde Room) |
 | Home / 02 — Notifications | `notifications` | 🎭 Demostración (notificaciones de ejemplo; "Mark all as read" funcional) |
 
 ### Asistente VORA
@@ -104,12 +117,12 @@ Una pantalla con 6 estados simulados.
 ### Progress
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Progress / 01 — Today's Overview | a definir | ⏳ Pendiente |
-| Progress / 02 — Dashboard | `progress` | 🚧 Provisoria |
-| Progress / 03 — Workout Progress | a definir | ⏳ Pendiente |
-| Progress / 04 — Nutrition Progress | a definir | ⏳ Pendiente |
-| Progress / 05 — Health Trends | a definir | ⏳ Pendiente |
-| Progress / 06 — Weekly Review | a definir | ⏳ Pendiente |
+| Progress / 01 — Today's Overview | `progress_today` | 🎭 Demostración (métricas del día de ejemplo; entrenamiento real desde Room; objetivo y meta semanal del perfil) |
+| Progress / 02 — Dashboard | `progress` | 🎭 Demostración (métricas de ejemplo por período; "Active goal" del perfil) |
+| Progress / 03 — Workout Progress | `progress_workout` | 🎭 Demostración (volumen y ejercicios de ejemplo por período) |
+| Progress / 04 — Nutrition Progress | `progress_nutrition` | 🎭 Demostración (objetivos por macro y hábitos de ejemplo) |
+| Progress / 05 — Health Trends | `progress_health` | 🎭 Demostración (pasos y señales de hábito de ejemplo) |
+| Progress / 06 — Weekly Review | `progress_weekly_review` | 🎭 Demostración (revisión de ejemplo; accesos reales a Nutrition, Weekly Plan y Coach) |
 
 ### Profile
 | Pantalla (Figma) | Ruta | Estado |
