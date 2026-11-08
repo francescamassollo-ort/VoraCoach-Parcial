@@ -3,6 +3,7 @@ package com.example.voracoach.di
 import android.content.Context
 import androidx.room.Room
 import com.example.voracoach.data.local.AppDatabase
+import com.example.voracoach.data.local.MealDao
 import com.example.voracoach.data.local.WorkoutDao
 import dagger.Module
 import dagger.Provides
@@ -23,12 +24,12 @@ object DatabaseModule {
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "vora.db")
             // Si cambia la estructura de la base (se sube la version) y no hay una migración escrita, Room borra y recrea las tablas en vez de cerrar la app con un error.
-            // Durante el desarrollo es lo práctico, en una app publicada se escriben migraciones para no perder los datos de los usuarios.
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
 
     @Provides
     fun provideWorkoutDao(database: AppDatabase): WorkoutDao = database.workoutDao()
 
-    // Nutrition: agregar acá el @Provides de MealDao, igual al de WorkoutDao.
+    @Provides
+    fun provideMealDao(database: AppDatabase): MealDao = database.mealDao()
 }

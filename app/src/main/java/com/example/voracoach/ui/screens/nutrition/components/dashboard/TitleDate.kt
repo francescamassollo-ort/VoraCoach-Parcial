@@ -12,13 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.voracoach.ui.components.CircleIconButton
 import com.example.voracoach.ui.components.CircleIconButtonStyle
 
 @Composable
-fun TitleDate(){
+fun TitleDate(
+  //titleOne: String = "titulo uno",
+  //titleTwo: String = "titulo dos",
+  //item: Composable
+){
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -45,9 +48,19 @@ fun TitleDate(){
     )
   }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
+/*
+@Preview(showBackground = true, showSystemUi = false)
 @Composable
 fun PreviewTitleDate(){
-  TitleDate()
+  VoraCoachTheme {
+
+    TitleDate(
+      titleOne = "titleOne",
+      titleTwo = "titleTwo",
+
+    )
+
+
+  }
 }
+*/
