@@ -265,6 +265,91 @@ fun Dashboard(
                 )
 
                 // 3. Interactive Prompt Box ("Tell Vora what you ate")
+
+
+                // Section Heading ("Today's Meals")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    AppSectionLabel(text = stringResource(R.string.nutrition_todays_meals))
+                    TextButton(onClick = onNavigateToTodayMeals) {
+                        Text(
+                            text = stringResource(R.string.nutrition_view_history),
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
+
+                // 4. Zero-State Meal Category Slots
+                val slots = listOf(
+                    SlotInfo(MealType.BREAKFAST, "Breakfast", Icons.Outlined.FreeBreakfast),
+                    SlotInfo(MealType.LUNCH, "Lunch", Icons.Outlined.LunchDining),
+                    SlotInfo(MealType.AFTERNOON_SNACK, "Snack", Icons.Outlined.Fastfood),
+                    SlotInfo(MealType.DINNER, "Dinner", Icons.Outlined.DinnerDining),
+                )
+
+                slots.forEach { slot ->
+                    val categoryMeals = meals.filter { it.type == slot.type }
+                    if (categoryMeals.isNotEmpty()) {
+                        categoryMeals.forEach { meal ->
+                            AppListRow(
+                                icon = slot.icon,
+                                title = slot.title,
+                                subtitle = meal.name,
+                                onClick = onNavigateToTodayMeals,
+                                trailing = {
+                                    Text(
+                                        text = "${meal.calories} kcal",
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    )
+                                },
+                            )
+                        }
+                    } else {
+                        // Empty slot placeholder with "+ Add" button
+                        AppCard(modifier = Modifier.fillMaxWidth()) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = slot.title,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        text = stringResource(R.string.nutrition_not_logged),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = TextMuted,
+                                    )
+                                }
+                                Spacer(Modifier.width(12.dp))
+                                Button(
+                                    onClick = onNavigateToAddFood,
+                                    shape = CircleShape,
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = DarkGreen,
+                                        contentColor = SurfaceWhite,
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.nutrition_add_meal),
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
+
                 AppCard(
                     modifier = Modifier.fillMaxWidth(),
                     style = AppCardStyle.Dark,
@@ -358,89 +443,6 @@ fun Dashboard(
                         }
                     }
                 }
-
-                // Section Heading ("Today's Meals")
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    AppSectionLabel(text = stringResource(R.string.nutrition_todays_meals))
-                    TextButton(onClick = onNavigateToTodayMeals) {
-                        Text(
-                            text = stringResource(R.string.nutrition_view_history),
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                }
-
-                // 4. Zero-State Meal Category Slots
-                val slots = listOf(
-                    SlotInfo(MealType.BREAKFAST, "Breakfast", Icons.Outlined.FreeBreakfast),
-                    SlotInfo(MealType.LUNCH, "Lunch", Icons.Outlined.LunchDining),
-                    SlotInfo(MealType.AFTERNOON_SNACK, "Snack", Icons.Outlined.Fastfood),
-                    SlotInfo(MealType.DINNER, "Dinner", Icons.Outlined.DinnerDining),
-                )
-
-                slots.forEach { slot ->
-                    val categoryMeals = meals.filter { it.type == slot.type }
-                    if (categoryMeals.isNotEmpty()) {
-                        categoryMeals.forEach { meal ->
-                            AppListRow(
-                                icon = slot.icon,
-                                title = slot.title,
-                                subtitle = meal.name,
-                                onClick = onNavigateToTodayMeals,
-                                trailing = {
-                                    Text(
-                                        text = "${meal.calories} kcal",
-                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                    )
-                                },
-                            )
-                        }
-                    } else {
-                        // Empty slot placeholder with "+ Add" button
-                        AppCard(modifier = Modifier.fillMaxWidth()) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = slot.title,
-                                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
-                                    )
-                                    Spacer(Modifier.height(2.dp))
-                                    Text(
-                                        text = stringResource(R.string.nutrition_not_logged),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = TextMuted,
-                                    )
-                                }
-                                Spacer(Modifier.width(12.dp))
-                                Button(
-                                    onClick = onNavigateToAddFood,
-                                    shape = CircleShape,
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = DarkGreen,
-                                        contentColor = SurfaceWhite,
-                                    ),
-                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.nutrition_add_meal),
-                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
             }
         }
     }
