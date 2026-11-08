@@ -295,7 +295,7 @@ fun AppNavHost(
                 SettingsRoute(
                     onBack = { navController.popBackStack() },
                     onItemClick = { /* destino de cada fila: a definir */ },
-                    // Log out vuelve a Sign In vaciando todo el historial, así el botón atrás no reabre la app con la sesión cerrada
+                    // Log out vuelve a Sign In vaciando ttodo el historial, así el botón atrás no reabre la app con la sesión cerrada
                     onLogout = {
                         navController.navigate(AppDestination.SignIn.route) {
                             popUpTo(navController.graph.id) { inclusive = true }
