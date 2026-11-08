@@ -36,6 +36,9 @@ class NutritionViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    val allTasks: StateFlow<List<Meal>>
+        get() = meals
+
     fun addMeal(
         name: String,
         type: MealType,
