@@ -1,6 +1,6 @@
 package com.example.voracoach.data.repository
 
-import com.example.voracoach.model.CoachingStyle
+import com.example.voracoach.model.CoachingStyles
 import com.example.voracoach.model.DietType
 import com.example.voracoach.model.FavoriteFood
 import com.example.voracoach.model.FitnessGoal
@@ -30,7 +30,7 @@ private val DEMO_PREFERENCES = GoalsPreferences(
     goals = setOf(FitnessGoal.BUILD_STRENGTH, FitnessGoal.IMPROVE_FITNESS),
     frequency = TrainingFrequency.FOUR,
     workoutType = WorkoutType.STRENGTH,
-    coachingStyle = CoachingStyle.BALANCED
+    coachingStyles = CoachingStyles.BALANCED
 )
 
 private val DEMO_NUTRITION = NutritionPreferences(

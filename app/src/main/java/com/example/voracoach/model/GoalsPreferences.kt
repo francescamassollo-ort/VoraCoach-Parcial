@@ -8,12 +8,12 @@ enum class TrainingFrequency(val days: Int) { THREE(3), FOUR(4), FIVE(5), SIX_PL
 enum class WorkoutType { STRENGTH, CARDIO, HIIT, MOBILITY, MIXED }
 
 // Lo comparte Goals & Preferences con Voice & AI Settings
-enum class CoachingStyle { SUPPORTIVE, BALANCED, DIRECT }
+enum class CoachingStyles { SUPPORTIVE, BALANCED, DIRECT }
 
 // Objetivos y preferencias de entrenamiento. Los objetivos se pueden elegir varios.
 data class GoalsPreferences(
     val goals: Set<FitnessGoal>,
     val frequency: TrainingFrequency,
     val workoutType: WorkoutType,
-    val coachingStyle: CoachingStyle
+    val coachingStyles: CoachingStyles
 )

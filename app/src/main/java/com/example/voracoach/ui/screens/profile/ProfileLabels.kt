@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.voracoach.R
-import com.example.voracoach.model.CoachingStyle
+import com.example.voracoach.model.CoachingStyles
 import com.example.voracoach.model.DietType
 import com.example.voracoach.model.FavoriteFood
 import com.example.voracoach.model.FitnessGoal
@@ -49,17 +49,17 @@ fun WorkoutType.labelRes(): Int = when (this) {
 }
 
 @StringRes
-fun CoachingStyle.labelRes(): Int = when (this) {
-    CoachingStyle.SUPPORTIVE -> R.string.coaching_supportive
-    CoachingStyle.BALANCED -> R.string.coaching_balanced
-    CoachingStyle.DIRECT -> R.string.coaching_direct
+fun CoachingStyles.labelRes(): Int = when (this) {
+    CoachingStyles.SUPPORTIVE -> R.string.coaching_supportive
+    CoachingStyles.BALANCED -> R.string.coaching_balanced
+    CoachingStyles.DIRECT -> R.string.coaching_direct
 }
 
 @StringRes
-fun CoachingStyle.descriptionRes(): Int = when (this) {
-    CoachingStyle.SUPPORTIVE -> R.string.coaching_supportive_desc
-    CoachingStyle.BALANCED -> R.string.coaching_balanced_desc
-    CoachingStyle.DIRECT -> R.string.coaching_direct_desc
+fun CoachingStyles.descriptionRes(): Int = when (this) {
+    CoachingStyles.SUPPORTIVE -> R.string.coaching_supportive_desc
+    CoachingStyles.BALANCED -> R.string.coaching_balanced_desc
+    CoachingStyles.DIRECT -> R.string.coaching_direct_desc
 }
 
 @StringRes

@@ -20,8 +20,8 @@ import com.example.voracoach.ui.theme.VoraCoachTheme
 
 @Composable
 fun Dashboard(){
-  VoraCoachTheme {
-    Scaffold { innerPadding ->
+  // El tema ya lo aplica MainActivity a toda la app; acá no hace falta repetirlo
+  Scaffold { innerPadding ->
       Column(
         modifier = Modifier
           .padding(innerPadding)
@@ -64,7 +64,6 @@ fun Dashboard(){
 
       }
     }
-  }
 }
 
 
@@ -72,5 +71,6 @@ fun Dashboard(){
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewDashboard(){
-  Dashboard()
+  // El Preview no pasa por MainActivity, por eso acá sí se aplica el tema
+  VoraCoachTheme { Dashboard() }
 }

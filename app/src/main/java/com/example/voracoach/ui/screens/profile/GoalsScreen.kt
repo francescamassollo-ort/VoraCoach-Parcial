@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.voracoach.R
-import com.example.voracoach.model.CoachingStyle
+import com.example.voracoach.model.CoachingStyles
 import com.example.voracoach.model.FitnessGoal
 import com.example.voracoach.model.TrainingFrequency
 import com.example.voracoach.model.WorkoutType
@@ -70,7 +70,7 @@ fun GoalsScreen(
     onGoalToggle: (FitnessGoal) -> Unit,
     onFrequencySelected: (TrainingFrequency) -> Unit,
     onWorkoutTypeSelected: (WorkoutType) -> Unit,
-    onCoachingStyleSelected: (CoachingStyle) -> Unit,
+    onCoachingStyleSelected: (CoachingStyles) -> Unit,
     onSave: () -> Unit
 ) {
     Column(
@@ -141,11 +141,11 @@ fun GoalsScreen(
 
             Section(stringResource(R.string.goals_section_coaching)) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    CoachingStyle.entries.forEach { style ->
+                    CoachingStyles.entries.forEach { style ->
                         AppOptionCard(
                             title = stringResource(style.labelRes()),
                             subtitle = stringResource(style.descriptionRes()),
-                            selected = style == uiState.coachingStyle,
+                            selected = style == uiState.coachingStyles,
                             onClick = { onCoachingStyleSelected(style) }
                         )
                     }
@@ -185,7 +185,7 @@ private fun GoalsPreview() {
                 goals = setOf(FitnessGoal.BUILD_STRENGTH, FitnessGoal.IMPROVE_FITNESS),
                 frequency = TrainingFrequency.FOUR,
                 workoutType = WorkoutType.STRENGTH,
-                coachingStyle = CoachingStyle.BALANCED
+                coachingStyles = CoachingStyles.BALANCED
             ),
             onBack = {}, onGoalToggle = {}, onFrequencySelected = {},
             onWorkoutTypeSelected = {}, onCoachingStyleSelected = {}, onSave = {}

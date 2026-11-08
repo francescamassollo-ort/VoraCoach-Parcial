@@ -74,6 +74,7 @@ fun HomeRoute(
     onStartMyWorkout: () -> Unit,
     onLogBreakfast: () -> Unit,
     onWorkoutClick: (workoutId: String) -> Unit,
+    onTodayOverviewClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -83,7 +84,8 @@ fun HomeRoute(
         onStartVoiceSession = onStartVoiceSession,
         onStartMyWorkout = onStartMyWorkout,
         onLogBreakfast = onLogBreakfast,
-        onWorkoutClick = onWorkoutClick
+        onWorkoutClick = onWorkoutClick,
+        onTodayOverviewClick = onTodayOverviewClick
     )
 }
 
@@ -94,7 +96,8 @@ fun HomeScreen(
     onStartVoiceSession: () -> Unit,
     onStartMyWorkout: () -> Unit,
     onLogBreakfast: () -> Unit,
-    onWorkoutClick: (workoutId: String) -> Unit
+    onWorkoutClick: (workoutId: String) -> Unit,
+    onTodayOverviewClick: () -> Unit
 ) {
     // verticalScroll, Home es más alta que la pantalla, se desplaza (UI03)
     Column(
@@ -109,7 +112,12 @@ fun HomeScreen(
         GreetingRow(uiState.userName, uiState.partOfDay, uiState.hasUnreadNotifications, onNotificationsClick)
         CoachCard(onStartVoiceSession, onStartMyWorkout, onLogBreakfast)
         InsightBanner(message = stringResource(R.string.home_on_track))
-        SectionHeader(title = stringResource(R.string.home_overview))
+        // "View details" abre el resumen completo del día (Progress / 01)
+        SectionHeader(
+            title = stringResource(R.string.home_overview),
+            actionText = stringResource(R.string.home_view_details),
+            onActionClick = onTodayOverviewClick
+        )
         OverviewRow(uiState.summary)
         StatsCard(uiState.summary)
         // Solo si ya hay entrenamientos guardados (se descargan al abrir la pestaña Workout)
@@ -350,7 +358,7 @@ private fun HomePreview() {
                 hasUnreadNotifications = true
             ),
             onNotificationsClick = {}, onStartVoiceSession = {}, onStartMyWorkout = {},
-            onLogBreakfast = {}, onWorkoutClick = {}
+            onLogBreakfast = {}, onWorkoutClick = {}, onTodayOverviewClick = {}
         )
     }
 }

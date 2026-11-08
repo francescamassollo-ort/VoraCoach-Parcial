@@ -2,7 +2,7 @@ package com.example.voracoach.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.voracoach.data.repository.ProfileRepository
-import com.example.voracoach.model.CoachingStyle
+import com.example.voracoach.model.CoachingStyles
 import com.example.voracoach.model.FitnessGoal
 import com.example.voracoach.model.GoalsPreferences
 import com.example.voracoach.model.TrainingFrequency
@@ -18,7 +18,7 @@ data class GoalsUiState(
     val goals: Set<FitnessGoal>,
     val frequency: TrainingFrequency,
     val workoutType: WorkoutType,
-    val coachingStyle: CoachingStyle
+    val coachingStyles: CoachingStyles
 ) {
     // Tiene que haber al menos un objetivo elegido para guardar
     val canSave: Boolean get() = goals.isNotEmpty()
@@ -42,15 +42,15 @@ class GoalsViewModel @Inject constructor(
 
     fun onWorkoutTypeSelected(type: WorkoutType) = _uiState.update { it.copy(workoutType = type) }
 
-    fun onCoachingStyleSelected(style: CoachingStyle) = _uiState.update { it.copy(coachingStyle = style) }
+    fun onCoachingStyleSelected(style: CoachingStyles) = _uiState.update { it.copy(coachingStyles = style) }
 
     fun onSave() {
         val form = _uiState.value
         if (!form.canSave) return
         profileRepository.updatePreferences(
-            GoalsPreferences(form.goals, form.frequency, form.workoutType, form.coachingStyle)
+            GoalsPreferences(form.goals, form.frequency, form.workoutType, form.coachingStyles)
         )
     }
 
-    private fun GoalsPreferences.toUiState() = GoalsUiState(goals, frequency, workoutType, coachingStyle)
+    private fun GoalsPreferences.toUiState() = GoalsUiState(goals, frequency, workoutType, coachingStyles)
 }
