@@ -41,7 +41,7 @@ fun TitleDate(
       )
     }
     CircleIconButton(
-      contentDescription = "Calendar",
+      contentDescription = "Calendario",
       icon = Icons.Outlined.CalendarToday,
       onClick = {},
       style = CircleIconButtonStyle.Light
