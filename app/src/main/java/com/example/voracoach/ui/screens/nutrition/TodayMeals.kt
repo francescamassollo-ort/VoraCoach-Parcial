@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.DinnerDining
 import androidx.compose.material.icons.outlined.Fastfood
@@ -38,12 +38,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.voracoach.R
 import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.*
+import com.example.voracoach.ui.theme.DarkGreen
 import com.example.voracoach.ui.theme.SurfaceWhite
 import com.example.voracoach.ui.theme.TextMuted
 import com.example.voracoach.ui.theme.TextSecondary
@@ -55,13 +60,10 @@ fun TodayMeals(
     viewModel: NutritionViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit = {},
     onNavigateToAddFood: () -> Unit = {},
+    onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
 ) {
     val meals by viewModel.allTasks.collectAsState()
-
-    val totalCalories = meals.sumOf { it.calories }
-    val totalProtein = meals.sumOf { it.protein.toInt() }
-    val totalCarbs = meals.sumOf { it.carbs.toInt() }
-    val totalFat = meals.sumOf { it.fat.toInt() }
+    val totalCalories = if (meals.isNotEmpty()) meals.sumOf { it.calories } else 0
 
     var mealToDelete by remember { mutableStateOf<Meal?>(null) }
 
@@ -71,72 +73,61 @@ fun TodayMeals(
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 ScreenHeader(
-                    title = "Today's Meals",
+                    title = "",
                     onBackClick = onNavigateBack,
                     modifier = Modifier.statusBarsPadding(),
-                    actions = {
-                        IconButton(onClick = onNavigateToAddFood) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = "Add Food",
-                                modifier = Modifier.size(22.dp),
-                            )
-                        }
-                    },
                 )
             },
         ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .padding(horizontal = 20.dp, vertical = 8.dp),
             ) {
-                // Mini Macro Strip Summary Row
-                AppCard(
+                // 1. Top Timeline Header Row
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 8.dp),
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Column {
-                            Text(
-                                text = "TOTAL CONSUMED",
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = TextSecondary,
-                            )
-                            Spacer(Modifier.height(2.dp))
-                            Text(
-                                text = "$totalCalories kcal",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            MacroChip(label = "P", value = "${totalProtein}g")
-                            MacroChip(label = "C", value = "${totalCarbs}g")
-                            MacroChip(label = "F", value = "${totalFat}g")
-                        }
+                    Column {
+                        Text(
+                            text = "TIMELINE",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.8.sp,
+                            ),
+                            color = TextSecondary,
+                        )
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            text = "Today's Meals",
+                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onBackground,
+                        )
                     }
+
+                    Text(
+                        text = "$totalCalories kcal",
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
 
-                Spacer(Modifier.height(8.dp))
-
-                // Detailed Scrollable Timeline
+                // 2. Timeline LazyColumn List & Inline Category Add Triggers
                 val categories = listOf(
-                    CategoryInfo(MealType.BREAKFAST, "BREAKFAST", Icons.Outlined.FreeBreakfast),
-                    CategoryInfo(MealType.LUNCH, "LUNCH", Icons.Outlined.LunchDining),
-                    CategoryInfo(MealType.AFTERNOON_SNACK, "AFTERNOON SNACK", Icons.Outlined.Fastfood),
-                    CategoryInfo(MealType.DINNER, "DINNER", Icons.Outlined.DinnerDining),
+                    CategoryInfo(MealType.BREAKFAST, "BREAKFAST", "BREAKFAST", Icons.Outlined.FreeBreakfast),
+                    CategoryInfo(MealType.LUNCH, "LUNCH", "LUNCH", Icons.Outlined.LunchDining),
+                    CategoryInfo(MealType.AFTERNOON_SNACK, "AFTERNOON SNACK", "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
+                    CategoryInfo(MealType.DINNER, "DINNER", "DINNER", Icons.Outlined.DinnerDining),
                 )
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     categories.forEach { category ->
@@ -204,11 +195,18 @@ fun TodayMeals(
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = TextMuted,
                                         )
-                                        TextButton(onClick = onNavigateToAddFood) {
+                                        Button(
+                                            onClick = { onNavigateToAddFoodWithCategory(category.categoryKey) },
+                                            shape = CircleShape,
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = DarkGreen,
+                                                contentColor = SurfaceWhite,
+                                            ),
+                                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                                        ) {
                                             Text(
-                                                text = "+ Add",
+                                                text = stringResource(R.string.nutrition_add_meal),
                                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                                color = MaterialTheme.colorScheme.primary,
                                             )
                                         }
                                     }
@@ -263,21 +261,14 @@ fun TodayMeals(
 private data class CategoryInfo(
     val type: MealType,
     val label: String,
+    val categoryKey: String,
     val icon: ImageVector,
 )
 
+@Preview(showBackground = true)
 @Composable
-private fun MacroChip(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = TextSecondary,
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onSurface,
-        )
+private fun TodayMealsPreview() {
+    VoraCoachTheme {
+        TodayMeals()
     }
 }

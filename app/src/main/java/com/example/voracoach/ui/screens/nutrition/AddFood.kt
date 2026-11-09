@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.PhotoCamera
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,14 +28,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.voracoach.ui.components.AppCard
+import com.example.voracoach.ui.components.AppCardStyle
+import com.example.voracoach.ui.components.PrimaryButton
 import com.example.voracoach.ui.components.ScreenHeader
-import com.example.voracoach.ui.components.SecondaryButton
-import com.example.voracoach.ui.components.SecondaryButtonStyle
+import com.example.voracoach.ui.components.VoraOrb
 import com.example.voracoach.ui.theme.VoraCoachTheme
+import com.example.voracoach.ui.theme.White60
 
 @Composable
 fun AddFood(
@@ -61,124 +65,155 @@ fun AddFood(
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 20.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    // Option 1: AI Voice Input
-                    AppCard(
+                // Card 1: Green Conversational Hero Card ("Talk to VORA")
+                AppCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    style = AppCardStyle.Dark,
+                ) {
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text(
+                                text = "Talk to VORA",
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = Color.White,
+                            )
+                            Text(
+                                text = "\"I had grilled Chicken breast with basmati rice\"",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = White60,
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        VoraOrb(diameter = 40.dp)
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    PrimaryButton(
+                        text = "Start Voice Logging",
                         onClick = onNavigateToVoice,
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Mic,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(22.dp),
-                                )
-                            }
-                            Spacer(Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "AI Voice Input",
-                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                                )
-                                Spacer(Modifier.height(4.dp))
-                                Text(
-                                    text = "Speak naturally to log your meal...",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
-                    }
-
-                    // Option 2: Smart Photo Scan
-                    AppCard(
+                        leadingIcon = Icons.Outlined.Mic,
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = onNavigateToPhoto,
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.PhotoCamera,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(22.dp),
-                                )
-                            }
-                            Spacer(Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Smart Photo Scan",
-                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                                )
-                                Spacer(Modifier.height(4.dp))
-                                Text(
-                                    text = "Take a picture of your plate to auto-analyze...",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
-                    }
+                    )
+                }
 
-                    // Option 3: Log Manually
-                    AppCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = onNavigateToManual,
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Edit,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(22.dp),
-                                )
-                            }
-                            Spacer(Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Log Manually",
-                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                                )
-                                Spacer(Modifier.height(4.dp))
-                                Text(
-                                    text = "Type in your meal, calories, and macros manually...",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
+                // Card 2: Smart Photo Scan
+                AppCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onNavigateToPhoto,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(44.dp)
+                                .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.PhotoCamera,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(22.dp),
+                            )
+                        }
+                        Spacer(Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Snap a Photo",
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Take a picture of your plate to auto-analyze...",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
                         }
                     }
                 }
 
-                Spacer(Modifier.height(24.dp))
-
-                // Bottom Section: Cancel button
-                SecondaryButton(
-                    text = "Cancel",
-                    onClick = onNavigateBack,
-                    style = SecondaryButtonStyle.Outlined,
+                // Card 3: Local Database Search Utility
+                AppCard(
                     modifier = Modifier.fillMaxWidth(),
-                )
+                    onClick = {},
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(44.dp)
+                                .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Search,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(22.dp),
+                            )
+                        }
+                        Spacer(Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Search database",
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Search millions of local & global food items.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+
+
+
+                // Card 4: Manual Logging Form Entry
+                AppCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onNavigateToManual,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(44.dp)
+                                .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Edit,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(22.dp),
+                            )
+                        }
+                        Spacer(Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Log Manually",
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Type in your meal, calories, and macros manually...",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
             }
         }
     }
