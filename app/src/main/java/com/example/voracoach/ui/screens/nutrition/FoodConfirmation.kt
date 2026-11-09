@@ -1,8 +1,8 @@
 package com.example.voracoach.ui.screens.nutrition
 
+import java.util.Locale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,8 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Bolt
 import androidx.compose.material.icons.outlined.Egg
 import androidx.compose.material.icons.outlined.Grain
-import androidx.compose.material.icons.outlined.Restaurant
-import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -41,16 +39,29 @@ import com.example.voracoach.viewmodel.NutritionViewModel
 
 @Composable
 fun FoodConfirmation(
+    mealType: String = "BREAKFAST",
     viewModel: NutritionViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit = {},
     onSaveSuccess: () -> Unit = {},
 ) {
+    val selectedType = remember(mealType) {
+        MealType.entries.firstOrNull { it.name.equals(mealType, ignoreCase = true) } ?: MealType.BREAKFAST
+    }
+
+    val formattedCategoryName = remember(mealType) {
+        mealType.replace("_", " ")
+            .lowercase(Locale.getDefault())
+            .split(" ")
+            .joinToString(" ") { word ->
+                word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            }
+    }
+
     var nameInput by remember { mutableStateOf("") }
     var caloriesInput by remember { mutableStateOf("0") }
     var proteinInput by remember { mutableStateOf("0") }
     var carbsInput by remember { mutableStateOf("0") }
     var fatInput by remember { mutableStateOf("0") }
-    var selectedType by remember { mutableStateOf(MealType.BREAKFAST) }
 
     var nameError by remember { mutableStateOf(false) }
     var caloriesError by remember { mutableStateOf(false) }
@@ -112,29 +123,14 @@ fun FoodConfirmation(
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                    // Category Selectors
+                    // Category Lock Display (Read-Only)
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        AppSectionLabel(text = "MEAL CATEGORY")
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            val categories = listOf(
-                                MealType.BREAKFAST to "Breakfast",
-                                MealType.LUNCH to "Lunch",
-                                MealType.AFTERNOON_SNACK to "Afternoon Snack",
-                                MealType.DINNER to "Dinner",
-                            )
-
-                            categories.forEach { (type, label) ->
-                                AppChip(
-                                    text = label,
-                                    selected = selectedType == type,
-                                    onClick = { selectedType = type },
-                                    style = AppChipStyle.Light,
-                                )
-                            }
-                        }
+                        AppSectionLabel(text = "TARGET MEAL CATEGORY")
+                        AppChip(
+                            text = formattedCategoryName,
+                            selected = true,
+                            style = AppChipStyle.Light,
+                        )
                     }
 
                     // Form Inputs
@@ -147,7 +143,7 @@ fun FoodConfirmation(
                                 if (nameError) nameError = false
                             },
                             placeholder = "e.g. Grilled Chicken Salad",
-                            leadingIcon = Icons.Outlined.Restaurant,
+                            leadingIcon = Icons.Outlined.Bolt,
                             errorMessage = if (nameError) "Meal name cannot be empty" else null,
                         )
 
@@ -198,7 +194,7 @@ fun FoodConfirmation(
                                 if (fatError) fatError = false
                             },
                             placeholder = "e.g. 12",
-                            leadingIcon = Icons.Outlined.WaterDrop,
+                            leadingIcon = Icons.Outlined.Grain,
                             keyboardType = KeyboardType.Number,
                             errorMessage = if (fatError) "Must be a non-negative number" else null,
                         )
@@ -207,9 +203,9 @@ fun FoodConfirmation(
 
                 Spacer(Modifier.height(24.dp))
 
-                // Action Button
+                // Action Button with dynamic label: "Add to ${formattedCategoryName}"
                 PrimaryButton(
-                    text = "Add Meal",
+                    text = "Add to $formattedCategoryName",
                     onClick = { validateAndSave() },
                     modifier = Modifier.fillMaxWidth(),
                 )

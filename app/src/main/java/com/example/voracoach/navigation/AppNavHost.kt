@@ -5,71 +5,76 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.voracoach.R
+import androidx.navigation.navArgument
+import com.example.voracoach.model.Meal
+import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.AppBottomBar
 import com.example.voracoach.ui.components.StatusBarIconsFor
 import com.example.voracoach.ui.screens.auth.SignInScreen
 import com.example.voracoach.ui.screens.auth.SignUpScreen
-import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
-import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
 import com.example.voracoach.ui.screens.coach.CoachRoute
 import com.example.voracoach.ui.screens.home.HomeRoute
 import com.example.voracoach.ui.screens.home.NotificationsRoute
-import com.example.voracoach.ui.screens.workout.ExerciseGuideRoute
-import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
-import com.example.voracoach.ui.screens.workout.WeeklyPlanRoute
-import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
-import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
-import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
+import com.example.voracoach.ui.screens.nutrition.AddFood
+import com.example.voracoach.ui.screens.nutrition.Dashboard
+import com.example.voracoach.ui.screens.nutrition.FoodAnalysis
+import com.example.voracoach.ui.screens.nutrition.FoodConfirmation
+import com.example.voracoach.ui.screens.nutrition.MealDetails
+import com.example.voracoach.ui.screens.nutrition.PhotoAnalysis
+import com.example.voracoach.ui.screens.nutrition.TodayMeals
+import com.example.voracoach.ui.screens.nutrition.VoiceFoodLogging
+import com.example.voracoach.ui.screens.profile.EditProfileRoute
+import com.example.voracoach.ui.screens.profile.GoalsRoute
+import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
 import com.example.voracoach.ui.screens.profile.ProfileRoute
-import com.example.voracoach.ui.screens.nutrition.Dashboard as NutritionDashboard
+import com.example.voracoach.ui.screens.profile.SettingsRoute
+import com.example.voracoach.ui.screens.profile.VoiceSettingsRoute
 import com.example.voracoach.ui.screens.progress.HealthTrendsRoute
 import com.example.voracoach.ui.screens.progress.NutritionProgressRoute
 import com.example.voracoach.ui.screens.progress.ProgressDashboardRoute
 import com.example.voracoach.ui.screens.progress.TodayOverviewRoute
 import com.example.voracoach.ui.screens.progress.WeeklyReviewScreen
 import com.example.voracoach.ui.screens.progress.WorkoutProgressRoute
-import com.example.voracoach.ui.screens.profile.EditProfileRoute
-import com.example.voracoach.ui.screens.profile.GoalsRoute
-import com.example.voracoach.ui.screens.profile.NutritionPreferencesRoute
-import com.example.voracoach.ui.screens.profile.VoiceSettingsRoute
-import com.example.voracoach.ui.screens.profile.SettingsRoute
+import com.example.voracoach.ui.screens.workout.ActiveWorkoutRoute
+import com.example.voracoach.ui.screens.workout.ExerciseGuideRoute
+import com.example.voracoach.ui.screens.workout.PreWorkoutRoute
+import com.example.voracoach.ui.screens.workout.WeeklyPlanRoute
+import com.example.voracoach.ui.screens.workout.WorkoutCatalogRoute
+import com.example.voracoach.ui.screens.workout.WorkoutCompleteRoute
+import com.example.voracoach.ui.screens.workout.WorkoutDetailRoute
+import com.example.voracoach.viewmodel.NutritionViewModel
+import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
-    // se usa para cerrar la app desde la flecha atrás de Sign In, que es la primera pantalla.
     val activity = LocalActivity.current
-
-    // Pantalla actual, observada como estado: cada vez que se navega, esto cambia
-    // y la barra se vuelve a dibujar marcando la pestaña correcta.
     val currentEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentEntry?.destination
 
-    // La barra solo aparece en las pantallas que son pestañas. En Sign In, Sign Up,
-    // Notifications y las futuras sub-pantallas (detalle, agregar...) se oculta.
+    // Shared NutritionViewModel instance scoped to the Nutrition flow
+    val nutritionViewModel: NutritionViewModel = hiltViewModel()
+
     val showBottomBar = BottomBarItem.entries.any { it.destination.route == currentDestination?.route }
 
-    // Pantallas con fondo verde oscuro: ahí la hora y la batería se muestran en blanco.
-    // Al sumar otra pantalla oscura (por ejemplo, estados de Coach), agregar su ruta acá.
     val darkBackgroundRoutes = setOf(
         AppDestination.PreWorkout.route,
         AppDestination.ActiveWorkout.route,
-        AppDestination.WeeklyReview.route
+        AppDestination.WeeklyReview.route,
     )
-    // Coach se excluye: cambia de fondo claro a oscuro sin cambiar de ruta, y lo decide su propia pantalla
+
     if (currentDestination?.route != AppDestination.Coach.route) {
         StatusBarIconsFor(darkBackground = currentDestination?.route in darkBackgroundRoutes)
     }
@@ -80,25 +85,22 @@ fun AppNavHost(
             if (showBottomBar) {
                 AppBottomBar(
                     currentDestination = currentDestination,
-                    onItemSelected = { navController.navigateToTab(it) }
+                    onItemSelected = { navController.navigateToTab(it) },
                 )
             }
         },
-        // Sin márgenes automáticos por la barra de estado: cada pantalla ya tiene su propio
-        // Scaffold que los aplica. Si los aplicaran los dos, el contenido quedaría el doble de bajo.
-        contentWindowInsets = WindowInsets(0)
+        contentWindowInsets = WindowInsets(0),
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = AppDestination.SignIn.route,
-            // innerPadding deja lugar para la barra inferior, así no tapa el contenido
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         ) {
             composable(AppDestination.SignIn.route) {
                 SignInScreen(
                     onBack = { activity?.finish() },
                     onSignIn = { navController.goToHomeClearingAuth() },
-                    onGoToSignUp = { navController.navigate(AppDestination.SignUp.route) }
+                    onGoToSignUp = { navController.navigate(AppDestination.SignUp.route) },
                 )
             }
 
@@ -106,8 +108,7 @@ fun AppNavHost(
                 SignUpScreen(
                     onBack = { navController.popBackStack() },
                     onSignUp = { navController.goToHomeClearingAuth() },
-                    // Sign Up siempre se abre desde Sign In, así que "Sign In" es volver atrás y no apilar otra copia de Sign In.
-                    onGoToSignIn = { navController.popBackStack() }
+                    onGoToSignIn = { navController.popBackStack() },
                 )
             }
 
@@ -115,19 +116,15 @@ fun AppNavHost(
                 HomeRoute(
                     onNotificationsClick = { navController.navigate(AppDestination.Notifications.route) },
                     onStartVoiceSession = { navController.navigate(AppDestination.Coach.route) },
-                    // Los chips llevan a otras pestañas con navigateToTab para que la barra
-                    // quede marcada en la pestaña correcta y no se apilen pantallas
                     onStartMyWorkout = { navController.navigateToTab(BottomBarItem.Workout) },
                     onLogBreakfast = { navController.navigateToTab(BottomBarItem.Nutrition) },
                     onWorkoutClick = { workoutId ->
                         navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
                     },
-                    onTodayOverviewClick = { navController.navigate(AppDestination.TodayOverview.route) }
+                    onTodayOverviewClick = { navController.navigate(AppDestination.TodayOverview.route) },
                 )
             }
 
-            // Las tres rutas quedan registradas aunque todavía no haya pantalla real,
-            // así ningún botón que navegue hacia ellas hace crashear la app.
             composable(AppDestination.Notifications.route) {
                 NotificationsRoute(onBack = { navController.popBackStack() })
             }
@@ -137,7 +134,7 @@ fun AppNavHost(
                     onWorkoutClick = { workoutId ->
                         navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
                     },
-                    onWeeklyPlanClick = { navController.navigate(AppDestination.WeeklyPlan.route) }
+                    onWeeklyPlanClick = { navController.navigate(AppDestination.WeeklyPlan.route) },
                 )
             }
 
@@ -146,15 +143,13 @@ fun AppNavHost(
                     onBack = { navController.popBackStack() },
                     onWorkoutClick = { workoutId ->
                         navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
-                    }
+                    },
                 )
             }
 
-            // navArgument declara el parámetro de la ruta. El ViewModel del detalle lo lee
-            // con SavedStateHandle, así que la pantalla no necesita recibir el id.
             composable(
                 route = AppDestination.WorkoutDetail.route,
-                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType }),
             ) {
                 WorkoutDetailRoute(
                     onBack = { navController.popBackStack() },
@@ -163,40 +158,38 @@ fun AppNavHost(
                     },
                     onExerciseClick = { workoutId, exerciseId ->
                         navController.navigate(AppDestination.ExerciseGuide.createRoute(workoutId, exerciseId))
-                    }
+                    },
                 )
             }
 
-            // La guía recibe dos argumentos, el entrenamiento (lo lee el ViewModel) y el ejercicio
             composable(
                 route = AppDestination.ExerciseGuide.route,
                 arguments = listOf(
                     navArgument(WORKOUT_ID_ARG) { type = NavType.StringType },
-                    navArgument(EXERCISE_ID_ARG) { type = NavType.StringType }
-                )
+                    navArgument(EXERCISE_ID_ARG) { type = NavType.StringType },
+                ),
             ) { backStackEntry ->
                 ExerciseGuideRoute(
                     exerciseId = backStackEntry.arguments?.getString(EXERCISE_ID_ARG).orEmpty(),
-                    onBack = { navController.popBackStack() }
+                    onBack = { navController.popBackStack() },
                 )
             }
 
             composable(
                 route = AppDestination.PreWorkout.route,
-                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType }),
             ) {
                 PreWorkoutRoute(
-                    // La X vuelve al detalle, igual que el botón atrás del sistema
                     onClose = { navController.popBackStack() },
                     onStartWorkout = { workoutId ->
                         navController.navigate(AppDestination.ActiveWorkout.createRoute(workoutId))
-                    }
+                    },
                 )
             }
 
             composable(
                 route = AppDestination.ActiveWorkout.route,
-                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType }),
             ) {
                 ActiveWorkoutRoute(
                     onClose = { navController.popBackStack() },
@@ -205,32 +198,106 @@ fun AppNavHost(
                     },
                     onExerciseInfoClick = { workoutId, exerciseId ->
                         navController.navigate(AppDestination.ExerciseGuide.createRoute(workoutId, exerciseId))
-                    }
+                    },
                 )
             }
 
             composable(
                 route = AppDestination.WorkoutComplete.route,
-                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType })
+                arguments = listOf(navArgument(WORKOUT_ID_ARG) { type = NavType.StringType }),
             ) {
                 WorkoutCompleteRoute(
-                    // Saca del historial detalle, Pre, Active y Complete, y vuelve a donde se abrió el
-                    // entrenamiento (catálogo, Home, Today's Overview o Weekly Plan). Así atrás no
-                    // reabre un entrenamiento ya terminado.
-                    onDone = { navController.popBackStack(AppDestination.WorkoutDetail.route, inclusive = true) }
+                    onDone = { navController.popBackStack(AppDestination.WorkoutDetail.route, inclusive = true) },
                 )
             }
 
+            // ── NUTRITION SUBGRAPH (8 Screens) ───────────────────────────────
             composable(AppDestination.Nutrition.route) {
-                NutritionDashboard()
+                Dashboard(
+                    viewModel = nutritionViewModel,
+                    onNavigateToTodayMeals = { navController.navigate(AppDestination.TodayMeals.route) },
+                    onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
+                )
             }
 
+            composable(AppDestination.TodayMeals.route) {
+                TodayMeals(
+                    viewModel = nutritionViewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
+                )
+            }
+
+            composable(AppDestination.AddFood.route) {
+                AddFood(
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToVoice = { navController.navigate(AppDestination.VoiceFoodLogging.route) },
+                    onNavigateToPhoto = { navController.navigate(AppDestination.PhotoAnalysis.route) },
+                    onNavigateToManual = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                )
+            }
+
+            composable(AppDestination.VoiceFoodLogging.route) {
+                VoiceFoodLogging(
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToDoneSpeaking = { navController.navigate(AppDestination.FoodAnalysis.route) },
+                )
+            }
+
+            composable(AppDestination.FoodAnalysis.route) {
+                FoodAnalysis(
+                    onAnalysisComplete = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                    onNavigateBack = { navController.popBackStack() },
+                )
+            }
+
+            composable(AppDestination.PhotoAnalysis.route) {
+                PhotoAnalysis(
+                    onNavigateBack = { navController.popBackStack() },
+                    onReviewAndAdd = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                )
+            }
+
+            composable(AppDestination.FoodConfirmation.route) {
+                FoodConfirmation(
+                    viewModel = nutritionViewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onSaveSuccess = {
+                        navController.popBackStack(AppDestination.Nutrition.route, inclusive = false)
+                    },
+                )
+            }
+
+            composable(
+                route = AppDestination.MealDetails.route,
+                arguments = listOf(navArgument(MEAL_ID_ARG) { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty()
+                val meals by nutritionViewModel.meals.collectAsState()
+                val meal = meals.find { it.id.toString() == mealId } ?: Meal(
+                    id = mealId.toIntOrNull() ?: 0,
+                    name = "Logged Meal",
+                    date = "Today",
+                    type = MealType.LUNCH,
+                    calories = 520,
+                    protein = 42f,
+                    carbs = 55f,
+                    fat = 12f,
+                )
+                MealDetails(
+                    meal = meal,
+                    viewModel = nutritionViewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                )
+            }
+
+            // ── PROGRESS ──────────────────────────────────────────────────────
             composable(AppDestination.Progress.route) {
                 ProgressDashboardRoute(
                     onWorkoutClick = { navController.navigate(AppDestination.WorkoutProgress.route) },
                     onNutritionClick = { navController.navigate(AppDestination.NutritionProgress.route) },
                     onActivityClick = { navController.navigate(AppDestination.HealthTrends.route) },
-                    onWeeklyReviewClick = { navController.navigate(AppDestination.WeeklyReview.route) }
+                    onWeeklyReviewClick = { navController.navigate(AppDestination.WeeklyReview.route) },
                 )
             }
 
@@ -239,7 +306,7 @@ fun AppNavHost(
                     onBack = { navController.popBackStack() },
                     onWorkoutClick = { workoutId ->
                         navController.navigate(AppDestination.WorkoutDetail.createRoute(workoutId))
-                    }
+                    },
                 )
             }
 
@@ -260,7 +327,7 @@ fun AppNavHost(
                     onBack = { navController.popBackStack() },
                     onDinnerIdeasClick = { navController.navigateToTab(BottomBarItem.Nutrition) },
                     onNextWeekPlanClick = { navController.navigate(AppDestination.WeeklyPlan.route) },
-                    onAskVoraClick = { navController.navigate(AppDestination.Coach.route) }
+                    onAskVoraClick = { navController.navigate(AppDestination.Coach.route) },
                 )
             }
 
@@ -272,7 +339,7 @@ fun AppNavHost(
                     onPreferencesClick = { navController.navigate(AppDestination.NutritionPreferences.route) },
                     onConnectedDataClick = { /* Settings (pantalla 06) */ },
                     onAccountClick = { navController.navigate(AppDestination.Settings.route) },
-                    onReviewPreferencesClick = { navController.navigate(AppDestination.VoiceSettings.route) }
+                    onReviewPreferencesClick = { navController.navigate(AppDestination.VoiceSettings.route) },
                 )
             }
 
@@ -284,23 +351,22 @@ fun AppNavHost(
                 GoalsRoute(onBack = { navController.popBackStack() })
             }
 
-            composable(AppDestination.VoiceSettings.route){
+            composable(AppDestination.VoiceSettings.route) {
                 VoiceSettingsRoute(
-                    onBack = { navController.popBackStack() }, // Se conecta a Settings cuando exista la pantalla 06
-                    onPrivacyClick = {}
+                    onBack = { navController.popBackStack() },
+                    onPrivacyClick = {},
                 )
             }
 
-            composable(AppDestination.Settings.route){
+            composable(AppDestination.Settings.route) {
                 SettingsRoute(
                     onBack = { navController.popBackStack() },
                     onItemClick = { /* destino de cada fila: a definir */ },
-                    // Log out vuelve a Sign In vaciando ttodo el historial, así el botón atrás no reabre la app con la sesión cerrada
                     onLogout = {
                         navController.navigate(AppDestination.SignIn.route) {
                             popUpTo(navController.graph.id) { inclusive = true }
                         }
-                    }
+                    },
                 )
             }
 
@@ -317,14 +383,14 @@ fun AppNavHost(
 
 private fun NavHostController.goToHomeClearingAuth() {
     navigate(AppDestination.Home.route) {
-        popUpTo(AppDestination.SignIn.route) { inclusive = true }// Al entrar a Home se borran Sign In y Sign Up del historial para que el botón atrás desde Home cierre la app en vez de volver al login
+        popUpTo(AppDestination.SignIn.route) { inclusive = true }
     }
 }
 
 fun NavHostController.navigateToTab(item: BottomBarItem) {
     navigate(item.destination.route) {
-        popUpTo(AppDestination.Home.route) { saveState = true }// - saveState / restoreState: cada pestaña recuerda dónde quedaste al volver a ella.
-        launchSingleTop = true // - launchSingleTop: tocar la pestaña en la que ya estás no crea otra copia.
+        popUpTo(AppDestination.Home.route) { saveState = true }
+        launchSingleTop = true
         restoreState = true
     }
 }

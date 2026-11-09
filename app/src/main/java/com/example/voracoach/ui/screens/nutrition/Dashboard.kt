@@ -76,11 +76,17 @@ fun NutritionDashboard(
     viewModel: NutritionViewModel = hiltViewModel(),
     onNavigateToTodayMeals: () -> Unit = {},
     onNavigateToAddFood: () -> Unit = {},
+    onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
+    onNavigateToVoice: () -> Unit = {},
+    onNavigateToPhoto: () -> Unit = {},
 ) {
     Dashboard(
         viewModel = viewModel,
         onNavigateToTodayMeals = onNavigateToTodayMeals,
         onNavigateToAddFood = onNavigateToAddFood,
+        onNavigateToAddFoodWithCategory = onNavigateToAddFoodWithCategory,
+        onNavigateToVoice = onNavigateToVoice,
+        onNavigateToPhoto = onNavigateToPhoto,
     )
 }
 
@@ -89,21 +95,25 @@ fun Dashboard(
     viewModel: NutritionViewModel = hiltViewModel(),
     onNavigateToTodayMeals: () -> Unit = {},
     onNavigateToAddFood: () -> Unit = {},
+    onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
+    onNavigateToVoice: () -> Unit = {},
+    onNavigateToPhoto: () -> Unit = {},
 ) {
-    // 1. Collect real-time list of meals from database
+    // Collect real-time list of meals from database
     val meals by viewModel.allTasks.collectAsState()
-    val currentDateText by viewModel.currentDate.collectAsState()
 
-    // Dynamic Data Calculations (guarded against empty state)
-    val totalCalories = meals.sumOf { it.calories }
-    val totalProtein = meals.sumOf { it.protein.toInt() }
-    val totalCarbs = meals.sumOf { it.carbs.toInt() }
-    val totalFat = meals.sumOf { it.fat.toInt() }
+    // 1. Dynamic Data Calculations (handling zero-state when empty)
+    val hasData = meals.isNotEmpty()
 
-    val calorieGoal = 2100
-    val proteinGoal = 140
-    val carbsGoal = 220
-    val fatGoal = 65
+    val totalCalories = if (hasData) meals.sumOf { it.calories } else 0
+    val totalProtein = if (hasData) meals.sumOf { it.protein.toInt() } else 0
+    val totalCarbs = if (hasData) meals.sumOf { it.carbs.toInt() } else 0
+    val totalFat = if (hasData) meals.sumOf { it.fat.toInt() } else 0
+
+    val calorieGoal = if (hasData) 2100 else 0
+    val proteinGoal = if (hasData) 140 else 0
+    val carbsGoal = if (hasData) 220 else 0
+    val fatGoal = if (hasData) 65 else 0
 
     val caloriePercent = if (calorieGoal > 0) ((totalCalories * 100) / calorieGoal).coerceIn(0, 100) else 0
 
@@ -112,9 +122,12 @@ fun Dashboard(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
+                // Top Header without back navigation arrow for top-level landing tab
                 ScreenHeader(
                     title = stringResource(R.string.screen_nutrition),
                     onBackClick = {},
+                    backButtonContainerColor = Color.Transparent,
+                    backButtonBorderColor = null,
                     modifier = Modifier.statusBarsPadding(),
                     actions = {
                         IconButton(onClick = {}) {
@@ -136,10 +149,10 @@ fun Dashboard(
                     .padding(horizontal = 20.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // 2. Top Area: Current Date Header Label
+                // 1. Date Header Label
                 Column {
                     Text(
-                        text = if (currentDateText.isNotBlank()) currentDateText.uppercase() else stringResource(R.string.nutrition_date_default),
+                        text = "MONDAY, 9 NOVEMBER",
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.8.sp,
@@ -154,10 +167,10 @@ fun Dashboard(
                     )
                 }
 
-                // Balance Snapshot Summary Card (AppCard)
+                // 2. Reactive Zero-State / Dynamic Balancing Panel (AppCard)
                 AppCard(modifier = Modifier.fillMaxWidth()) {
                     Column {
-                        // Top Row: Calorie count & ring gauge
+                        // Top Row: Calories consumed & circular progress ring
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -165,7 +178,7 @@ fun Dashboard(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = stringResource(R.string.nutrition_calories_consumed),
+                                    text = "CONSUMED CALORIES",
                                     style = MaterialTheme.typography.labelSmall.copy(
                                         fontWeight = FontWeight.SemiBold,
                                         letterSpacing = 0.5.sp,
@@ -183,16 +196,13 @@ fun Dashboard(
                                 )
                                 Spacer(Modifier.height(2.dp))
                                 Text(
-                                    text = stringResource(
-                                        R.string.nutrition_calories_goal,
-                                        String.format(Locale.getDefault(), "%,d", calorieGoal),
-                                    ),
+                                    text = "Goal: ${String.format(Locale.getDefault(), "%,d", calorieGoal)} kcal",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = TextSecondary,
                                 )
                             }
 
-                            // Circular Progress Indicator Ring Bar
+                            // Circular Tracking Graphic Meter
                             Box(
                                 modifier = Modifier.size(72.dp),
                                 contentAlignment = Alignment.Center,
@@ -228,7 +238,7 @@ fun Dashboard(
                             color = BorderGray,
                         )
 
-                        // Bottom Row: Side-by-side Protein, Carbs, Fat macronutrient progress bars
+                        // Bottom Row: Macronutrient progress indicators
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -258,13 +268,11 @@ fun Dashboard(
                     }
                 }
 
-                // Insight Hub: Custom InsightBanner
+                // Coaching Callout (Insight Banner)
                 InsightBanner(
                     message = stringResource(R.string.nutrition_insight_default),
                     modifier = Modifier.fillMaxWidth(),
                 )
-
-                // 3. Interactive Prompt Box ("Tell Vora what you ate")
 
 
                 // Section Heading ("Today's Meals")
@@ -283,12 +291,12 @@ fun Dashboard(
                     }
                 }
 
-                // 4. Zero-State Meal Category Slots
+                // 3. Slot-Aware Category Mapping
                 val slots = listOf(
-                    SlotInfo(MealType.BREAKFAST, "Breakfast", Icons.Outlined.FreeBreakfast),
-                    SlotInfo(MealType.LUNCH, "Lunch", Icons.Outlined.LunchDining),
-                    SlotInfo(MealType.AFTERNOON_SNACK, "Snack", Icons.Outlined.Fastfood),
-                    SlotInfo(MealType.DINNER, "Dinner", Icons.Outlined.DinnerDining),
+                    SlotInfo(MealType.BREAKFAST, "Breakfast", "BREAKFAST", Icons.Outlined.FreeBreakfast),
+                    SlotInfo(MealType.LUNCH, "Lunch", "LUNCH", Icons.Outlined.LunchDining),
+                    SlotInfo(MealType.AFTERNOON_SNACK, "Snack", "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
+                    SlotInfo(MealType.DINNER, "Dinner", "DINNER", Icons.Outlined.DinnerDining),
                 )
 
                 slots.forEach { slot ->
@@ -309,8 +317,11 @@ fun Dashboard(
                             )
                         }
                     } else {
-                        // Empty slot placeholder with "+ Add" button
-                        AppCard(modifier = Modifier.fillMaxWidth()) {
+                        // Empty slot layout with category-aware "+ Add" button
+                        AppCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { onNavigateToAddFoodWithCategory(slot.categoryKey) },
+                        ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -330,7 +341,7 @@ fun Dashboard(
                                 }
                                 Spacer(Modifier.width(12.dp))
                                 Button(
-                                    onClick = onNavigateToAddFood,
+                                    onClick = { onNavigateToAddFoodWithCategory(slot.categoryKey) },
                                     shape = CircleShape,
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = DarkGreen,
@@ -350,6 +361,7 @@ fun Dashboard(
 
                 Spacer(Modifier.height(16.dp))
 
+                // 4. Quick Action Button Cards ("Tell Vora what you ate")
                 AppCard(
                     modifier = Modifier.fillMaxWidth(),
                     style = AppCardStyle.Dark,
@@ -375,8 +387,9 @@ fun Dashboard(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
+                        // Voice Trigger Button
                         Button(
-                            onClick = onNavigateToAddFood,
+                            onClick = onNavigateToVoice,
                             shape = CircleShape,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = LimeGreen,
@@ -396,8 +409,9 @@ fun Dashboard(
                             )
                         }
 
+                        // Photo Trigger Button
                         Surface(
-                            onClick = onNavigateToAddFood,
+                            onClick = onNavigateToPhoto,
                             shape = CircleShape,
                             color = White12,
                             contentColor = Color.White,
@@ -419,8 +433,9 @@ fun Dashboard(
                             }
                         }
 
+                        // Search / Manual Trigger Button
                         Surface(
-                            onClick = onNavigateToAddFood,
+                            onClick = { onNavigateToAddFoodWithCategory("MANUAL") },
                             shape = CircleShape,
                             color = White12,
                             contentColor = Color.White,
@@ -443,6 +458,7 @@ fun Dashboard(
                         }
                     }
                 }
+
             }
         }
     }
@@ -451,6 +467,7 @@ fun Dashboard(
 private data class SlotInfo(
     val type: MealType,
     val title: String,
+    val categoryKey: String,
     val icon: ImageVector,
 )
 
