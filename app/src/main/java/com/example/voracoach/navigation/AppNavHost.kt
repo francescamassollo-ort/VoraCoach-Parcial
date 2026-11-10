@@ -72,6 +72,8 @@ fun AppNavHost(
         AppDestination.PreWorkout.route,
         AppDestination.ActiveWorkout.route,
         AppDestination.WeeklyReview.route,
+        AppDestination.VoiceFoodLogging.route,
+        AppDestination.FoodAnalysis.route,
     )
 
     if (currentDestination?.route != AppDestination.Coach.route) {
@@ -273,6 +275,7 @@ fun AppNavHost(
                     VoiceFoodLogging(
                         onNavigateBack = { navController.popBackStack() },
                         onNavigateToDoneSpeaking = { navController.navigate(AppDestination.FoodAnalysis.route) },
+                        onTypeInstead = { navController.navigate(AppDestination.FoodConfirmation.createRoute()) },
                     )
                 }
 

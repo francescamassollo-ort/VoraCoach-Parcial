@@ -655,6 +655,10 @@
     <string name="voice_hint">Speak naturally, e.g. \"A bowl of oatmeal with strawberries and a glass of milk\"</string>
     <string name="voice_microphone">Microphone</string>
     <string name="voice_done">Done Speaking</string>
+    <string name="voice_keep_talking">\"Keep talking. I\'m listening.\"</string>
+    <string name="voice_transcript_example">\"I had grilled chicken with rice and some mixed vegetables for lunch.\"</string>
+    <string name="voice_type_instead">Type instead</string>
+    <string name="nutrition_close">Close</string>
     <string name="analysis_title">Analyzing…</string>
     <string name="analysis_message">Vora AI is analyzing your food…</string>
     <string name="analysis_step_transcribing">Transcribing audio…</string>
