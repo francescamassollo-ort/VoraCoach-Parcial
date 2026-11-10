@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.AppCard
 import com.example.voracoach.ui.components.PrimaryButton
@@ -54,12 +53,31 @@ data class IngredientItem(
     val calories: Int = 0,
 )
 
+// Route: recibe la comida armada por la pantalla, la guarda con el ViewModel y navega.
 @Composable
-fun FoodConfirmation(
+fun FoodConfirmationRoute(
+    viewModel: NutritionViewModel,
+    onNavigateBack: () -> Unit,
+    onSaveSuccess: () -> Unit,
     mealType: String = "BREAKFAST",
-    viewModel: NutritionViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit = {},
-    onSaveSuccess: () -> Unit = {},
+) {
+    FoodConfirmationScreen(
+        mealType = mealType,
+        onNavigateBack = onNavigateBack,
+        onSaveMeal = { name, type, calories, protein, carbs, fat ->
+            viewModel.addMeal(name, type, calories, protein, carbs, fat)
+            onSaveSuccess()
+        },
+    )
+}
+
+// Screen: formulario de ingredientes. La lista que se va cargando es estado propio de la
+// pantalla; al confirmar, avisa con onSaveMeal y la Route decide qué hacer.
+@Composable
+fun FoodConfirmationScreen(
+    mealType: String,
+    onNavigateBack: () -> Unit,
+    onSaveMeal: (name: String, type: MealType, calories: Int, protein: Float, carbs: Float, fat: Float) -> Unit,
 ) {
     val ingredientList = remember { mutableStateListOf<IngredientItem>() }
 
@@ -86,203 +104,200 @@ fun FoodConfirmation(
             "$formattedCategoryName Item"
         }
 
-        viewModel.addMeal(
-            name = mealName,
-            type = selectedType,
-            calories = totalCals,
-            protein = totalProtein.toFloat(),
-            carbs = totalCarbs.toFloat(),
-            fat = totalFat.toFloat(),
+        onSaveMeal(
+            mealName,
+            selectedType,
+            totalCals,
+            totalProtein.toFloat(),
+            totalCarbs.toFloat(),
+            totalFat.toFloat(),
         )
-        onSaveSuccess()
     }
 
-    VoraCoachTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                ScreenHeader(
-                    title = "Review Meal",
-                    onBackClick = onNavigateBack,
-                    modifier = Modifier.statusBarsPadding(),
-                )
-            },
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                // Component 1: Add Ingredient Button
-                SecondaryButton(
-                    text = "+ Add Ingredient",
-                    onClick = {
-                        val newId = (ingredientList.maxOfOrNull { it.id } ?: 0) + 1
-                        ingredientList.add(IngredientItem(id = newId, name = "", grams = 100, calories = 150))
-                    },
-                    style = SecondaryButtonStyle.Outlined,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ScreenHeader(
+                title = "Review Meal",
+                onBackClick = onNavigateBack,
+                modifier = Modifier.statusBarsPadding(),
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            // Component 1: Add Ingredient Button
+            SecondaryButton(
+                text = "+ Add Ingredient",
+                onClick = {
+                    val newId = (ingredientList.maxOfOrNull { it.id } ?: 0) + 1
+                    ingredientList.add(IngredientItem(id = newId, name = "", grams = 100, calories = 150))
+                },
+                style = SecondaryButtonStyle.Outlined,
+                modifier = Modifier.fillMaxWidth(),
+            )
 
-                // Component 2: Dynamic Ingredient Cards List
-                ingredientList.forEachIndexed { index, item ->
-                    AppCard(modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
+            // Component 2: Dynamic Ingredient Cards List
+            ingredientList.forEachIndexed { index, item ->
+                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        // Left Side Column: Name input & Grams counter
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            // Left Side Column: Name input & Grams counter
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                VoraTextField(
-                                    label = "Ingredient Name",
-                                    value = item.name,
-                                    onValueChange = { newName ->
-                                        ingredientList[index] = item.copy(name = newName)
+                            VoraTextField(
+                                label = "Ingredient Name",
+                                value = item.name,
+                                onValueChange = { newName ->
+                                    ingredientList[index] = item.copy(name = newName)
+                                },
+                                placeholder = "e.g. Oats, Eggs, Chicken",
+                                leadingIcon = Icons.Outlined.Edit,
+                            )
+
+                            // Grams counter row
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(
+                                    onClick = {
+                                        val newGrams = maxOf(0, item.grams - 10)
+                                        val newCals = maxOf(0, item.calories - 20)
+                                        ingredientList[index] = item.copy(grams = newGrams, calories = newCals)
                                     },
-                                    placeholder = "e.g. Oats, Eggs, Chicken",
-                                    leadingIcon = Icons.Outlined.Edit,
-                                )
-
-                                // Grams counter row
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    IconButton(
-                                        onClick = {
-                                            val newGrams = maxOf(0, item.grams - 10)
-                                            val newCals = maxOf(0, item.calories - 20)
-                                            ingredientList[index] = item.copy(grams = newGrams, calories = newCals)
-                                        },
-                                        modifier = Modifier.size(28.dp),
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Remove,
-                                            contentDescription = "Decrease grams",
-                                            modifier = Modifier.size(16.dp),
-                                        )
-                                    }
-
-                                    Spacer(Modifier.width(4.dp))
-
-                                    Text(
-                                        text = "${item.grams}g",
-                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.size(28.dp),
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Remove,
+                                        contentDescription = "Decrease grams",
+                                        modifier = Modifier.size(16.dp),
                                     )
-
-                                    Spacer(Modifier.width(4.dp))
-
-                                    IconButton(
-                                        onClick = {
-                                            ingredientList[index] = item.copy(
-                                                grams = item.grams + 10,
-                                                calories = item.calories + 20,
-                                            )
-                                        },
-                                        modifier = Modifier.size(28.dp),
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Add,
-                                            contentDescription = "Increase grams",
-                                            modifier = Modifier.size(16.dp),
-                                        )
-                                    }
                                 }
-                            }
 
-                            Spacer(Modifier.width(12.dp))
+                                Spacer(Modifier.width(4.dp))
 
-                            // Right Side Column: Calories & Remove button
-                            Column(
-                                horizontalAlignment = Alignment.End,
-                                verticalArrangement = Arrangement.SpaceBetween,
-                            ) {
                                 Text(
-                                    text = "${item.calories} kcal",
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    text = "${item.grams}g",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
 
-                                Spacer(Modifier.height(12.dp))
+                                Spacer(Modifier.width(4.dp))
 
-                                TextButton(
-                                    onClick = { ingredientList.remove(item) },
-                                    contentPadding = PaddingValues(0.dp),
+                                IconButton(
+                                    onClick = {
+                                        ingredientList[index] = item.copy(
+                                            grams = item.grams + 10,
+                                            calories = item.calories + 20,
+                                        )
+                                    },
+                                    modifier = Modifier.size(28.dp),
                                 ) {
-                                    Text(
-                                        text = "Remove",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.error,
+                                    Icon(
+                                        imageVector = Icons.Outlined.Add,
+                                        contentDescription = "Increase grams",
+                                        modifier = Modifier.size(16.dp),
                                     )
                                 }
                             }
                         }
-                    }
-                }
 
-                // Component 3: Meal Totals Display Summary Card
-                AppCard(modifier = Modifier.fillMaxWidth()) {
-                    Column {
-                        // Top Row
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
+                        Spacer(Modifier.width(12.dp))
+
+                        // Right Side Column: Calories & Remove button
+                        Column(
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
-                                text = "meal totals",
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = TextSecondary,
-                            )
-                            Text(
-                                text = "$totalCals kcal",
+                                text = "${item.calories} kcal",
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
-                        }
 
-                        Spacer(Modifier.height(12.dp))
-                        HorizontalDivider(color = BorderGray)
-                        Spacer(Modifier.height(12.dp))
+                            Spacer(Modifier.height(12.dp))
 
-                        // Bottom Row (3 Macro Metrics)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            MacroMetric(label = "Protein", value = "${totalProtein}g")
-                            MacroMetric(label = "Carbs", value = "${totalCarbs}g")
-                            MacroMetric(label = "Fat", value = "${totalFat}g")
+                            TextButton(
+                                onClick = { ingredientList.remove(item) },
+                                contentPadding = PaddingValues(0.dp),
+                            ) {
+                                Text(
+                                    text = "Remove",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = MaterialTheme.colorScheme.error,
+                                )
+                            }
                         }
                     }
                 }
-
-                Spacer(Modifier.height(8.dp))
-
-                // Component 4: Contextual Dynamic Action Button
-                PrimaryButton(
-                    text = "Add to $formattedCategoryName",
-                    onClick = { saveAndConfirm() },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                // Component 5: Secondary Action Button
-                SecondaryButton(
-                    text = "Save without loggin",
-                    onClick = {},
-                    style = SecondaryButtonStyle.Outlined,
-                    modifier = Modifier.fillMaxWidth(),
-                )
             }
+
+            // Component 3: Meal Totals Display Summary Card
+            AppCard(modifier = Modifier.fillMaxWidth()) {
+                Column {
+                    // Top Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "meal totals",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = TextSecondary,
+                        )
+                        Text(
+                            text = "$totalCals kcal",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+
+                    Spacer(Modifier.height(12.dp))
+                    HorizontalDivider(color = BorderGray)
+                    Spacer(Modifier.height(12.dp))
+
+                    // Bottom Row (3 Macro Metrics)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        MacroMetric(label = "Protein", value = "${totalProtein}g")
+                        MacroMetric(label = "Carbs", value = "${totalCarbs}g")
+                        MacroMetric(label = "Fat", value = "${totalFat}g")
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            // Component 4: Contextual Dynamic Action Button
+            PrimaryButton(
+                text = "Add to $formattedCategoryName",
+                onClick = { saveAndConfirm() },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            // Component 5: Secondary Action Button
+            SecondaryButton(
+                text = "Save without loggin",
+                onClick = {},
+                style = SecondaryButtonStyle.Outlined,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }
@@ -308,6 +323,10 @@ private fun MacroMetric(label: String, value: String) {
 @Composable
 private fun FoodConfirmationPreview() {
     VoraCoachTheme {
-        FoodConfirmation()
+        FoodConfirmationScreen(
+            mealType = "LUNCH",
+            onNavigateBack = {},
+            onSaveMeal = { _, _, _, _, _, _ -> },
+        )
     }
 }

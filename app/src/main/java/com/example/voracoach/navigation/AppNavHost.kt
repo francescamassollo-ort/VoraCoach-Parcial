@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,8 +28,8 @@ import com.example.voracoach.ui.screens.home.NotificationsRoute
 import com.example.voracoach.ui.screens.nutrition.AddFood
 import com.example.voracoach.ui.screens.nutrition.DashboardRoute
 import com.example.voracoach.ui.screens.nutrition.FoodAnalysis
-import com.example.voracoach.ui.screens.nutrition.FoodConfirmation
-import com.example.voracoach.ui.screens.nutrition.MealDetails
+import com.example.voracoach.ui.screens.nutrition.FoodConfirmationRoute
+import com.example.voracoach.ui.screens.nutrition.MealDetailsRoute
 import com.example.voracoach.ui.screens.nutrition.PhotoAnalysis
 import com.example.voracoach.ui.screens.nutrition.TodayMealsRoute
 import com.example.voracoach.ui.screens.nutrition.VoiceFoodLogging
@@ -267,7 +266,7 @@ fun AppNavHost(
                 }
 
                 composable(AppDestination.FoodConfirmation.route) { entry ->
-                    FoodConfirmation(
+                    FoodConfirmationRoute(
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
                         onSaveSuccess = {
@@ -280,15 +279,9 @@ fun AppNavHost(
                     route = AppDestination.MealDetails.route,
                     arguments = listOf(navArgument(MEAL_ID_ARG) { type = NavType.StringType }),
                 ) { backStackEntry ->
-                    val mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty()
-                    val nutritionViewModel = backStackEntry.sharedNutritionViewModel(navController)
-                    val meals by nutritionViewModel.meals.collectAsStateWithLifecycle()
-                    // Si la comida no existe (por ejemplo, se borró), queda null y la pantalla
-                    // muestra un estado vacío en vez de datos inventados
-                    val meal = meals.find { it.id.toString() == mealId }
-                    MealDetails(
-                        meal = meal,
-                        viewModel = nutritionViewModel,
+                    MealDetailsRoute(
+                        mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty(),
+                        viewModel = backStackEntry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
                     )
                 }

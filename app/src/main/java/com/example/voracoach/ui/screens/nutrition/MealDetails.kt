@@ -36,7 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.voracoach.R
 import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealType
@@ -52,11 +52,30 @@ import com.example.voracoach.ui.theme.TextSecondary
 import com.example.voracoach.ui.theme.VoraCoachTheme
 import com.example.voracoach.viewmodel.NutritionViewModel
 
+// Route: busca la comida por id en el estado del ViewModel y conecta el borrado.
 @Composable
-fun MealDetails(
+fun MealDetailsRoute(
+    mealId: String,
+    viewModel: NutritionViewModel,
+    onNavigateBack: () -> Unit,
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    // Si la comida no existe (por ejemplo, se borró), queda null y la pantalla
+    // muestra un estado vacío en vez de datos inventados
+    val meal = uiState.meals.find { it.id.toString() == mealId }
+    MealDetailsScreen(
+        meal = meal,
+        onNavigateBack = onNavigateBack,
+        onDeleteMeal = viewModel::removeMeal,
+    )
+}
+
+// Screen: muestra la comida recibida y avisa cuando se confirma el borrado.
+@Composable
+fun MealDetailsScreen(
     meal: Meal?,
-    viewModel: NutritionViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit = {},
+    onNavigateBack: () -> Unit,
+    onDeleteMeal: (Meal) -> Unit,
 ) {
     // Sin comida no hay nada que mostrar ni borrar: estado vacío con opción de volver
     if (meal == null) {
@@ -66,114 +85,112 @@ fun MealDetails(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    VoraCoachTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                ScreenHeader(
-                    title = "Meal Detail",
-                    onBackClick = onNavigateBack,
-                    modifier = Modifier.statusBarsPadding(),
-                    actions = {
-                        IconButton(onClick = { showDeleteDialog = true }) {
-                            Icon(
-                                imageVector = Icons.Outlined.DeleteOutline,
-                                contentDescription = "Delete Meal",
-                                tint = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.size(22.dp),
-                            )
-                        }
-                    },
-                )
-            },
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                // Title Section: Meal name & type category badge
-                AppCard(modifier = Modifier.fillMaxWidth()) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ScreenHeader(
+                title = "Meal Detail",
+                onBackClick = onNavigateBack,
+                modifier = Modifier.statusBarsPadding(),
+                actions = {
+                    IconButton(onClick = { showDeleteDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteOutline,
+                            contentDescription = "Delete Meal",
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
+                },
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            // Title Section: Meal name & type category badge
+            AppCard(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "MEAL ITEM",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = TextSecondary,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = meal.name,
+                            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                    StatusBadge(
+                        text = meal.type.name.replace("_", " "),
+                        style = StatusBadgeStyle.Mint,
+                        fontSize = 11.sp,
+                    )
+                }
+            }
+
+            // Macro Breakout Card
+            AppCard(modifier = Modifier.fillMaxWidth()) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "NUTRITIONAL BREAKDOWN",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = TextSecondary,
+                    )
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "MEAL ITEM",
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = TextSecondary,
-                            )
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                text = meal.name,
-                                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-                        StatusBadge(
-                            text = meal.type.name.replace("_", " "),
-                            style = StatusBadgeStyle.Mint,
-                            fontSize = 11.sp,
-                        )
-                    }
-                }
-
-                // Macro Breakout Card
-                AppCard(modifier = Modifier.fillMaxWidth()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(
-                            text = "NUTRITIONAL BREAKDOWN",
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = TextSecondary,
+                            text = "Calories",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = "Calories",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                            Text(
-                                text = "${meal.calories} kcal",
-                                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-
-                        HorizontalDivider(color = BorderGray)
-
-                        AppInfoRow(
-                            label = "Protein",
-                            value = "${meal.protein.toInt()}g",
-                        )
-                        AppInfoRow(
-                            label = "Carbs",
-                            value = "${meal.carbs.toInt()}g",
-                        )
-                        AppInfoRow(
-                            label = "Fat",
-                            value = "${meal.fat.toInt()}g",
+                        Text(
+                            text = "${meal.calories} kcal",
+                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
-                }
 
-                // Date metadata card
-                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    HorizontalDivider(color = BorderGray)
+
                     AppInfoRow(
-                        label = "Date Logged",
-                        value = meal.date,
+                        label = "Protein",
+                        value = "${meal.protein.toInt()}g",
+                    )
+                    AppInfoRow(
+                        label = "Carbs",
+                        value = "${meal.carbs.toInt()}g",
+                    )
+                    AppInfoRow(
+                        label = "Fat",
+                        value = "${meal.fat.toInt()}g",
                     )
                 }
+            }
+
+            // Date metadata card
+            AppCard(modifier = Modifier.fillMaxWidth()) {
+                AppInfoRow(
+                    label = "Date Logged",
+                    value = meal.date,
+                )
             }
         }
     }
@@ -197,7 +214,7 @@ fun MealDetails(
             confirmButton = {
                 Button(
                     onClick = {
-                        viewModel.removeMeal(meal)
+                        onDeleteMeal(meal)
                         showDeleteDialog = false
                         onNavigateBack()
                     },
@@ -222,7 +239,7 @@ fun MealDetails(
 @Composable
 private fun MealDetailsPreview() {
     VoraCoachTheme {
-        MealDetails(
+        MealDetailsScreen(
             meal = Meal(
                 id = 1,
                 name = "Grilled Chicken & Rice",
@@ -233,6 +250,8 @@ private fun MealDetailsPreview() {
                 carbs = 55f,
                 fat = 12f,
             ),
+            onNavigateBack = {},
+            onDeleteMeal = {},
         )
     }
 }
