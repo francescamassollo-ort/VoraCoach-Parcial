@@ -28,10 +28,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.voracoach.R
 import com.example.voracoach.ui.components.AppCard
 import com.example.voracoach.ui.components.AppCardStyle
 import com.example.voracoach.ui.components.PrimaryButton
@@ -46,6 +48,7 @@ fun AddFood(
     onNavigateToVoice: () -> Unit = {},
     onNavigateToPhoto: () -> Unit = {},
     onNavigateToManual: () -> Unit = {},
+    onNavigateToSearch: () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -140,10 +143,10 @@ fun AddFood(
                 }
             }
 
-            // Card 3: Local Database Search Utility
+            // Card 3: busca entre las comidas guardadas en el celu (Room)
             AppCard(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {},
+                onClick = onNavigateToSearch,
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
@@ -162,12 +165,12 @@ fun AddFood(
                     Spacer(Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Search database",
+                            text = stringResource(R.string.add_food_search_title),
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "Search millions of local & global food items.",
+                            text = stringResource(R.string.add_food_search_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

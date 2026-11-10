@@ -630,6 +630,20 @@
     <string name="food_add_to">Add to %1$s</string>
     <string name="food_save_without_logging">Save without logging</string>
     <string name="food_meal_saved">Meal saved. Find it in Search Database.</string>
+
+    <!-- Saved Meals (Search Database) -->
+    <string name="saved_meals_title">Search Database</string>
+    <string name="saved_meals_search_label">Search</string>
+    <string name="saved_meals_search_hint">e.g. chicken, smoothie</string>
+    <string name="saved_meals_macros">P: %1$dg · C: %2$dg · F: %3$dg</string>
+    <string name="saved_meals_delete">Delete saved meal</string>
+    <string name="saved_meals_delete_title">Delete saved meal?</string>
+    <string name="saved_meals_delete_body">\"%1$s\" will be removed from your saved meals.</string>
+    <string name="saved_meals_empty">No saved meals yet</string>
+    <string name="saved_meals_no_results">No meals match your search</string>
+    <string name="saved_meals_empty_body">Use \"Save without logging\" when reviewing a meal to find it here later.</string>
+    <string name="add_food_search_title">Search database</string>
+    <string name="add_food_search_subtitle">Search your saved meals and log them in one tap.</string>
     <string name="food_kcal_value">%1$d kcal</string>
     <string name="food_grams_value">%1$dg</string>
     <string name="food_increase_grams">Increase grams</string>

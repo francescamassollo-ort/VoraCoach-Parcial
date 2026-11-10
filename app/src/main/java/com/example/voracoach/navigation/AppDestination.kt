@@ -78,6 +78,8 @@ sealed class AppDestination(val route: String) {
 
     data object PhotoAnalysis : AppDestination("nutrition_photo")
 
+    data object SavedMeals : AppDestination("nutrition_saved_meals")
+
     // mealType: horario de la comida. fromAnalysis (opcional, por query): true si viene de voz
     // o foto, para que la pantalla arranque con los ingredientes "detectados".
     data object FoodConfirmation :

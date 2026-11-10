@@ -32,6 +32,7 @@ import com.example.voracoach.ui.screens.nutrition.FoodAnalysis
 import com.example.voracoach.ui.screens.nutrition.FoodConfirmationRoute
 import com.example.voracoach.ui.screens.nutrition.MealDetailsRoute
 import com.example.voracoach.ui.screens.nutrition.PhotoAnalysis
+import com.example.voracoach.ui.screens.nutrition.SavedMealsRoute
 import com.example.voracoach.ui.screens.nutrition.TodayMealsRoute
 import com.example.voracoach.ui.screens.nutrition.VoiceFoodLogging
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
@@ -254,6 +255,18 @@ fun AppNavHost(
                         onNavigateToVoice = { navController.navigate(AppDestination.VoiceFoodLogging.route) },
                         onNavigateToPhoto = { navController.navigate(AppDestination.PhotoAnalysis.route) },
                         onNavigateToManual = { navController.navigate(AppDestination.FoodConfirmation.createRoute()) },
+                        onNavigateToSearch = { navController.navigate(AppDestination.SavedMeals.route) },
+                    )
+                }
+
+                // Comidas guardadas: al registrar una, vuelve al Dashboard para verla sumada
+                composable(AppDestination.SavedMeals.route) { entry ->
+                    SavedMealsRoute(
+                        viewModel = entry.sharedNutritionViewModel(navController),
+                        onNavigateBack = { navController.popBackStack() },
+                        onMealLogged = {
+                            navController.popBackStack(AppDestination.Nutrition.route, inclusive = false)
+                        },
                     )
                 }
 
