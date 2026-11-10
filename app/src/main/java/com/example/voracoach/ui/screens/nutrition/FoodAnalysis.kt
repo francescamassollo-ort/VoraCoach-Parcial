@@ -63,84 +63,82 @@ fun FoodAnalysis(
         onAnalysisComplete()
     }
 
-    VoraCoachTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                ScreenHeader(
-                    title = "Analyzing...",
-                    onBackClick = onNavigateBack,
-                    modifier = Modifier.statusBarsPadding(),
-                )
-            },
-        ) { innerPadding ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ScreenHeader(
+                title = "Analyzing...",
+                onBackClick = onNavigateBack,
+                modifier = Modifier.statusBarsPadding(),
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 24.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            // Central Loading Hub
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 24.dp),
+                verticalArrangement = Arrangement.Center,
             ) {
-                // Central Loading Hub
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(top = 24.dp),
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    VoraOrb(diameter = 110.dp) {
-                        Icon(
-                            imageVector = Icons.Outlined.AutoAwesome,
-                            contentDescription = "AI Analyzing",
-                            tint = Color.White,
-                            modifier = Modifier.size(36.dp),
-                        )
-                    }
-
-                    Spacer(Modifier.height(32.dp))
-
-                    Text(
-                        text = "Vora AI is analyzing your food...",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onBackground,
+                VoraOrb(diameter = 110.dp) {
+                    Icon(
+                        imageVector = Icons.Outlined.AutoAwesome,
+                        contentDescription = "AI Analyzing",
+                        tint = Color.White,
+                        modifier = Modifier.size(36.dp),
                     )
-
-                    Spacer(Modifier.height(24.dp))
-
-                    // Milestones Checklist
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        StepRow(
-                            title = "Transcribing audio...",
-                            isCompleted = currentStep >= 1,
-                            isLoading = currentStep == 0,
-                        )
-                        StepRow(
-                            title = "Identifying food ingredients...",
-                            isCompleted = currentStep >= 2,
-                            isLoading = currentStep == 1,
-                        )
-                        StepRow(
-                            title = "Calculating macronutrient breakdown...",
-                            isCompleted = currentStep >= 3,
-                            isLoading = currentStep == 2,
-                        )
-                    }
                 }
 
-                // Bottom Action Button: Skip to Review
-                SecondaryButton(
-                    text = "Skip to Review",
-                    onClick = onAnalysisComplete,
-                    style = SecondaryButtonStyle.Outlined,
-                    modifier = Modifier.fillMaxWidth(),
+                Spacer(Modifier.height(32.dp))
+
+                Text(
+                    text = "Vora AI is analyzing your food...",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
+
+                Spacer(Modifier.height(24.dp))
+
+                // Milestones Checklist
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    StepRow(
+                        title = "Transcribing audio...",
+                        isCompleted = currentStep >= 1,
+                        isLoading = currentStep == 0,
+                    )
+                    StepRow(
+                        title = "Identifying food ingredients...",
+                        isCompleted = currentStep >= 2,
+                        isLoading = currentStep == 1,
+                    )
+                    StepRow(
+                        title = "Calculating macronutrient breakdown...",
+                        isCompleted = currentStep >= 3,
+                        isLoading = currentStep == 2,
+                    )
+                }
             }
+
+            // Bottom Action Button: Skip to Review
+            SecondaryButton(
+                text = "Skip to Review",
+                onClick = onAnalysisComplete,
+                style = SecondaryButtonStyle.Outlined,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }

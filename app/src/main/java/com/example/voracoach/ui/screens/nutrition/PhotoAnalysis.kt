@@ -43,141 +43,139 @@ fun PhotoAnalysis(
     onNavigateBack: () -> Unit = {},
     onReviewAndAdd: () -> Unit = {},
 ) {
-    VoraCoachTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                ScreenHeader(
-                    title = "Photo Analysis",
-                    onBackClick = onNavigateBack,
-                    modifier = Modifier.statusBarsPadding(),
-                )
-            },
-        ) { innerPadding ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ScreenHeader(
+                title = "Photo Analysis",
+                onBackClick = onNavigateBack,
+                modifier = Modifier.statusBarsPadding(),
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                // Central Bounding Box Simulation
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(320.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    // Central Bounding Box Simulation
+                    // Background Photo Placeholder
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.PhotoCamera,
+                            contentDescription = "Captured Food Photo",
+                            tint = TextMuted,
+                            modifier = Modifier.size(56.dp),
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = "Analyzed Plate Photo",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextMuted,
+                        )
+                    }
+
+                    // Bounding Overlay Chips
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(320.dp)
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant),
-                        contentAlignment = Alignment.Center,
+                            .align(Alignment.TopStart)
+                            .padding(start = 20.dp, top = 28.dp),
                     ) {
-                        // Background Photo Placeholder
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.PhotoCamera,
-                                contentDescription = "Captured Food Photo",
-                                tint = TextMuted,
-                                modifier = Modifier.size(56.dp),
-                            )
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                text = "Analyzed Plate Photo",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TextMuted,
-                            )
-                        }
-
-                        // Bounding Overlay Chips
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(start = 20.dp, top = 28.dp),
-                        ) {
-                            AppChip(
-                                text = "Grilled Chicken — 250g",
-                                style = AppChipStyle.Light,
-                                selected = true,
-                            )
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .padding(end = 20.dp, top = 12.dp),
-                        ) {
-                            AppChip(
-                                text = "Brown Rice — 150g",
-                                style = AppChipStyle.Light,
-                                selected = true,
-                            )
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(start = 24.dp, bottom = 24.dp),
-                        ) {
-                            AppChip(
-                                text = "Steamed Veggies — 100g",
-                                style = AppChipStyle.Light,
-                                selected = true,
-                            )
-                        }
+                        AppChip(
+                            text = "Grilled Chicken — 250g",
+                            style = AppChipStyle.Light,
+                            selected = true,
+                        )
                     }
 
-                    // Summary Data Callout Banner
-                    AppCard(modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Column {
-                                Text(
-                                    text = "ESTIMATED TOTAL",
-                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                    color = TextSecondary,
-                                )
-                                Spacer(Modifier.height(2.dp))
-                                Text(
-                                    text = "Estimated: 520 kcal",
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
-                            }
-
-                            Text(
-                                text = "P: 42g · C: 55g · F: 12g",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondary,
-                            )
-                        }
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 20.dp, top = 12.dp),
+                    ) {
+                        AppChip(
+                            text = "Brown Rice — 150g",
+                            style = AppChipStyle.Light,
+                            selected = true,
+                        )
                     }
 
-                    // Insight Tip
-                    InsightBanner(
-                        message = "Vora AI detected 3 food items from your plate. Tap 'Review & Add' to confirm.",
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(start = 24.dp, bottom = 24.dp),
+                    ) {
+                        AppChip(
+                            text = "Steamed Veggies — 100g",
+                            style = AppChipStyle.Light,
+                            selected = true,
+                        )
+                    }
                 }
 
-                Spacer(Modifier.height(24.dp))
+                // Summary Data Callout Banner
+                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column {
+                            Text(
+                                text = "ESTIMATED TOTAL",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = TextSecondary,
+                            )
+                            Spacer(Modifier.height(2.dp))
+                            Text(
+                                text = "Estimated: 520 kcal",
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
 
-                // Bottom Primary Action
-                PrimaryButton(
-                    text = "Review & Add",
-                    onClick = onReviewAndAdd,
+                        Text(
+                            text = "P: 42g · C: 55g · F: 12g",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextSecondary,
+                        )
+                    }
+                }
+
+                // Insight Tip
+                InsightBanner(
+                    message = "Vora AI detected 3 food items from your plate. Tap 'Review & Add' to confirm.",
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
+
+            Spacer(Modifier.height(24.dp))
+
+            // Bottom Primary Action
+            PrimaryButton(
+                text = "Review & Add",
+                onClick = onReviewAndAdd,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }

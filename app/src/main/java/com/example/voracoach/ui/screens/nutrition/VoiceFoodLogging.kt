@@ -53,68 +53,66 @@ fun VoiceFoodLogging(
         label = "pulseScale",
     )
 
-    VoraCoachTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                ScreenHeader(
-                    title = "Voice Logging",
-                    onBackClick = onNavigateBack,
-                    modifier = Modifier.statusBarsPadding(),
-                )
-            },
-        ) { innerPadding ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ScreenHeader(
+                title = "Voice Logging",
+                onBackClick = onNavigateBack,
+                modifier = Modifier.statusBarsPadding(),
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 24.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            // Top Status Header
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.padding(top = 16.dp),
             ) {
-                // Top Status Header
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = 16.dp),
-                ) {
-                    Text(
-                        text = "Listening...",
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 28.sp,
-                        ),
-                        color = MaterialTheme.colorScheme.onBackground,
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = "Speak naturally, e.g., 'A bowl of oatmeal with strawberries and a glass of milk'",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-
-                // Central Interactive VoraOrb Visual
-                VoraOrb(
-                    diameter = 150.dp,
-                    modifier = Modifier.scale(pulseScale),
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Mic,
-                        contentDescription = "Microphone",
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp),
-                    )
-                }
-
-                // Bottom Action Button
-                PrimaryButton(
-                    text = "Done Speaking",
-                    onClick = onNavigateToDoneSpeaking,
-                    modifier = Modifier.fillMaxWidth(),
+                Text(
+                    text = "Listening...",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 28.sp,
+                    ),
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Speak naturally, e.g., 'A bowl of oatmeal with strawberries and a glass of milk'",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
                 )
             }
+
+            // Central Interactive VoraOrb Visual
+            VoraOrb(
+                diameter = 150.dp,
+                modifier = Modifier.scale(pulseScale),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Mic,
+                    contentDescription = "Microphone",
+                    tint = Color.White,
+                    modifier = Modifier.size(40.dp),
+                )
+            }
+
+            // Bottom Action Button
+            PrimaryButton(
+                text = "Done Speaking",
+                onClick = onNavigateToDoneSpeaking,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }
