@@ -26,7 +26,7 @@ interface WorkoutDao {
     // Guarda el catálogo sin pisar los detalles ya descargados.
     // Primero saca a todos del catálogo y después vuelve a marcar los que llegaron: si la API
     // devuelve una lista vacía, el catálogo queda vacío, pero los detalles siguen guardados.
-    // @Transaction: ttodo se aplica junto (o nada), y la pantalla recibe un solo cambio al final.
+    // @Transaction: todo se aplica junto (o nada), y la pantalla recibe un solo cambio al final.
     @Transaction
     suspend fun saveCatalog(workouts: List<WorkoutEntity>) {
         removeAllFromCatalog()

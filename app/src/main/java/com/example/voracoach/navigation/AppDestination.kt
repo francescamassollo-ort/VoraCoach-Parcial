@@ -1,11 +1,14 @@
 package com.example.voracoach.navigation
 
+import com.example.voracoach.model.MealType
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
 // Nombre de los argumentos con el id de ejercicio, comida y tipo de comida
 const val EXERCISE_ID_ARG = "exerciseId"
 const val MEAL_ID_ARG = "mealId"
 const val MEAL_TYPE_ARG = "mealType"
+const val FROM_ANALYSIS_ARG = "fromAnalysis"
+const val EDIT_MEAL_ID_ARG = "editMealId"
 
 // Ruteo
 sealed class AppDestination(val route: String) {
@@ -62,6 +65,9 @@ sealed class AppDestination(val route: String) {
 
     data object WeeklyReview : AppDestination("progress_weekly_review")
 
+    // Ruta del subgrafo que agrupa todas las pantallas de Nutrition (no es una pantalla)
+    data object NutritionGraph : AppDestination("nutrition_graph")
+
     // Sub-pantallas de Nutrition
     data object TodayMeals : AppDestination("nutrition_today_meals")
 
@@ -73,8 +79,19 @@ sealed class AppDestination(val route: String) {
 
     data object PhotoAnalysis : AppDestination("nutrition_photo")
 
-    data object FoodConfirmation : AppDestination("food_confirmation/{$MEAL_TYPE_ARG}") {
-        fun createRoute(mealType: String = "BREAKFAST") = "food_confirmation/$mealType"
+    data object SavedMeals : AppDestination("nutrition_saved_meals")
+
+    // mealType: horario de la comida. Opcionales, por query:
+    // - fromAnalysis: true si viene de voz o foto, para arrancar con los ingredientes "detectados".
+    // - editMealId: id de la comida a editar ("Edit Meal"); -1 si es una comida nueva.
+    data object FoodConfirmation : AppDestination(
+        "food_confirmation/{$MEAL_TYPE_ARG}?$FROM_ANALYSIS_ARG={$FROM_ANALYSIS_ARG}&$EDIT_MEAL_ID_ARG={$EDIT_MEAL_ID_ARG}"
+    ) {
+        fun createRoute(
+            mealType: String = MealType.forCurrentTime().name,
+            fromAnalysis: Boolean = false,
+            editMealId: Int = -1,
+        ) = "food_confirmation/$mealType?$FROM_ANALYSIS_ARG=$fromAnalysis&$EDIT_MEAL_ID_ARG=$editMealId"
     }
 
     data object MealDetails : AppDestination("nutrition_detail/{$MEAL_ID_ARG}") {

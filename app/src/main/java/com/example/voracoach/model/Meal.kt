@@ -5,7 +5,22 @@ enum class MealType {
     BREAKFAST,
     LUNCH,
     AFTERNOON_SNACK,
-    DINNER
+    DINNER;
+
+    companion object {
+        // Tipo de comida según la hora actual: se usa cuando se carga una comida sin elegir
+        // el horario (desde voz o foto). Antes de las 11 desayuno, hasta las 15 almuerzo,
+        // hasta las 19 merienda y después cena.
+        fun forHour(hour: Int): MealType = when {
+            hour < 11 -> BREAKFAST
+            hour < 15 -> LUNCH
+            hour < 19 -> AFTERNOON_SNACK
+            else -> DINNER
+        }
+
+        fun forCurrentTime(): MealType =
+            forHour(java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY))
+    }
 }
 
 // Modelo de la app para representar una comida registrada.
@@ -13,6 +28,7 @@ data class Meal(
     val id: Int = 0,
     val name: String,
     val date: String, // Formato YYYY-MM-DD
+    val time: String = "", // Hora en que se registró, formato HH:mm
     val type: MealType,
     val calories: Int,
     val protein: Float,

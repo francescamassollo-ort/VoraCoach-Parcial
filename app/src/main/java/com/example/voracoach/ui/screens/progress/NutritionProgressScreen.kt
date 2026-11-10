@@ -136,8 +136,10 @@ fun NutritionProgressScreen(
 
             AppSectionLabel(stringResource(R.string.progress_food_habits))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                HabitTile(stringResource(R.string.progress_frequent_lunch), data.frequentLunch, Modifier.weight(1f))
-                HabitTile(stringResource(R.string.progress_top_protein), data.topProteinSource, Modifier.weight(1f))
+                // Si en el período no hay comidas registradas, se muestra un guion
+                val noData = stringResource(R.string.progress_no_data)
+                HabitTile(stringResource(R.string.progress_frequent_lunch), data.frequentLunch.ifBlank { noData }, Modifier.weight(1f))
+                HabitTile(stringResource(R.string.progress_top_protein), data.topProteinSource.ifBlank { noData }, Modifier.weight(1f))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 HabitTile(
