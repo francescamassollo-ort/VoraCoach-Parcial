@@ -5,6 +5,7 @@ import com.example.voracoach.data.local.SavedMealDao
 import com.example.voracoach.data.local.entity.toEntity
 import com.example.voracoach.data.local.entity.toModel
 import com.example.voracoach.model.Meal
+import com.example.voracoach.model.MealDates
 import com.example.voracoach.model.MealIngredient
 import com.example.voracoach.model.MealType
 import com.example.voracoach.model.SavedMeal
@@ -12,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
+
+// Días de historial de ejemplo que se cargan antes de hoy
+private const val HISTORY_DAYS = 13
 
 @Singleton
 class NutritionRepository @Inject constructor(
@@ -23,6 +27,12 @@ class NutritionRepository @Inject constructor(
         mealDao.getMealsByDate(date).map { entities ->
             entities.map { it.toModel() }
         }
+
+    fun observeMealsBetween(from: String, to: String): Flow<List<Meal>> =
+        mealDao.observeMealsBetween(from, to).map { entities -> entities.map { it.toModel() } }
+
+    fun observeIngredientsBetween(from: String, to: String): Flow<List<MealIngredient>> =
+        mealDao.observeIngredientsBetween(from, to).map { entities -> entities.map { it.toModel() } }
 
     // Una comida con sus ingredientes (para el detalle). Si la comida se borra, emite null.
     fun observeMeal(mealId: Int): Flow<Meal?> =
@@ -56,11 +66,58 @@ class NutritionRepository @Inject constructor(
     }
 
     // La primera vez que se abre la app la tabla está vacía: se cargan comidas de ejemplo
-    // (con sus ingredientes) para la fecha dada, así el Dashboard no arranca en cero.
+    // (con sus ingredientes) para hoy y un historial de las 2 semanas anteriores, así el
+    // Dashboard no arranca en cero y Progress / Nutrition tiene datos reales para promediar.
     suspend fun seedIfEmpty(date: String) {
         if (mealDao.countMeals() > 0) return
         demoMeals(date).forEach { (meal, ingredients) -> insertMeal(meal, ingredients) }
+        for (daysAgo in 1..HISTORY_DAYS) {
+            demoHistoryDay(MealDates.daysAgo(daysAgo), daysAgo)
+                .forEach { (meal, ingredients) -> insertMeal(meal, ingredients) }
+        }
     }
+
+    // Un día del historial: desayuno, almuerzo y cena que van rotando según el día,
+    // así los promedios y los días "en objetivo" varían.
+    private fun demoHistoryDay(date: String, daysAgo: Int) = listOf(
+        if (daysAgo % 2 == 0) {
+            demoMeal(date, "08:15", MealType.BREAKFAST, "Oatmeal with banana", listOf(
+                MealIngredient(name = "Rolled Oats", grams = 60, calories = 230, protein = 8f, carbs = 40f, fat = 4f),
+                MealIngredient(name = "Banana", grams = 120, calories = 105, protein = 1f, carbs = 27f, fat = 0f),
+                MealIngredient(name = "Skim Milk", grams = 150, calories = 50, protein = 5f, carbs = 7f, fat = 0f),
+            ))
+        } else {
+            demoMeal(date, "08:40", MealType.BREAKFAST, "Scrambled eggs on toast", listOf(
+                MealIngredient(name = "Eggs", grams = 120, calories = 180, protein = 15f, carbs = 1f, fat = 12f),
+                MealIngredient(name = "Whole Wheat Toast", grams = 60, calories = 150, protein = 6f, carbs = 26f, fat = 2f),
+            ))
+        },
+        if (daysAgo % 3 == 0) {
+            demoMeal(date, "13:00", MealType.LUNCH, "Tuna salad", listOf(
+                MealIngredient(name = "Tuna", grams = 120, calories = 160, protein = 30f, carbs = 0f, fat = 4f),
+                MealIngredient(name = "Mixed Greens", grams = 100, calories = 25, protein = 2f, carbs = 5f, fat = 0f),
+                MealIngredient(name = "Olive Oil", grams = 15, calories = 120, protein = 0f, carbs = 0f, fat = 14f),
+            ))
+        } else {
+            demoMeal(date, "13:10", MealType.LUNCH, "Chicken, rice and vegetables", listOf(
+                MealIngredient(name = "Grilled Chicken Breast", grams = 180, calories = 280, protein = 32f, carbs = 0f, fat = 8f),
+                MealIngredient(name = "Basmati Rice", grams = 150, calories = 190, protein = 4f, carbs = 42f, fat = 1f),
+                MealIngredient(name = "Mixed Steamed Vegetables", grams = 100, calories = 50, protein = 2f, carbs = 12f, fat = 5f),
+            ))
+        },
+        if (daysAgo % 2 == 0) {
+            demoMeal(date, "20:30", MealType.DINNER, "Salmon with potatoes", listOf(
+                MealIngredient(name = "Salmon Fillet", grams = 170, calories = 350, protein = 34f, carbs = 0f, fat = 22f),
+                MealIngredient(name = "Roasted Potatoes", grams = 200, calories = 260, protein = 5f, carbs = 50f, fat = 6f),
+            ))
+        } else {
+            demoMeal(date, "21:00", MealType.DINNER, "Pasta with tomato sauce", listOf(
+                MealIngredient(name = "Pasta", grams = 120, calories = 430, protein = 15f, carbs = 86f, fat = 2f),
+                MealIngredient(name = "Tomato Sauce", grams = 150, calories = 90, protein = 3f, carbs = 14f, fat = 3f),
+                MealIngredient(name = "Parmesan", grams = 15, calories = 60, protein = 5f, carbs = 0f, fat = 4f),
+            ))
+        },
+    )
 
     // Arma una comida de ejemplo: los totales salen de sumar los ingredientes
     private fun demoMeal(date: String, time: String, type: MealType, name: String, ingredients: List<MealIngredient>) =

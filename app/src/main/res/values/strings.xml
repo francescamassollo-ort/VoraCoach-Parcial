@@ -527,6 +527,7 @@
     <string name="progress_nutrition_analysis_text">\"Your protein intake has improved this week, especially on workout days. Keeping this consistent will better support your strength goal.\"</string>
     <string name="progress_food_habits">FOOD HABITS &amp; PATTERNS</string>
     <string name="progress_frequent_lunch">Frequent lunch</string>
+    <string name="progress_no_data">—</string>
     <string name="progress_top_protein">Top protein source</string>
     <string name="progress_avg_breakfast">Avg breakfast</string>
     <string name="progress_avg_dinner">Avg dinner</string>

@@ -6,6 +6,7 @@ import com.example.voracoach.data.repository.NutritionRepository
 import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealIngredient
 import com.example.voracoach.model.MealType
+import com.example.voracoach.model.NutritionGoals
 import com.example.voracoach.model.SavedMeal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,11 +64,11 @@ data class MealDetailsUiState(
     val proteinRemaining: Int = 0,
 )
 
-// Objetivos diarios de demostración (los mismos que mostraba la pantalla)
-private const val CALORIE_GOAL = 2_100
-private const val PROTEIN_GOAL = 140
-private const val CARBS_GOAL = 220
-private const val FAT_GOAL = 65
+// Objetivos diarios: compartidos con Progress / Nutrition (model/NutritionGoals)
+private const val CALORIE_GOAL = NutritionGoals.CALORIES
+private const val PROTEIN_GOAL = NutritionGoals.PROTEIN
+private const val CARBS_GOAL = NutritionGoals.CARBS
+private const val FAT_GOAL = NutritionGoals.FAT
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel

@@ -28,6 +28,21 @@ interface MealDao {
     @Query("SELECT * FROM meals_table WHERE date = :date ORDER BY time ASC, id ASC")
     fun getMealsByDate(date: String): Flow<List<MealEntity>>
 
+    // Comidas entre dos fechas (inclusive). Las fechas "yyyy-MM-dd" se pueden comparar como texto.
+    // La usa Progress / Nutrition para calcular promedios de la semana, el mes o 3 meses.
+    @Query("SELECT * FROM meals_table WHERE date BETWEEN :from AND :to")
+    fun observeMealsBetween(from: String, to: String): Flow<List<MealEntity>>
+
+    // Ingredientes de las comidas de ese rango (JOIN con meals_table para filtrar por fecha)
+    @Query(
+        """
+        SELECT i.* FROM meal_ingredients i
+        INNER JOIN meals_table m ON m.id = i.mealId
+        WHERE m.date BETWEEN :from AND :to
+        """
+    )
+    fun observeIngredientsBetween(from: String, to: String): Flow<List<MealIngredientEntity>>
+
     // Una comida por id (para el detalle). Flow<...?>: emite null si se borra.
     @Query("SELECT * FROM meals_table WHERE id = :id")
     fun observeMeal(id: Int): Flow<MealEntity?>
