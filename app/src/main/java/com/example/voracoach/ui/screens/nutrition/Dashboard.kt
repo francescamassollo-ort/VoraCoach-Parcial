@@ -81,6 +81,7 @@ fun DashboardRoute(
     onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
     onNavigateToVoice: () -> Unit,
     onNavigateToPhoto: () -> Unit,
+    onMealClick: (mealId: Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     DashboardScreen(
@@ -90,6 +91,7 @@ fun DashboardRoute(
         onNavigateToAddFoodWithCategory = onNavigateToAddFoodWithCategory,
         onNavigateToVoice = onNavigateToVoice,
         onNavigateToPhoto = onNavigateToPhoto,
+        onMealClick = onMealClick,
     )
 }
 
@@ -103,6 +105,7 @@ fun DashboardScreen(
     onNavigateToAddFoodWithCategory: (String) -> Unit,
     onNavigateToVoice: () -> Unit,
     onNavigateToPhoto: () -> Unit,
+    onMealClick: (mealId: Int) -> Unit,
 ) {
     val meals = uiState.meals
     val totalCalories = uiState.totalCalories
@@ -304,7 +307,8 @@ fun DashboardScreen(
                             icon = slot.icon,
                             title = slot.title,
                             subtitle = meal.name,
-                            onClick = onNavigateToTodayMeals,
+                            // Tocar una comida abre su detalle
+                            onClick = { onMealClick(meal.id) },
                             trailing = {
                                 Text(
                                     text = "${meal.calories} kcal",
@@ -432,7 +436,7 @@ fun DashboardScreen(
 
                     // Search / Manual Trigger Button
                     Surface(
-                        onClick = { onNavigateToAddFoodWithCategory("MANUAL") },
+                        onClick = onNavigateToAddFood,
                         shape = CircleShape,
                         color = White12,
                         contentColor = Color.White,
@@ -525,6 +529,7 @@ private fun DashboardPreview() {
             onNavigateToAddFoodWithCategory = {},
             onNavigateToVoice = {},
             onNavigateToPhoto = {},
+            onMealClick = {},
         )
     }
 }

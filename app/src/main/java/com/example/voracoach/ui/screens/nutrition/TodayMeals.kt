@@ -62,6 +62,7 @@ fun TodayMealsRoute(
     onNavigateBack: () -> Unit,
     onNavigateToAddFood: () -> Unit,
     onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
+    onMealClick: (mealId: Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     TodayMealsScreen(
@@ -69,6 +70,7 @@ fun TodayMealsRoute(
         onNavigateBack = onNavigateBack,
         onNavigateToAddFoodWithCategory = onNavigateToAddFoodWithCategory,
         onDeleteMeal = viewModel::removeMeal,
+        onMealClick = onMealClick,
     )
 }
 
@@ -80,6 +82,7 @@ fun TodayMealsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToAddFoodWithCategory: (String) -> Unit,
     onDeleteMeal: (Meal) -> Unit,
+    onMealClick: (mealId: Int) -> Unit,
 ) {
     val meals = uiState.meals
     val totalCalories = uiState.totalCalories
@@ -157,7 +160,11 @@ fun TodayMealsScreen(
 
                     if (categoryMeals.isNotEmpty()) {
                         items(categoryMeals, key = { it.id }) { meal ->
-                            AppCard(modifier = Modifier.fillMaxWidth()) {
+                            // Tocar la tarjeta abre el detalle; el ícono de borrar sigue funcionando aparte
+                            AppCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = { onMealClick(meal.id) },
+                            ) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -299,6 +306,7 @@ private fun TodayMealsPreview() {
             onNavigateBack = {},
             onNavigateToAddFoodWithCategory = {},
             onDeleteMeal = {},
+            onMealClick = {},
         )
     }
 }

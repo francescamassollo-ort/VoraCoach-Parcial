@@ -18,6 +18,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.AppBottomBar
 import com.example.voracoach.ui.components.StatusBarIconsFor
 import com.example.voracoach.ui.screens.auth.SignInScreen
@@ -224,6 +225,12 @@ fun AppNavHost(
                         onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
                         onNavigateToVoice = { navController.navigate(AppDestination.VoiceFoodLogging.route) },
                         onNavigateToPhoto = { navController.navigate(AppDestination.PhotoAnalysis.route) },
+                        onNavigateToAddFoodWithCategory = { type ->
+                            navController.navigate(AppDestination.FoodConfirmation.createRoute(type))
+                        },
+                        onMealClick = { mealId ->
+                            navController.navigate(AppDestination.MealDetails.createRoute(mealId.toString()))
+                        },
                     )
                 }
 
@@ -232,6 +239,12 @@ fun AppNavHost(
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
                         onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
+                        onNavigateToAddFoodWithCategory = { type ->
+                            navController.navigate(AppDestination.FoodConfirmation.createRoute(type))
+                        },
+                        onMealClick = { mealId ->
+                            navController.navigate(AppDestination.MealDetails.createRoute(mealId.toString()))
+                        },
                     )
                 }
 
@@ -240,7 +253,7 @@ fun AppNavHost(
                         onNavigateBack = { navController.popBackStack() },
                         onNavigateToVoice = { navController.navigate(AppDestination.VoiceFoodLogging.route) },
                         onNavigateToPhoto = { navController.navigate(AppDestination.PhotoAnalysis.route) },
-                        onNavigateToManual = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                        onNavigateToManual = { navController.navigate(AppDestination.FoodConfirmation.createRoute()) },
                     )
                 }
 
@@ -253,7 +266,7 @@ fun AppNavHost(
 
                 composable(AppDestination.FoodAnalysis.route) {
                     FoodAnalysis(
-                        onAnalysisComplete = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                        onAnalysisComplete = { navController.navigate(AppDestination.FoodConfirmation.createRoute()) },
                         onNavigateBack = { navController.popBackStack() },
                     )
                 }
@@ -261,12 +274,18 @@ fun AppNavHost(
                 composable(AppDestination.PhotoAnalysis.route) {
                     PhotoAnalysis(
                         onNavigateBack = { navController.popBackStack() },
-                        onReviewAndAdd = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                        onReviewAndAdd = { navController.navigate(AppDestination.FoodConfirmation.createRoute()) },
                     )
                 }
 
-                composable(AppDestination.FoodConfirmation.route) { entry ->
+                // El tipo de comida viaja en la ruta (food_confirmation/LUNCH). Si se abre desde
+                // voz, foto o "Add food" sin tipo, se usa el valor por defecto de createRoute().
+                composable(
+                    route = AppDestination.FoodConfirmation.route,
+                    arguments = listOf(navArgument(MEAL_TYPE_ARG) { type = NavType.StringType }),
+                ) { entry ->
                     FoodConfirmationRoute(
+                        mealType = entry.arguments?.getString(MEAL_TYPE_ARG) ?: MealType.BREAKFAST.name,
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
                         onSaveSuccess = {
