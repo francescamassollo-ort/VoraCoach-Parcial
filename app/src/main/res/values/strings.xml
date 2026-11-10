@@ -591,4 +591,25 @@
     <string name="progress_review_next_week_plan">View next week\'s plan</string>
     <string name="progress_review_ask_vora">Ask VORA</string>
     <string name="progress_review_done">Done</string>
+
+    <!-- Nutrition (Pantalla Dashboard / Hoy) -->
+    <string name="nutrition_date_default">TUESDAY, 8 SEPTEMBER</string>
+    <string name="nutrition_calendar_desc">Select date</string>
+    <string name="nutrition_calories_consumed">CALORIES CONSUMED</string>
+    <string name="nutrition_calories_goal">Goal: %1$s kcal</string>
+    <string name="nutrition_percent_format">%1$d%%</string>
+    <string name="nutrition_protein">Protein</string>
+    <string name="nutrition_carbs">Carbs</string>
+    <string name="nutrition_fat">Fat</string>
+    <string name="nutrition_grams_format">%1$dg/%2$dg</string>
+    <string name="nutrition_todays_meals">Today’s Meals</string>
+    <string name="nutrition_view_history">View History</string>
+    <string name="nutrition_add_meal">+ Add</string>
+    <string name="nutrition_tell_vora">Tell Vora what you ate</string>
+    <string name="nutrition_ai_description">Vora will automatically estimate the portions, ingredients, and log the nutrition details.</string>
+    <string name="nutrition_btn_voice">Voice</string>
+    <string name="nutrition_btn_photo">Photo</string>
+    <string name="nutrition_btn_search">Search</string>
+    <string name="nutrition_insight_default">You\'re on track today. A protein-rich dinner would help you reach your target.</string>
+    <string name="nutrition_not_logged">Not logged yet</string>
 </resources>
