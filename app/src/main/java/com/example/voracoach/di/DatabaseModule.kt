@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.voracoach.data.local.AppDatabase
 import com.example.voracoach.data.local.MealDao
+import com.example.voracoach.data.local.SavedMealDao
 import com.example.voracoach.data.local.WorkoutDao
 import dagger.Module
 import dagger.Provides
@@ -32,4 +33,7 @@ object DatabaseModule {
 
     @Provides
     fun provideMealDao(database: AppDatabase): MealDao = database.mealDao()
+
+    @Provides
+    fun provideSavedMealDao(database: AppDatabase): SavedMealDao = database.savedMealDao()
 }
