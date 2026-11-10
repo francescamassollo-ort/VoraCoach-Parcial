@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import com.example.voracoach.R
 import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealType
+import com.example.voracoach.ui.components.CircleIconButton
 import com.example.voracoach.ui.components.*
 import com.example.voracoach.ui.theme.BorderGray
 import com.example.voracoach.ui.theme.DarkGreen
@@ -126,25 +127,6 @@ fun DashboardScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            // Top Header without back navigation arrow for top-level landing tab
-            ScreenHeader(
-                title = stringResource(R.string.screen_nutrition),
-                onBackClick = {},
-                backButtonContainerColor = Color.Transparent,
-                backButtonBorderColor = null,
-                modifier = Modifier.statusBarsPadding(),
-                actions = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Outlined.CalendarToday,
-                            contentDescription = stringResource(R.string.nutrition_calendar_desc),
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
-                },
-            )
-        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -154,21 +136,31 @@ fun DashboardScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // 1. Date Header Label
-            Column {
-                Text(
-                    text = todayLabel,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.8.sp,
-                    ),
-                    color = TextSecondary,
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = stringResource(R.string.screen_nutrition),
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onBackground,
+            // 1. Encabezado: fecha y título a la izquierda, calendario a la derecha
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = todayLabel,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.8.sp,
+                        ),
+                        color = TextSecondary,
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = stringResource(R.string.screen_nutrition),
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+                }
+                CircleIconButton(
+                    icon = Icons.Outlined.CalendarToday,
+                    contentDescription = stringResource(R.string.nutrition_calendar_desc),
+                    onClick = {},
                 )
             }
 
@@ -286,7 +278,11 @@ fun DashboardScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                AppSectionLabel(text = stringResource(R.string.nutrition_todays_meals))
+                Text(
+                    text = stringResource(R.string.nutrition_todays_meals),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
                 TextButton(onClick = onNavigateToTodayMeals) {
                     Text(
                         text = stringResource(R.string.nutrition_view_history),
@@ -308,19 +304,34 @@ fun DashboardScreen(
                 val categoryMeals = meals.filter { it.type == slot.type }
                 if (categoryMeals.isNotEmpty()) {
                     categoryMeals.forEach { meal ->
-                        AppListRow(
-                            icon = slot.icon,
-                            title = slot.title,
-                            subtitle = meal.name,
-                            // Tocar una comida abre su detalle
+                        // Tocar una comida abre su detalle
+                        AppCard(
+                            modifier = Modifier.fillMaxWidth(),
                             onClick = { onMealClick(meal.id) },
-                            trailing = {
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = slot.title,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        text = meal.name,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = TextSecondary,
+                                    )
+                                }
+                                Spacer(Modifier.width(12.dp))
                                 Text(
                                     text = stringResource(R.string.food_kcal_value, meal.calories),
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                                 )
-                            },
-                        )
+                            }
+                        }
                     }
                 } else {
                     // Empty slot layout with category-aware "+ Add" button
@@ -511,6 +522,8 @@ private fun MacroColumn(
             color = barColor,
             trackColor = BorderGray,
             strokeCap = StrokeCap.Round,
+            gapSize = 0.dp,
+            drawStopIndicator = {},
         )
     }
 }

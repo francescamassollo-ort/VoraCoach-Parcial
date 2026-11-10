@@ -642,7 +642,7 @@
     <string name="add_food_photo_subtitle">Vora estimates sizes and nutrition info.</string>
     <string name="add_food_manual_title">Log Manually</string>
     <string name="add_food_manual_subtitle">Input weight, calories and macros yourself.</string>
-    <string name="nutrition_consumed_calories">CONSUMED CALORIES</string>
+    <string name="nutrition_consumed_calories">CALORIES CONSUMED</string>
     <string name="nutrition_goal_kcal">Goal: %1$s kcal</string>
     <string name="nutrition_percent">%1$d%%</string>
     <string name="today_meals_timeline">TIMELINE</string>
