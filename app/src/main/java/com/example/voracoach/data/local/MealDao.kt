@@ -20,4 +20,8 @@ interface MealDao {
 
     @Query("SELECT * FROM meals_table WHERE date = :date ORDER BY id ASC")
     fun getMealsByDate(date: String): Flow<List<MealEntity>>
+
+    // Cantidad de comidas guardadas: el repositorio la usa para saber si la tabla está vacía
+    @Query("SELECT COUNT(*) FROM meals_table")
+    suspend fun countMeals(): Int
 }

@@ -62,8 +62,9 @@ fun TodayMeals(
     onNavigateToAddFood: () -> Unit = {},
     onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
 ) {
-    val meals by viewModel.meals.collectAsStateWithLifecycle()
-    val totalCalories = if (meals.isNotEmpty()) meals.sumOf { it.calories } else 0
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val meals = uiState.meals
+    val totalCalories = uiState.totalCalories
 
     var mealToDelete by remember { mutableStateOf<Meal?>(null) }
 

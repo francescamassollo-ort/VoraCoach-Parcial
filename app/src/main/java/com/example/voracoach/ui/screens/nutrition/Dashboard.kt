@@ -99,23 +99,18 @@ fun Dashboard(
     onNavigateToVoice: () -> Unit = {},
     onNavigateToPhoto: () -> Unit = {},
 ) {
-    // Collect real-time list of meals from database
-    val meals by viewModel.meals.collectAsStateWithLifecycle()
-
-    // 1. Dynamic Data Calculations (handling zero-state when empty)
-    val hasData = meals.isNotEmpty()
-
-    val totalCalories = if (hasData) meals.sumOf { it.calories } else 0
-    val totalProtein = if (hasData) meals.sumOf { it.protein.toInt() } else 0
-    val totalCarbs = if (hasData) meals.sumOf { it.carbs.toInt() } else 0
-    val totalFat = if (hasData) meals.sumOf { it.fat.toInt() } else 0
-
-    val calorieGoal = if (hasData) 2100 else 0
-    val proteinGoal = if (hasData) 140 else 0
-    val carbsGoal = if (hasData) 220 else 0
-    val fatGoal = if (hasData) 65 else 0
-
-    val caloriePercent = if (calorieGoal > 0) ((totalCalories * 100) / calorieGoal).coerceIn(0, 100) else 0
+    // Estado del ViewModel: comidas de Room y totales ya calculados
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val meals = uiState.meals
+    val totalCalories = uiState.totalCalories
+    val totalProtein = uiState.totalProtein
+    val totalCarbs = uiState.totalCarbs
+    val totalFat = uiState.totalFat
+    val calorieGoal = uiState.calorieGoal
+    val proteinGoal = uiState.proteinGoal
+    val carbsGoal = uiState.carbsGoal
+    val fatGoal = uiState.fatGoal
+    val caloriePercent = uiState.caloriePercent
 
     VoraCoachTheme {
         Scaffold(
