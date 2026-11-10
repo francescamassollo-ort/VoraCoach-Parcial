@@ -1,25 +1,20 @@
 package com.example.voracoach.ui.screens.nutrition
 
+import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,185 +23,151 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.voracoach.R
-import com.example.voracoach.ui.components.AppCard
-import com.example.voracoach.ui.components.ScreenHeader
-import com.example.voracoach.ui.components.SecondaryButton
-import com.example.voracoach.ui.components.SecondaryButtonStyle
-import com.example.voracoach.ui.components.StatusBadge
-import com.example.voracoach.ui.components.StatusBadgeStyle
-import com.example.voracoach.ui.components.VoraOrb
-import com.example.voracoach.ui.theme.DarkGreen
-import com.example.voracoach.ui.theme.TextMuted
-import com.example.voracoach.ui.theme.TextSecondary
+import com.example.voracoach.ui.theme.LimeGreen
+import com.example.voracoach.ui.theme.Mint
 import com.example.voracoach.ui.theme.VoraCoachTheme
+import com.example.voracoach.ui.theme.White12
+import com.example.voracoach.ui.theme.White60
 import kotlinx.coroutines.delay
 
+// Pasos del análisis, en orden
+private val ANALYSIS_STEPS = listOf(
+    R.string.analysis_step_identifying,
+    R.string.analysis_step_portions,
+    R.string.analysis_step_nutrition,
+)
+
+// Tiempo que dura cada paso (simulado)
+private const val STEP_MILLIS = 1_200L
+
+// "05 — Food Analysis" según Figma. El análisis es simulado: los pasos avanzan solos y al
+// terminar se abre Review Meal con los ingredientes "detectados". "Cancel analysis" vuelve atrás.
 @Composable
 fun FoodAnalysis(
     onAnalysisComplete: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
 ) {
+    // Paso en curso: 0, 1 o 2; 3 = terminado
     var currentStep by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
-        delay(1200L)
-        currentStep = 1
-        delay(1200L)
-        currentStep = 2
-        delay(1200L)
-        currentStep = 3
-        delay(600L)
+        repeat(ANALYSIS_STEPS.size) {
+            delay(STEP_MILLIS)
+            currentStep++
+        }
         onAnalysisComplete()
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            ScreenHeader(
-                title = stringResource(R.string.analysis_title),
-                onBackClick = onNavigateBack,
-                modifier = Modifier.statusBarsPadding(),
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 24.dp, vertical = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
-        ) {
-            // Central Loading Hub
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(top = 24.dp),
-                verticalArrangement = Arrangement.Center,
-            ) {
-                VoraOrb(diameter = 110.dp) {
-                    Icon(
-                        imageVector = Icons.Outlined.AutoAwesome,
-                        contentDescription = stringResource(R.string.analysis_title),
-                        tint = Color.White,
-                        modifier = Modifier.size(36.dp),
-                    )
-                }
-
-                Spacer(Modifier.height(32.dp))
-
-                Text(
-                    text = stringResource(R.string.analysis_message),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-
-                Spacer(Modifier.height(24.dp))
-
-                // Milestones Checklist
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    StepRow(
-                        title = stringResource(R.string.analysis_step_transcribing),
-                        isCompleted = currentStep >= 1,
-                        isLoading = currentStep == 0,
-                    )
-                    StepRow(
-                        title = stringResource(R.string.analysis_step_identifying),
-                        isCompleted = currentStep >= 2,
-                        isLoading = currentStep == 1,
-                    )
-                    StepRow(
-                        title = stringResource(R.string.analysis_step_macros),
-                        isCompleted = currentStep >= 3,
-                        isLoading = currentStep == 2,
-                    )
-                }
-            }
-
-            // Bottom Action Button: Skip to Review
-            SecondaryButton(
-                text = stringResource(R.string.analysis_skip),
-                onClick = onAnalysisComplete,
-                style = SecondaryButtonStyle.Outlined,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-    }
+    FoodAnalysisContent(
+        currentStep = currentStep,
+        onCancel = onNavigateBack,
+    )
 }
 
+// Contenido sin la animación, para poder previsualizar cualquier paso
 @Composable
-private fun StepRow(
-    title: String,
-    isCompleted: Boolean,
-    isLoading: Boolean,
-) {
-    AppCard(modifier = Modifier.fillMaxWidth()) {
-        Row(
+private fun FoodAnalysisContent(currentStep: Int, onCancel: () -> Unit) {
+    NutritionDarkLayout(
+        title = stringResource(R.string.analysis_header),
+        onClose = onCancel,
+    ) {
+        Spacer(Modifier.height(16.dp))
+        ListeningOrb()
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.analysis_title),
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colorScheme.inverseOnSurface,
+        )
+        Spacer(Modifier.height(28.dp))
+
+        // Lo que dijo el usuario (de ejemplo, el mismo plato que precarga Review Meal)
+        DarkInfoCard {
+            Text(
+                text = stringResource(R.string.analysis_captured_input),
+                style = MaterialTheme.typography.labelSmall,
+                color = Mint,
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = stringResource(R.string.analysis_captured_example),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.inverseOnSurface,
+            )
+        }
+        Spacer(Modifier.height(24.dp))
+
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f),
-            ) {
-                when {
-                    isCompleted -> Icon(
-                        imageVector = Icons.Outlined.CheckCircle,
-                        contentDescription = stringResource(R.string.analysis_completed),
-                        tint = DarkGreen,
-                        modifier = Modifier.size(22.dp),
-                    )
-                    isLoading -> CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp,
-                        color = DarkGreen,
-                    )
-                    else -> Icon(
-                        imageVector = Icons.Outlined.RadioButtonUnchecked,
-                        contentDescription = stringResource(R.string.analysis_pending),
-                        tint = TextMuted,
-                        modifier = Modifier.size(22.dp),
-                    )
-                }
-
-                Spacer(Modifier.width(12.dp))
-
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = if (isLoading || isCompleted) FontWeight.SemiBold else FontWeight.Normal,
-                    ),
-                    color = if (isCompleted || isLoading) MaterialTheme.colorScheme.onSurface else TextSecondary,
+            ANALYSIS_STEPS.forEachIndexed { index, labelRes ->
+                StepRow(
+                    labelRes = labelRes,
+                    state = when {
+                        index < currentStep -> StepState.DONE
+                        index == currentStep -> StepState.CURRENT
+                        else -> StepState.PENDING
+                    },
                 )
             }
+        }
+        Spacer(Modifier.height(20.dp))
 
-            Spacer(Modifier.width(8.dp))
-
-            when {
-                isCompleted -> StatusBadge(text = stringResource(R.string.analysis_badge_done), style = StatusBadgeStyle.Mint)
-                isLoading -> StatusBadge(text = stringResource(R.string.analysis_badge_in_progress), style = StatusBadgeStyle.Mint)
-                else -> StatusBadge(text = stringResource(R.string.analysis_badge_pending), style = StatusBadgeStyle.Plain)
-            }
+        TextButton(onClick = onCancel) {
+            Text(
+                text = stringResource(R.string.analysis_cancel),
+                style = MaterialTheme.typography.bodyMedium.copy(textDecoration = TextDecoration.Underline),
+                color = White60,
+            )
         }
     }
 }
 
-@Preview(showBackground = true)
+private enum class StepState { DONE, CURRENT, PENDING }
+
+// Paso del análisis: punto de color + texto. Hecho = menta, en curso = lima y negrita,
+// pendiente = apagado (como en Figma)
+@Composable
+private fun StepRow(@StringRes labelRes: Int, state: StepState) {
+    val dotColor = when (state) {
+        StepState.DONE -> Mint
+        StepState.CURRENT -> LimeGreen
+        StepState.PENDING -> White12
+    }
+    val textColor = when (state) {
+        StepState.DONE -> White60
+        StepState.CURRENT -> Color.White
+        StepState.PENDING -> Color.White.copy(alpha = 0.35f)
+    }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            Modifier
+                .size(14.dp)
+                .background(dotColor, CircleShape)
+        )
+        Spacer(Modifier.width(14.dp))
+        Text(
+            text = stringResource(labelRes),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = if (state == StepState.CURRENT) FontWeight.SemiBold else FontWeight.Normal,
+            ),
+            color = textColor,
+        )
+    }
+}
+
+@Preview(showBackground = true, heightDp = 850)
 @Composable
 private fun FoodAnalysisPreview() {
     VoraCoachTheme {
-        FoodAnalysis()
+        FoodAnalysisContent(currentStep = 1, onCancel = {})
     }
 }
