@@ -32,7 +32,7 @@ import com.example.voracoach.ui.screens.nutrition.FoodAnalysis
 import com.example.voracoach.ui.screens.nutrition.FoodConfirmation
 import com.example.voracoach.ui.screens.nutrition.MealDetails
 import com.example.voracoach.ui.screens.nutrition.PhotoAnalysis
-import com.example.voracoach.ui.screens.nutrition.TodayMeals
+import com.example.voracoach.ui.screens.nutrition.TodayMealsRoute
 import com.example.voracoach.ui.screens.nutrition.VoiceFoodLogging
 import com.example.voracoach.ui.screens.profile.EditProfileRoute
 import com.example.voracoach.ui.screens.profile.GoalsRoute
@@ -229,7 +229,7 @@ fun AppNavHost(
                 }
 
                 composable(AppDestination.TodayMeals.route) { entry ->
-                    TodayMeals(
+                    TodayMealsRoute(
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
                         onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },

@@ -43,7 +43,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.voracoach.R
 import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealType
@@ -53,163 +52,180 @@ import com.example.voracoach.ui.theme.SurfaceWhite
 import com.example.voracoach.ui.theme.TextMuted
 import com.example.voracoach.ui.theme.TextSecondary
 import com.example.voracoach.ui.theme.VoraCoachTheme
+import com.example.voracoach.viewmodel.NutritionUiState
 import com.example.voracoach.viewmodel.NutritionViewModel
 
+// Route: conecta la pantalla con el ViewModel. Borrar una comida es una acción del ViewModel.
 @Composable
-fun TodayMeals(
-    viewModel: NutritionViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit = {},
-    onNavigateToAddFood: () -> Unit = {},
+fun TodayMealsRoute(
+    viewModel: NutritionViewModel,
+    onNavigateBack: () -> Unit,
+    onNavigateToAddFood: () -> Unit,
     onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    TodayMealsScreen(
+        uiState = uiState,
+        onNavigateBack = onNavigateBack,
+        onNavigateToAddFoodWithCategory = onNavigateToAddFoodWithCategory,
+        onDeleteMeal = viewModel::removeMeal,
+    )
+}
+
+// Screen: dibuja las comidas del estado y avisa los clics; el diálogo de confirmación
+// es estado propio de la pantalla (no hace falta que lo sepa el ViewModel).
+@Composable
+fun TodayMealsScreen(
+    uiState: NutritionUiState,
+    onNavigateBack: () -> Unit,
+    onNavigateToAddFoodWithCategory: (String) -> Unit,
+    onDeleteMeal: (Meal) -> Unit,
+) {
     val meals = uiState.meals
     val totalCalories = uiState.totalCalories
 
     var mealToDelete by remember { mutableStateOf<Meal?>(null) }
 
-    VoraCoachTheme {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                ScreenHeader(
-                    title = "",
-                    onBackClick = onNavigateBack,
-                    modifier = Modifier.statusBarsPadding(),
-                )
-            },
-        ) { innerPadding ->
-            Column(
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ScreenHeader(
+                title = "",
+                onBackClick = onNavigateBack,
+                modifier = Modifier.statusBarsPadding(),
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 20.dp, vertical = 8.dp),
+        ) {
+            // 1. Top Timeline Header Row
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 20.dp, vertical = 8.dp),
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                // 1. Top Timeline Header Row
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Column {
-                        Text(
-                            text = "TIMELINE",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.8.sp,
-                            ),
-                            color = TextSecondary,
-                        )
-                        Spacer(Modifier.height(2.dp))
-                        Text(
-                            text = "Today's Meals",
-                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onBackground,
-                        )
-                    }
-
+                Column {
                     Text(
-                        text = "$totalCalories kcal",
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onSurface,
+                        text = "TIMELINE",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.8.sp,
+                        ),
+                        color = TextSecondary,
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = "Today's Meals",
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
 
-                // 2. Timeline LazyColumn List & Inline Category Add Triggers
-                val categories = listOf(
-                    CategoryInfo(MealType.BREAKFAST, "BREAKFAST", "BREAKFAST", Icons.Outlined.FreeBreakfast),
-                    CategoryInfo(MealType.LUNCH, "LUNCH", "LUNCH", Icons.Outlined.LunchDining),
-                    CategoryInfo(MealType.AFTERNOON_SNACK, "AFTERNOON SNACK", "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
-                    CategoryInfo(MealType.DINNER, "DINNER", "DINNER", Icons.Outlined.DinnerDining),
+                Text(
+                    text = "$totalCalories kcal",
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
+            }
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    categories.forEach { category ->
-                        val categoryMeals = meals.filter { it.type == category.type }
+            // 2. Timeline LazyColumn List & Inline Category Add Triggers
+            val categories = listOf(
+                CategoryInfo(MealType.BREAKFAST, "BREAKFAST", "BREAKFAST", Icons.Outlined.FreeBreakfast),
+                CategoryInfo(MealType.LUNCH, "LUNCH", "LUNCH", Icons.Outlined.LunchDining),
+                CategoryInfo(MealType.AFTERNOON_SNACK, "AFTERNOON SNACK", "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
+                CategoryInfo(MealType.DINNER, "DINNER", "DINNER", Icons.Outlined.DinnerDining),
+            )
 
-                        item(key = category.type.name + "_header") {
-                            AppSectionLabel(text = category.label)
-                        }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                categories.forEach { category ->
+                    val categoryMeals = meals.filter { it.type == category.type }
 
-                        if (categoryMeals.isNotEmpty()) {
-                            items(categoryMeals, key = { it.id }) { meal ->
-                                AppCard(modifier = Modifier.fillMaxWidth()) {
+                    item(key = category.type.name + "_header") {
+                        AppSectionLabel(text = category.label)
+                    }
+
+                    if (categoryMeals.isNotEmpty()) {
+                        items(categoryMeals, key = { it.id }) { meal ->
+                            AppCard(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = meal.name,
+                                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                                        )
+                                        Spacer(Modifier.height(2.dp))
+                                        Text(
+                                            text = "P: ${meal.protein.toInt()}g · C: ${meal.carbs.toInt()}g · F: ${meal.fat.toInt()}g",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = TextSecondary,
+                                        )
+                                    }
+
                                     Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(
-                                                text = meal.name,
-                                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
-                                            )
-                                            Spacer(Modifier.height(2.dp))
-                                            Text(
-                                                text = "P: ${meal.protein.toInt()}g · C: ${meal.carbs.toInt()}g · F: ${meal.fat.toInt()}g",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = TextSecondary,
-                                            )
-                                        }
+                                        Text(
+                                            text = "${meal.calories} kcal",
+                                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                        )
 
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        IconButton(
+                                            onClick = { mealToDelete = meal },
+                                            modifier = Modifier.size(28.dp),
                                         ) {
-                                            Text(
-                                                text = "${meal.calories} kcal",
-                                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                            Icon(
+                                                imageVector = Icons.Outlined.DeleteOutline,
+                                                contentDescription = "Delete meal",
+                                                tint = MaterialTheme.colorScheme.error,
+                                                modifier = Modifier.size(18.dp),
                                             )
-
-                                            IconButton(
-                                                onClick = { mealToDelete = meal },
-                                                modifier = Modifier.size(28.dp),
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.DeleteOutline,
-                                                    contentDescription = "Delete meal",
-                                                    tint = MaterialTheme.colorScheme.error,
-                                                    modifier = Modifier.size(18.dp),
-                                                )
-                                            }
                                         }
                                     }
                                 }
                             }
-                        } else {
-                            item(key = category.type.name + "_empty") {
-                                AppCard(modifier = Modifier.fillMaxWidth()) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically,
+                        }
+                    } else {
+                        item(key = category.type.name + "_empty") {
+                            AppCard(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "No items logged yet",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = TextMuted,
+                                    )
+                                    Button(
+                                        onClick = { onNavigateToAddFoodWithCategory(category.categoryKey) },
+                                        shape = CircleShape,
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = DarkGreen,
+                                            contentColor = SurfaceWhite,
+                                        ),
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
                                     ) {
                                         Text(
-                                            text = "No items logged yet",
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = TextMuted,
+                                            text = stringResource(R.string.nutrition_add_meal),
+                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                         )
-                                        Button(
-                                            onClick = { onNavigateToAddFoodWithCategory(category.categoryKey) },
-                                            shape = CircleShape,
-                                            colors = ButtonDefaults.buttonColors(
-                                                containerColor = DarkGreen,
-                                                contentColor = SurfaceWhite,
-                                            ),
-                                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
-                                        ) {
-                                            Text(
-                                                text = stringResource(R.string.nutrition_add_meal),
-                                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                            )
-                                        }
                                     }
                                 }
                             }
@@ -239,7 +255,7 @@ fun TodayMeals(
             confirmButton = {
                 Button(
                     onClick = {
-                        viewModel.removeMeal(meal)
+                        onDeleteMeal(meal)
                         mealToDelete = null
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -270,6 +286,19 @@ private data class CategoryInfo(
 @Composable
 private fun TodayMealsPreview() {
     VoraCoachTheme {
-        TodayMeals()
+        TodayMealsScreen(
+            uiState = NutritionUiState(
+                meals = listOf(
+                    Meal(name = "Oatmeal with banana", date = "2026-11-10", type = MealType.BREAKFAST,
+                        calories = 380, protein = 14f, carbs = 62f, fat = 8f),
+                    Meal(name = "Grilled chicken salad", date = "2026-11-10", type = MealType.LUNCH,
+                        calories = 520, protein = 42f, carbs = 30f, fat = 22f),
+                ),
+                totalCalories = 900,
+            ),
+            onNavigateBack = {},
+            onNavigateToAddFoodWithCategory = {},
+            onDeleteMeal = {},
+        )
     }
 }
