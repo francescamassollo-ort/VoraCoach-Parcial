@@ -239,7 +239,6 @@ fun AppNavHost(
                     TodayMealsRoute(
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
-                        onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
                         onNavigateToAddFoodWithCategory = { type ->
                             navController.navigate(AppDestination.FoodConfirmation.createRoute(type))
                         },

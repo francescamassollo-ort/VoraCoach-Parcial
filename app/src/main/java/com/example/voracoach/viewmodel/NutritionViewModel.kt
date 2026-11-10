@@ -29,6 +29,8 @@ import javax.inject.Inject
 // Las pantallas no suman nada, solo dibujan este estado.
 data class NutritionUiState(
     val meals: List<Meal> = emptyList(),
+    // Ingredientes de las comidas del día, agrupados por id de comida (para Today's Meals)
+    val ingredientsByMeal: Map<Int, List<MealIngredient>> = emptyMap(),
     val totalCalories: Int = 0,
     val totalProtein: Int = 0,
     val totalCarbs: Int = 0,
@@ -89,10 +91,15 @@ class NutritionViewModel @Inject constructor(
 
     // Estado completo para la UI: cada vez que Room avisa un cambio en las comidas,
     // se recalculan los totales acá y la pantalla se redibuja sola.
-    val uiState: StateFlow<NutritionUiState> = meals
-        .map { meals ->
+    // Ingredientes de todas las comidas del día elegido (una sola consulta con JOIN)
+    private val dayIngredients = _currentDate
+        .flatMapLatest { date -> repository.observeIngredientsBetween(date, date) }
+
+    val uiState: StateFlow<NutritionUiState> =
+        combine(meals, dayIngredients) { meals, ingredients ->
             NutritionUiState(
                 meals = meals,
+                ingredientsByMeal = ingredients.groupBy { it.mealId },
                 totalCalories = meals.sumOf { it.calories },
                 totalProtein = meals.sumOf { it.protein.toDouble() }.toInt(),
                 totalCarbs = meals.sumOf { it.carbs.toDouble() }.toInt(),

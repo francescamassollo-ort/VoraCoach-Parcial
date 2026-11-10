@@ -647,7 +647,9 @@
     <string name="nutrition_percent">%1$d%%</string>
     <string name="today_meals_timeline">TIMELINE</string>
     <string name="today_meals_title">Today\'s Meals</string>
-    <string name="today_meals_empty_slot">No items logged yet</string>
+    <string name="today_meals_not_logged">%1$s is not logged yet</string>
+    <string name="today_meals_add">+ Add %1$s</string>
+    <string name="nutrition_goal_kcal_value">%1$s kcal</string>
     <string name="voice_title">Voice Logging</string>
     <string name="voice_listening">Listening…</string>
     <string name="voice_hint">Speak naturally, e.g. \"A bowl of oatmeal with strawberries and a glass of milk\"</string>
