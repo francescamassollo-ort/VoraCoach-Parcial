@@ -44,7 +44,7 @@ import com.example.voracoach.ui.theme.VoraCoachTheme // ← cambialo si tu tema 
  *   [contentColor] es claro) es ese color al 12 % y sin borde, así siempre contrasta.
  * Si una pantalla necesita colores distintos, se pasan por parámetro.
  *
- * Ocupa ttodo el ancho y deja 8 dp de margen, de modo que el ícono de 24 dp queda a 20 dp del
+ * Ocupa todo el ancho y deja 8 dp de margen, de modo que el ícono de 24 dp queda a 20 dp del
  * borde, igual que en Figma. No le sumes padding horizontal desde la pantalla.
  */
 @Composable

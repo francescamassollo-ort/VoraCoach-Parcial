@@ -42,7 +42,7 @@ import com.example.voracoach.ui.theme.VoraCoachTheme // ← cambialo si tu tema 
  * Campo de texto con la etiqueta arriba, para Login y Sign Up.
  * Si [isPassword] es true, oculta el texto y muestra el ojito para verlo.
  *
- * TTodo el aspecto sale del tema (Color.kt, Type.kt y Theme.kt), así que no hay colores ni
+ * Todo el aspecto sale del tema (Color.kt, Type.kt y Theme.kt), así que no hay colores ni
  * tamaños de texto escritos a mano acá:
  * - Etiqueta: `labelMedium` (Manrope 14 sp SemiBold) en `onSurface`.
  * - Texto escrito: `bodyLarge` (14 sp) en `onSurface`. Placeholder: `bodyLarge` en `TextMuted`.
