@@ -1,11 +1,13 @@
 package com.example.voracoach.navigation
 
+import com.example.voracoach.model.MealType
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
 // Nombre de los argumentos con el id de ejercicio, comida y tipo de comida
 const val EXERCISE_ID_ARG = "exerciseId"
 const val MEAL_ID_ARG = "mealId"
 const val MEAL_TYPE_ARG = "mealType"
+const val FROM_ANALYSIS_ARG = "fromAnalysis"
 
 // Ruteo
 sealed class AppDestination(val route: String) {
@@ -76,8 +78,14 @@ sealed class AppDestination(val route: String) {
 
     data object PhotoAnalysis : AppDestination("nutrition_photo")
 
-    data object FoodConfirmation : AppDestination("food_confirmation/{$MEAL_TYPE_ARG}") {
-        fun createRoute(mealType: String = "BREAKFAST") = "food_confirmation/$mealType"
+    // mealType: horario de la comida. fromAnalysis (opcional, por query): true si viene de voz
+    // o foto, para que la pantalla arranque con los ingredientes "detectados".
+    data object FoodConfirmation :
+        AppDestination("food_confirmation/{$MEAL_TYPE_ARG}?$FROM_ANALYSIS_ARG={$FROM_ANALYSIS_ARG}") {
+        fun createRoute(
+            mealType: String = MealType.forCurrentTime().name,
+            fromAnalysis: Boolean = false,
+        ) = "food_confirmation/$mealType?$FROM_ANALYSIS_ARG=$fromAnalysis"
     }
 
     data object MealDetails : AppDestination("nutrition_detail/{$MEAL_ID_ARG}") {

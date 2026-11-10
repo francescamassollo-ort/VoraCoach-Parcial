@@ -266,7 +266,7 @@ fun AppNavHost(
 
                 composable(AppDestination.FoodAnalysis.route) {
                     FoodAnalysis(
-                        onAnalysisComplete = { navController.navigate(AppDestination.FoodConfirmation.createRoute()) },
+                        onAnalysisComplete = { navController.navigate(AppDestination.FoodConfirmation.createRoute(fromAnalysis = true)) },
                         onNavigateBack = { navController.popBackStack() },
                     )
                 }
@@ -274,18 +274,25 @@ fun AppNavHost(
                 composable(AppDestination.PhotoAnalysis.route) {
                     PhotoAnalysis(
                         onNavigateBack = { navController.popBackStack() },
-                        onReviewAndAdd = { navController.navigate(AppDestination.FoodConfirmation.createRoute()) },
+                        onReviewAndAdd = { navController.navigate(AppDestination.FoodConfirmation.createRoute(fromAnalysis = true)) },
                     )
                 }
 
                 // El tipo de comida viaja en la ruta (food_confirmation/LUNCH). Si se abre desde
-                // voz, foto o "Add food" sin tipo, se usa el valor por defecto de createRoute().
+                // voz, foto o "Add food" sin tipo, createRoute() lo elige según la hora del día.
                 composable(
                     route = AppDestination.FoodConfirmation.route,
-                    arguments = listOf(navArgument(MEAL_TYPE_ARG) { type = NavType.StringType }),
+                    arguments = listOf(
+                        navArgument(MEAL_TYPE_ARG) { type = NavType.StringType },
+                        navArgument(FROM_ANALYSIS_ARG) {
+                            type = NavType.BoolType
+                            defaultValue = false
+                        },
+                    ),
                 ) { entry ->
                     FoodConfirmationRoute(
-                        mealType = entry.arguments?.getString(MEAL_TYPE_ARG) ?: MealType.BREAKFAST.name,
+                        mealType = entry.arguments?.getString(MEAL_TYPE_ARG) ?: MealType.forCurrentTime().name,
+                        fromAnalysis = entry.arguments?.getBoolean(FROM_ANALYSIS_ARG) ?: false,
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
                         onSaveSuccess = {
