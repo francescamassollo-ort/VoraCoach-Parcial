@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.voracoach.data.repository.NutritionRepository
 import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealType
+import com.example.voracoach.model.SavedMeal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,9 +80,25 @@ class NutritionViewModel @Inject constructor(
             initialValue = NutritionUiState()
         )
 
+    // Texto del buscador de comidas guardadas. Cada vez que cambia, flatMapLatest cancela
+    // la búsqueda anterior y escucha la nueva consulta de Room.
+    private val _savedMealsQuery = MutableStateFlow("")
+    val savedMealsQuery: StateFlow<String> = _savedMealsQuery.asStateFlow()
+
+    val savedMeals: StateFlow<List<SavedMeal>> = _savedMealsQuery
+        .flatMapLatest { query -> repository.searchSavedMeals(query) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
     init {
-        // Carga las comidas de ejemplo solo si la base está vacía
-        viewModelScope.launch { repository.seedIfEmpty(_currentDate.value) }
+        // Carga las comidas de ejemplo (del día y guardadas) solo si las tablas están vacías
+        viewModelScope.launch {
+            repository.seedIfEmpty(_currentDate.value)
+            repository.seedSavedMealsIfEmpty()
+        }
     }
 
     fun addMeal(
@@ -112,6 +129,31 @@ class NutritionViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteMeal(meal)
         }
+    }
+
+    fun onSavedMealsQueryChange(query: String) {
+        _savedMealsQuery.value = query
+    }
+
+    // "Save without logging": guarda la comida como plantilla, sin sumarla al día
+    fun saveWithoutLogging(
+        name: String,
+        calories: Int,
+        protein: Float,
+        carbs: Float,
+        fat: Float,
+    ) {
+        val saved = SavedMeal(name = name, calories = calories, protein = protein, carbs = carbs, fat = fat)
+        viewModelScope.launch { repository.saveMeal(saved) }
+    }
+
+    // Registra una comida guardada en el día actual, con el horario que corresponda
+    fun logSavedMeal(saved: SavedMeal, type: MealType = MealType.forCurrentTime()) {
+        addMeal(saved.name, type, saved.calories, saved.protein, saved.carbs, saved.fat)
+    }
+
+    fun deleteSavedMeal(saved: SavedMeal) {
+        viewModelScope.launch { repository.deleteSavedMeal(saved) }
     }
 
     fun setDate(date: String) {
