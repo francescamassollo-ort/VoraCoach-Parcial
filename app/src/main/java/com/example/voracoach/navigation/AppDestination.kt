@@ -62,6 +62,9 @@ sealed class AppDestination(val route: String) {
 
     data object WeeklyReview : AppDestination("progress_weekly_review")
 
+    // Ruta del subgrafo que agrupa todas las pantallas de Nutrition (no es una pantalla)
+    data object NutritionGraph : AppDestination("nutrition_graph")
+
     // Sub-pantallas de Nutrition
     data object TodayMeals : AppDestination("nutrition_today_meals")
 

@@ -7,12 +7,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
@@ -61,9 +64,6 @@ fun AppNavHost(
     val activity = LocalActivity.current
     val currentEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentEntry?.destination
-
-    // Shared NutritionViewModel instance scoped to the Nutrition flow
-    val nutritionViewModel: NutritionViewModel = hiltViewModel()
 
     val showBottomBar = BottomBarItem.entries.any { it.destination.route == currentDestination?.route }
 
@@ -209,77 +209,87 @@ fun AppNavHost(
                 )
             }
 
-            // ── NUTRITION SUBGRAPH (8 Screens) ───────────────────────────────
-            composable(AppDestination.Nutrition.route) {
-                Dashboard(
-                    viewModel = nutritionViewModel,
-                    onNavigateToTodayMeals = { navController.navigate(AppDestination.TodayMeals.route) },
-                    onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
-                )
-            }
+            // ── NUTRITION ─────────────────────────────────────────────────────
+            // Subgrafo: agrupa las pantallas de Nutrition bajo una ruta propia. Así el
+            // NutritionViewModel se ata a este grupo: todas sus pantallas comparten la misma
+            // instancia (lo que se agrega en FoodConfirmation se ve en el Dashboard) y se
+            // descarta cuando el usuario sale de Nutrition.
+            navigation(
+                route = AppDestination.NutritionGraph.route,
+                startDestination = AppDestination.Nutrition.route,
+            ) {
+                composable(AppDestination.Nutrition.route) { entry ->
+                    Dashboard(
+                        viewModel = entry.sharedNutritionViewModel(navController),
+                        onNavigateToTodayMeals = { navController.navigate(AppDestination.TodayMeals.route) },
+                        onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
+                    )
+                }
 
-            composable(AppDestination.TodayMeals.route) {
-                TodayMeals(
-                    viewModel = nutritionViewModel,
-                    onNavigateBack = { navController.popBackStack() },
-                    onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
-                )
-            }
+                composable(AppDestination.TodayMeals.route) { entry ->
+                    TodayMeals(
+                        viewModel = entry.sharedNutritionViewModel(navController),
+                        onNavigateBack = { navController.popBackStack() },
+                        onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
+                    )
+                }
 
-            composable(AppDestination.AddFood.route) {
-                AddFood(
-                    onNavigateBack = { navController.popBackStack() },
-                    onNavigateToVoice = { navController.navigate(AppDestination.VoiceFoodLogging.route) },
-                    onNavigateToPhoto = { navController.navigate(AppDestination.PhotoAnalysis.route) },
-                    onNavigateToManual = { navController.navigate(AppDestination.FoodConfirmation.route) },
-                )
-            }
+                composable(AppDestination.AddFood.route) {
+                    AddFood(
+                        onNavigateBack = { navController.popBackStack() },
+                        onNavigateToVoice = { navController.navigate(AppDestination.VoiceFoodLogging.route) },
+                        onNavigateToPhoto = { navController.navigate(AppDestination.PhotoAnalysis.route) },
+                        onNavigateToManual = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                    )
+                }
 
-            composable(AppDestination.VoiceFoodLogging.route) {
-                VoiceFoodLogging(
-                    onNavigateBack = { navController.popBackStack() },
-                    onNavigateToDoneSpeaking = { navController.navigate(AppDestination.FoodAnalysis.route) },
-                )
-            }
+                composable(AppDestination.VoiceFoodLogging.route) {
+                    VoiceFoodLogging(
+                        onNavigateBack = { navController.popBackStack() },
+                        onNavigateToDoneSpeaking = { navController.navigate(AppDestination.FoodAnalysis.route) },
+                    )
+                }
 
-            composable(AppDestination.FoodAnalysis.route) {
-                FoodAnalysis(
-                    onAnalysisComplete = { navController.navigate(AppDestination.FoodConfirmation.route) },
-                    onNavigateBack = { navController.popBackStack() },
-                )
-            }
+                composable(AppDestination.FoodAnalysis.route) {
+                    FoodAnalysis(
+                        onAnalysisComplete = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                        onNavigateBack = { navController.popBackStack() },
+                    )
+                }
 
-            composable(AppDestination.PhotoAnalysis.route) {
-                PhotoAnalysis(
-                    onNavigateBack = { navController.popBackStack() },
-                    onReviewAndAdd = { navController.navigate(AppDestination.FoodConfirmation.route) },
-                )
-            }
+                composable(AppDestination.PhotoAnalysis.route) {
+                    PhotoAnalysis(
+                        onNavigateBack = { navController.popBackStack() },
+                        onReviewAndAdd = { navController.navigate(AppDestination.FoodConfirmation.route) },
+                    )
+                }
 
-            composable(AppDestination.FoodConfirmation.route) {
-                FoodConfirmation(
-                    viewModel = nutritionViewModel,
-                    onNavigateBack = { navController.popBackStack() },
-                    onSaveSuccess = {
-                        navController.popBackStack(AppDestination.Nutrition.route, inclusive = false)
-                    },
-                )
-            }
+                composable(AppDestination.FoodConfirmation.route) { entry ->
+                    FoodConfirmation(
+                        viewModel = entry.sharedNutritionViewModel(navController),
+                        onNavigateBack = { navController.popBackStack() },
+                        onSaveSuccess = {
+                            navController.popBackStack(AppDestination.Nutrition.route, inclusive = false)
+                        },
+                    )
+                }
 
-            composable(
-                route = AppDestination.MealDetails.route,
-                arguments = listOf(navArgument(MEAL_ID_ARG) { type = NavType.StringType }),
-            ) { backStackEntry ->
-                val mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty()
-                val meals by nutritionViewModel.meals.collectAsStateWithLifecycle()
-                // Si la comida no existe (por ejemplo, se borró), queda null y la pantalla
-                // muestra un estado vacío en vez de datos inventados
-                val meal = meals.find { it.id.toString() == mealId }
-                MealDetails(
-                    meal = meal,
-                    viewModel = nutritionViewModel,
-                    onNavigateBack = { navController.popBackStack() },
-                )
+                composable(
+                    route = AppDestination.MealDetails.route,
+                    arguments = listOf(navArgument(MEAL_ID_ARG) { type = NavType.StringType }),
+                ) { backStackEntry ->
+                    val mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty()
+                    val nutritionViewModel = backStackEntry.sharedNutritionViewModel(navController)
+                    val meals by nutritionViewModel.meals.collectAsStateWithLifecycle()
+                    // Si la comida no existe (por ejemplo, se borró), queda null y la pantalla
+                    // muestra un estado vacío en vez de datos inventados
+                    val meal = meals.find { it.id.toString() == mealId }
+                    MealDetails(
+                        meal = meal,
+                        viewModel = nutritionViewModel,
+                        onNavigateBack = { navController.popBackStack() },
+                    )
+                }
             }
 
             // ── PROGRESS ──────────────────────────────────────────────────────
@@ -384,4 +394,14 @@ fun NavHostController.navigateToTab(item: BottomBarItem) {
         launchSingleTop = true
         restoreState = true
     }
+}
+
+// Devuelve el NutritionViewModel del subgrafo de Nutrition (no el de esta pantalla sola):
+// se pide a la entrada del grafo padre, que vive mientras haya alguna pantalla de Nutrition abierta.
+@Composable
+private fun NavBackStackEntry.sharedNutritionViewModel(navController: NavHostController): NutritionViewModel {
+    val graphEntry = remember(this) {
+        navController.getBackStackEntry(AppDestination.NutritionGraph.route)
+    }
+    return hiltViewModel(graphEntry)
 }
