@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.voracoach.R
 import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.AppCard
@@ -197,12 +199,12 @@ fun MealDetails(
                         contentColor = SurfaceWhite,
                     ),
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.nutrition_delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel", color = TextSecondary)
+                    Text(stringResource(R.string.nutrition_cancel), color = TextSecondary)
                 }
             },
         )

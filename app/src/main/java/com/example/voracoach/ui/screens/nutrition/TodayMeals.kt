@@ -30,7 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,7 +62,7 @@ fun TodayMeals(
     onNavigateToAddFood: () -> Unit = {},
     onNavigateToAddFoodWithCategory: (String) -> Unit = { _ -> onNavigateToAddFood() },
 ) {
-    val meals by viewModel.allTasks.collectAsState()
+    val meals by viewModel.meals.collectAsStateWithLifecycle()
     val totalCalories = if (meals.isNotEmpty()) meals.sumOf { it.calories } else 0
 
     var mealToDelete by remember { mutableStateOf<Meal?>(null) }
@@ -246,12 +246,12 @@ fun TodayMeals(
                         contentColor = SurfaceWhite,
                     ),
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.nutrition_delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { mealToDelete = null }) {
-                    Text("Cancel", color = TextSecondary)
+                    Text(stringResource(R.string.nutrition_cancel), color = TextSecondary)
                 }
             },
         )

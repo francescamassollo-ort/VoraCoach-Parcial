@@ -39,7 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -100,7 +100,7 @@ fun Dashboard(
     onNavigateToPhoto: () -> Unit = {},
 ) {
     // Collect real-time list of meals from database
-    val meals by viewModel.allTasks.collectAsState()
+    val meals by viewModel.meals.collectAsStateWithLifecycle()
 
     // 1. Dynamic Data Calculations (handling zero-state when empty)
     val hasData = meals.isNotEmpty()

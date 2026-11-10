@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -273,7 +273,7 @@ fun AppNavHost(
                 arguments = listOf(navArgument(MEAL_ID_ARG) { type = NavType.StringType }),
             ) { backStackEntry ->
                 val mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty()
-                val meals by nutritionViewModel.meals.collectAsState()
+                val meals by nutritionViewModel.meals.collectAsStateWithLifecycle()
                 val meal = meals.find { it.id.toString() == mealId } ?: Meal(
                     id = mealId.toIntOrNull() ?: 0,
                     name = "Logged Meal",

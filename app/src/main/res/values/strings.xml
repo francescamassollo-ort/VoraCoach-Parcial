@@ -612,4 +612,6 @@
     <string name="nutrition_btn_search">Search</string>
     <string name="nutrition_insight_default">You\'re on track today. A protein-rich dinner would help you reach your target.</string>
     <string name="nutrition_not_logged">Not logged yet</string>
+    <string name="nutrition_delete">Delete</string>
+    <string name="nutrition_cancel">Cancel</string>
 </resources>
