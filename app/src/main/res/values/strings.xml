@@ -629,6 +629,7 @@
     <string name="food_meal_totals">MEAL TOTALS</string>
     <string name="food_add_to">Add to %1$s</string>
     <string name="food_save_without_logging">Save without logging</string>
+    <string name="food_meal_saved">Meal saved. Find it in Search Database.</string>
     <string name="food_kcal_value">%1$d kcal</string>
     <string name="food_grams_value">%1$dg</string>
     <string name="food_increase_grams">Increase grams</string>

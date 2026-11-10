@@ -1,5 +1,6 @@
 package com.example.voracoach.ui.screens.nutrition
 
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -114,6 +116,8 @@ fun FoodConfirmationRoute(
     mealType: String,
     fromAnalysis: Boolean,
 ) {
+    val context = LocalContext.current
+    val savedMessage = stringResource(R.string.food_meal_saved)
     FoodConfirmationScreen(
         mealType = mealType,
         fromAnalysis = fromAnalysis,
@@ -121,6 +125,13 @@ fun FoodConfirmationRoute(
         onSaveMeal = { name, type, calories, protein, carbs, fat ->
             viewModel.addMeal(name, type, calories, protein, carbs, fat)
             onSaveSuccess()
+        },
+        // Guarda la comida como plantilla (sin sumarla al día), avisa con un Toast y vuelve.
+        // Toast y no Snackbar: el aviso tiene que verse aunque esta pantalla se cierre.
+        onSaveWithoutLogging = { name, calories, protein, carbs, fat ->
+            viewModel.saveWithoutLogging(name, calories, protein, carbs, fat)
+            Toast.makeText(context, savedMessage, Toast.LENGTH_SHORT).show()
+            onNavigateBack()
         },
     )
 }
@@ -133,6 +144,7 @@ fun FoodConfirmationScreen(
     fromAnalysis: Boolean,
     onNavigateBack: () -> Unit,
     onSaveMeal: (name: String, type: MealType, calories: Int, protein: Float, carbs: Float, fat: Float) -> Unit,
+    onSaveWithoutLogging: (name: String, calories: Int, protein: Float, carbs: Float, fat: Float) -> Unit,
 ) {
     // Si viene de voz o foto arranca con lo "detectado"; si se carga a mano, arranca vacía
     val ingredients = remember(fromAnalysis) {
@@ -151,6 +163,7 @@ fun FoodConfirmationScreen(
     val totalCarbs = named.sumOf { it.carbs.toDouble() }.toFloat()
     val totalFat = named.sumOf { it.fat.toDouble() }.toFloat()
     val canSave = named.isNotEmpty()
+    val mealName = named.joinToString(", ") { it.name.trim() }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -210,7 +223,7 @@ fun FoodConfirmationScreen(
                 text = stringResource(R.string.food_add_to, typeLabel),
                 onClick = {
                     onSaveMeal(
-                        named.joinToString(", ") { it.name.trim() },
+                        mealName,
                         selectedType,
                         totalCalories,
                         totalProtein,
@@ -222,12 +235,12 @@ fun FoodConfirmationScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            // Está en Figma, pero la app todavía no tiene "comidas guardadas" (favoritas):
-            // se muestra deshabilitado en vez de un botón que no hace nada.
+            // Guarda la comida en el celu para registrarla otro día desde "Search Database",
+            // sin sumarla hoy. Mismas reglas que "Add to …": hace falta un ingrediente con nombre.
             SecondaryButton(
                 text = stringResource(R.string.food_save_without_logging),
-                onClick = {},
-                enabled = false,
+                onClick = { onSaveWithoutLogging(mealName, totalCalories, totalProtein, totalCarbs, totalFat) },
+                enabled = canSave,
                 style = SecondaryButtonStyle.Outlined,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -409,6 +422,7 @@ private fun FoodConfirmationPreview() {
             fromAnalysis = true,
             onNavigateBack = {},
             onSaveMeal = { _, _, _, _, _, _ -> },
+            onSaveWithoutLogging = { _, _, _, _, _ -> },
         )
     }
 }
@@ -422,6 +436,7 @@ private fun FoodConfirmationEmptyPreview() {
             fromAnalysis = false,
             onNavigateBack = {},
             onSaveMeal = { _, _, _, _, _, _ -> },
+            onSaveWithoutLogging = { _, _, _, _, _ -> },
         )
     }
 }
