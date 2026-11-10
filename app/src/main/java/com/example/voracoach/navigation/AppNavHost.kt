@@ -27,7 +27,7 @@ import com.example.voracoach.ui.screens.coach.CoachRoute
 import com.example.voracoach.ui.screens.home.HomeRoute
 import com.example.voracoach.ui.screens.home.NotificationsRoute
 import com.example.voracoach.ui.screens.nutrition.AddFood
-import com.example.voracoach.ui.screens.nutrition.Dashboard
+import com.example.voracoach.ui.screens.nutrition.DashboardRoute
 import com.example.voracoach.ui.screens.nutrition.FoodAnalysis
 import com.example.voracoach.ui.screens.nutrition.FoodConfirmation
 import com.example.voracoach.ui.screens.nutrition.MealDetails
@@ -219,10 +219,12 @@ fun AppNavHost(
                 startDestination = AppDestination.Nutrition.route,
             ) {
                 composable(AppDestination.Nutrition.route) { entry ->
-                    Dashboard(
+                    DashboardRoute(
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateToTodayMeals = { navController.navigate(AppDestination.TodayMeals.route) },
                         onNavigateToAddFood = { navController.navigate(AppDestination.AddFood.route) },
+                        onNavigateToVoice = { navController.navigate(AppDestination.VoiceFoodLogging.route) },
+                        onNavigateToPhoto = { navController.navigate(AppDestination.PhotoAnalysis.route) },
                     )
                 }
 
