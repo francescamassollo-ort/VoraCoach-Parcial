@@ -16,8 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.voracoach.model.Meal
-import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.AppBottomBar
 import com.example.voracoach.ui.components.StatusBarIconsFor
 import com.example.voracoach.ui.screens.auth.SignInScreen
@@ -274,16 +272,9 @@ fun AppNavHost(
             ) { backStackEntry ->
                 val mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty()
                 val meals by nutritionViewModel.meals.collectAsStateWithLifecycle()
-                val meal = meals.find { it.id.toString() == mealId } ?: Meal(
-                    id = mealId.toIntOrNull() ?: 0,
-                    name = "Logged Meal",
-                    date = "Today",
-                    type = MealType.LUNCH,
-                    calories = 520,
-                    protein = 42f,
-                    carbs = 55f,
-                    fat = 12f,
-                )
+                // Si la comida no existe (por ejemplo, se borró), queda null y la pantalla
+                // muestra un estado vacío en vez de datos inventados
+                val meal = meals.find { it.id.toString() == mealId }
                 MealDetails(
                     meal = meal,
                     viewModel = nutritionViewModel,

@@ -614,4 +614,8 @@
     <string name="nutrition_not_logged">Not logged yet</string>
     <string name="nutrition_delete">Delete</string>
     <string name="nutrition_cancel">Cancel</string>
+    <string name="nutrition_meal_detail">Meal Detail</string>
+    <string name="nutrition_meal_not_found">Meal not found</string>
+    <string name="nutrition_meal_not_found_body">This meal may have been deleted.</string>
+    <string name="nutrition_back_to_meals">Back to meals</string>
 </resources>

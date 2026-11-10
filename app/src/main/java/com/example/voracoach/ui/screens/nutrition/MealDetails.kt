@@ -42,6 +42,7 @@ import com.example.voracoach.model.Meal
 import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.AppCard
 import com.example.voracoach.ui.components.AppInfoRow
+import com.example.voracoach.ui.components.PrimaryButton
 import com.example.voracoach.ui.components.ScreenHeader
 import com.example.voracoach.ui.components.StatusBadge
 import com.example.voracoach.ui.components.StatusBadgeStyle
@@ -53,10 +54,16 @@ import com.example.voracoach.viewmodel.NutritionViewModel
 
 @Composable
 fun MealDetails(
-    meal: Meal,
+    meal: Meal?,
     viewModel: NutritionViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit = {},
 ) {
+    // Sin comida no hay nada que mostrar ni borrar: estado vacío con opción de volver
+    if (meal == null) {
+        MealNotFound(onNavigateBack = onNavigateBack)
+        return
+    }
+
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     VoraCoachTheme {
@@ -227,5 +234,56 @@ private fun MealDetailsPreview() {
                 fat = 12f,
             ),
         )
+    }
+}
+
+// Estado vacío: la comida pedida no está en la base (por ejemplo, se borró)
+@Composable
+private fun MealNotFound(onNavigateBack: () -> Unit) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ScreenHeader(
+                title = stringResource(R.string.nutrition_meal_detail),
+                onBackClick = onNavigateBack,
+                modifier = Modifier.statusBarsPadding(),
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = stringResource(R.string.nutrition_meal_not_found),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.nutrition_meal_not_found_body),
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextSecondary,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            PrimaryButton(
+                text = stringResource(R.string.nutrition_back_to_meals),
+                onClick = onNavigateBack,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MealNotFoundPreview() {
+    VoraCoachTheme {
+        MealNotFound(onNavigateBack = {})
     }
 }
