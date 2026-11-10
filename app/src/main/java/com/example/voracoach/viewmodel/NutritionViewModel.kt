@@ -4,14 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.voracoach.data.repository.NutritionRepository
 import com.example.voracoach.model.Meal
+import com.example.voracoach.model.MealIngredient
 import com.example.voracoach.model.MealType
 import com.example.voracoach.model.SavedMeal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -38,6 +41,27 @@ data class NutritionUiState(
     val caloriePercent: Int
         get() = if (calorieGoal > 0) (totalCalories * 100 / calorieGoal).coerceIn(0, 100) else 0
 }
+
+// Comida armada en Review Meal (FoodConfirmation), lista para guardar o editar
+data class MealDraft(
+    val name: String,
+    val type: MealType,
+    val calories: Int,
+    val protein: Float,
+    val carbs: Float,
+    val fat: Float,
+    val ingredients: List<MealIngredient>,
+)
+
+// Estado del detalle de una comida: la comida, sus ingredientes y cuánta proteína falta
+// para el objetivo del día (para el aviso de VORA)
+data class MealDetailsUiState(
+    val isLoading: Boolean = true,
+    val meal: Meal? = null,
+    val ingredients: List<MealIngredient> = emptyList(),
+    val calorieGoal: Int = CALORIE_GOAL,
+    val proteinRemaining: Int = 0,
+)
 
 // Objetivos diarios de demostración (los mismos que mostraba la pantalla)
 private const val CALORIE_GOAL = 2_100
@@ -101,28 +125,63 @@ class NutritionViewModel @Inject constructor(
         }
     }
 
-    fun addMeal(
-        name: String,
-        type: MealType,
-        calories: Int,
-        protein: Float,
-        carbs: Float,
-        fat: Float
-    ) {
+    // Registra una comida nueva (con sus ingredientes) en el día actual, con la hora de ahora
+    fun addMeal(draft: MealDraft) {
         val meal = Meal(
-            id = 0,
-            name = name,
+            name = draft.name,
             date = _currentDate.value,
-            type = type,
-            calories = calories,
-            protein = protein,
-            carbs = carbs,
-            fat = fat
+            time = currentTime(),
+            type = draft.type,
+            calories = draft.calories,
+            protein = draft.protein,
+            carbs = draft.carbs,
+            fat = draft.fat,
         )
+        viewModelScope.launch { repository.insertMeal(meal, draft.ingredients) }
+    }
 
+    // Edita una comida existente: mantiene su fecha y hora, cambia todo lo demás
+    fun updateMeal(mealId: Int, draft: MealDraft) {
         viewModelScope.launch {
-            repository.insertMeal(meal)
+            val original = repository.getMeal(mealId) ?: return@launch
+            val updated = original.copy(
+                name = draft.name,
+                type = draft.type,
+                calories = draft.calories,
+                protein = draft.protein,
+                carbs = draft.carbs,
+                fat = draft.fat,
+            )
+            repository.updateMeal(updated, draft.ingredients)
         }
+    }
+
+    // "Duplicate Meal": copia la comida y sus ingredientes al día de hoy, con la hora actual
+    fun duplicateMeal(mealId: Int) {
+        viewModelScope.launch { repository.duplicateMeal(mealId, getTodayDate(), currentTime()) }
+    }
+
+    // Detalle de una comida: combina la comida, sus ingredientes y los totales del día.
+    // Si se edita la comida o se agrega otra, el detalle se actualiza solo.
+    fun observeMealDetails(mealId: Int): Flow<MealDetailsUiState> =
+        combine(
+            repository.observeMeal(mealId),
+            repository.observeIngredients(mealId),
+            uiState,
+        ) { meal, ingredients, day ->
+            MealDetailsUiState(
+                isLoading = false,
+                meal = meal,
+                ingredients = ingredients,
+                calorieGoal = day.calorieGoal,
+                proteinRemaining = (day.proteinGoal - day.totalProtein).coerceAtLeast(0),
+            )
+        }
+
+    // Para "Edit Meal": la comida y sus ingredientes, leídos una vez
+    suspend fun getMealForEdit(mealId: Int): Pair<Meal, List<MealIngredient>>? {
+        val meal = repository.getMeal(mealId) ?: return null
+        return meal to repository.getIngredients(mealId)
     }
 
     fun removeMeal(meal: Meal) {
@@ -136,20 +195,22 @@ class NutritionViewModel @Inject constructor(
     }
 
     // "Save without logging": guarda la comida como plantilla, sin sumarla al día
-    fun saveWithoutLogging(
-        name: String,
-        calories: Int,
-        protein: Float,
-        carbs: Float,
-        fat: Float,
-    ) {
-        val saved = SavedMeal(name = name, calories = calories, protein = protein, carbs = carbs, fat = fat)
+    fun saveWithoutLogging(draft: MealDraft) {
+        val saved = SavedMeal(
+            name = draft.name,
+            calories = draft.calories,
+            protein = draft.protein,
+            carbs = draft.carbs,
+            fat = draft.fat,
+        )
         viewModelScope.launch { repository.saveMeal(saved) }
     }
 
     // Registra una comida guardada en el día actual, con el horario que corresponda
     fun logSavedMeal(saved: SavedMeal, type: MealType = MealType.forCurrentTime()) {
-        addMeal(saved.name, type, saved.calories, saved.protein, saved.carbs, saved.fat)
+        addMeal(
+            MealDraft(saved.name, type, saved.calories, saved.protein, saved.carbs, saved.fat, ingredients = emptyList())
+        )
     }
 
     fun deleteSavedMeal(saved: SavedMeal) {
@@ -162,4 +223,7 @@ class NutritionViewModel @Inject constructor(
 
     private fun getTodayDate(): String =
         SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
+    private fun currentTime(): String =
+        SimpleDateFormat("HH:mm", Locale.US).format(Date())
 }

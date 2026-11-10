@@ -5,6 +5,7 @@ import com.example.voracoach.data.local.SavedMealDao
 import com.example.voracoach.data.local.entity.toEntity
 import com.example.voracoach.data.local.entity.toModel
 import com.example.voracoach.model.Meal
+import com.example.voracoach.model.MealIngredient
 import com.example.voracoach.model.MealType
 import com.example.voracoach.model.SavedMeal
 import kotlinx.coroutines.flow.Flow
@@ -23,28 +24,73 @@ class NutritionRepository @Inject constructor(
             entities.map { it.toModel() }
         }
 
-    suspend fun insertMeal(meal: Meal) {
-        mealDao.insertMeal(meal.toEntity())
+    // Una comida con sus ingredientes (para el detalle). Si la comida se borra, emite null.
+    fun observeMeal(mealId: Int): Flow<Meal?> =
+        mealDao.observeMeal(mealId).map { it?.toModel() }
+
+    fun observeIngredients(mealId: Int): Flow<List<MealIngredient>> =
+        mealDao.observeIngredients(mealId).map { entities -> entities.map { it.toModel() } }
+
+    suspend fun getMeal(mealId: Int): Meal? = mealDao.getMeal(mealId)?.toModel()
+
+    suspend fun getIngredients(mealId: Int): List<MealIngredient> =
+        mealDao.getIngredients(mealId).map { it.toModel() }
+
+    // Guarda la comida y sus ingredientes juntos; devuelve el id nuevo
+    suspend fun insertMeal(meal: Meal, ingredients: List<MealIngredient> = emptyList()): Int =
+        mealDao.insertMealWithIngredients(meal.toEntity(), ingredients.map { it.toEntity() }).toInt()
+
+    suspend fun updateMeal(meal: Meal, ingredients: List<MealIngredient>) {
+        mealDao.updateMealWithIngredients(meal.toEntity(), ingredients.map { it.toEntity() })
     }
 
+    // Los ingredientes se borran solos por la clave foránea con CASCADE
     suspend fun deleteMeal(meal: Meal) {
         mealDao.deleteMeal(meal.toEntity())
     }
 
-    // La primera vez que se abre la app la tabla está vacía: se cargan comidas de ejemplo
-    // para la fecha dada, así el Dashboard no arranca en cero (igual que el catálogo de Workout).
-    suspend fun seedIfEmpty(date: String) {
-        if (mealDao.countMeals() > 0) return
-        demoMeals(date).forEach { mealDao.insertMeal(it.toEntity()) }
+    // Copia una comida (con sus ingredientes) a otra fecha y hora
+    suspend fun duplicateMeal(mealId: Int, date: String, time: String) {
+        val original = getMeal(mealId) ?: return
+        insertMeal(original.copy(id = 0, date = date, time = time), getIngredients(mealId))
     }
 
+    // La primera vez que se abre la app la tabla está vacía: se cargan comidas de ejemplo
+    // (con sus ingredientes) para la fecha dada, así el Dashboard no arranca en cero.
+    suspend fun seedIfEmpty(date: String) {
+        if (mealDao.countMeals() > 0) return
+        demoMeals(date).forEach { (meal, ingredients) -> insertMeal(meal, ingredients) }
+    }
+
+    // Arma una comida de ejemplo: los totales salen de sumar los ingredientes
+    private fun demoMeal(date: String, time: String, type: MealType, name: String, ingredients: List<MealIngredient>) =
+        Meal(
+            name = name,
+            date = date,
+            time = time,
+            type = type,
+            calories = ingredients.sumOf { it.calories },
+            protein = ingredients.sumOf { it.protein.toDouble() }.toFloat(),
+            carbs = ingredients.sumOf { it.carbs.toDouble() }.toFloat(),
+            fat = ingredients.sumOf { it.fat.toDouble() }.toFloat(),
+        ) to ingredients
+
     private fun demoMeals(date: String) = listOf(
-        Meal(name = "Oatmeal with banana", date = date, type = MealType.BREAKFAST,
-            calories = 380, protein = 14f, carbs = 62f, fat = 8f),
-        Meal(name = "Grilled chicken salad", date = date, type = MealType.LUNCH,
-            calories = 520, protein = 42f, carbs = 30f, fat = 22f),
-        Meal(name = "Greek yogurt with nuts", date = date, type = MealType.AFTERNOON_SNACK,
-            calories = 260, protein = 18f, carbs = 16f, fat = 14f),
+        demoMeal(date, "08:30", MealType.BREAKFAST, "Oatmeal with banana", listOf(
+            MealIngredient(name = "Rolled Oats", grams = 60, calories = 230, protein = 8f, carbs = 40f, fat = 4f),
+            MealIngredient(name = "Banana", grams = 120, calories = 105, protein = 1f, carbs = 27f, fat = 0f),
+            MealIngredient(name = "Skim Milk", grams = 150, calories = 50, protein = 5f, carbs = 7f, fat = 0f),
+        )),
+        // La misma comida que muestra el Figma de Meal Details: 520 kcal, P 38 g, C 54 g, F 14 g
+        demoMeal(date, "13:12", MealType.LUNCH, "Chicken, rice and vegetables", listOf(
+            MealIngredient(name = "Grilled Chicken Breast", grams = 180, calories = 280, protein = 32f, carbs = 0f, fat = 8f),
+            MealIngredient(name = "Basmati Rice", grams = 150, calories = 190, protein = 4f, carbs = 42f, fat = 1f),
+            MealIngredient(name = "Mixed Steamed Vegetables", grams = 100, calories = 50, protein = 2f, carbs = 12f, fat = 5f),
+        )),
+        demoMeal(date, "17:00", MealType.AFTERNOON_SNACK, "Greek yogurt with nuts", listOf(
+            MealIngredient(name = "Greek Yogurt", grams = 170, calories = 150, protein = 15f, carbs = 8f, fat = 5f),
+            MealIngredient(name = "Mixed Nuts", grams = 20, calories = 120, protein = 4f, carbs = 4f, fat = 10f),
+        )),
     )
 
     // --- Comidas guardadas ("Save without logging" y "Search Database") ---

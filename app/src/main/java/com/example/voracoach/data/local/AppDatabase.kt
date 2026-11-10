@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.voracoach.data.local.entity.ExerciseEntity
 import com.example.voracoach.data.local.entity.MealEntity
+import com.example.voracoach.data.local.entity.MealIngredientEntity
 import com.example.voracoach.data.local.entity.SavedMealEntity
 import com.example.voracoach.data.local.entity.WorkoutEntity
 
@@ -14,9 +15,10 @@ import com.example.voracoach.data.local.entity.WorkoutEntity
         WorkoutEntity::class,
         ExerciseEntity::class,
         MealEntity::class,
+        MealIngredientEntity::class,
         SavedMealEntity::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {

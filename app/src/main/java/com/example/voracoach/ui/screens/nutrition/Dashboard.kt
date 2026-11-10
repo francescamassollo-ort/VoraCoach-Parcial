@@ -39,6 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -117,6 +118,10 @@ fun DashboardScreen(
     val carbsGoal = uiState.carbsGoal
     val fatGoal = uiState.fatGoal
     val caloriePercent = uiState.caloriePercent
+    // Fecha de hoy para el encabezado, por ejemplo "TUESDAY, 10 NOVEMBER"
+    val todayLabel = remember {
+        java.text.SimpleDateFormat("EEEE, d MMMM", Locale.getDefault()).format(java.util.Date()).uppercase()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -152,7 +157,7 @@ fun DashboardScreen(
             // 1. Date Header Label
             Column {
                 Text(
-                    text = "MONDAY, 9 NOVEMBER",
+                    text = todayLabel,
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.8.sp,
@@ -178,7 +183,7 @@ fun DashboardScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "CONSUMED CALORIES",
+                                text = stringResource(R.string.nutrition_consumed_calories),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.SemiBold,
                                     letterSpacing = 0.5.sp,
@@ -196,7 +201,7 @@ fun DashboardScreen(
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
-                                text = "Goal: ${String.format(Locale.getDefault(), "%,d", calorieGoal)} kcal",
+                                text = stringResource(R.string.nutrition_goal_kcal, String.format(Locale.getDefault(), "%,d", calorieGoal)),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = TextSecondary,
                             )
@@ -226,7 +231,7 @@ fun DashboardScreen(
                                 )
                             }
                             Text(
-                                text = "$caloriePercent%",
+                                text = stringResource(R.string.nutrition_percent, caloriePercent),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
@@ -293,10 +298,10 @@ fun DashboardScreen(
 
             // 3. Slot-Aware Category Mapping
             val slots = listOf(
-                SlotInfo(MealType.BREAKFAST, "Breakfast", "BREAKFAST", Icons.Outlined.FreeBreakfast),
-                SlotInfo(MealType.LUNCH, "Lunch", "LUNCH", Icons.Outlined.LunchDining),
-                SlotInfo(MealType.AFTERNOON_SNACK, "Snack", "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
-                SlotInfo(MealType.DINNER, "Dinner", "DINNER", Icons.Outlined.DinnerDining),
+                SlotInfo(MealType.BREAKFAST, stringResource(R.string.meal_type_breakfast), "BREAKFAST", Icons.Outlined.FreeBreakfast),
+                SlotInfo(MealType.LUNCH, stringResource(R.string.meal_type_lunch), "LUNCH", Icons.Outlined.LunchDining),
+                SlotInfo(MealType.AFTERNOON_SNACK, stringResource(R.string.meal_type_snack), "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
+                SlotInfo(MealType.DINNER, stringResource(R.string.meal_type_dinner), "DINNER", Icons.Outlined.DinnerDining),
             )
 
             slots.forEach { slot ->
@@ -311,7 +316,7 @@ fun DashboardScreen(
                             onClick = { onMealClick(meal.id) },
                             trailing = {
                                 Text(
-                                    text = "${meal.calories} kcal",
+                                    text = stringResource(R.string.food_kcal_value, meal.calories),
                                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                                 )
                             },

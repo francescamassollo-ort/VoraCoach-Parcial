@@ -8,6 +8,7 @@ const val EXERCISE_ID_ARG = "exerciseId"
 const val MEAL_ID_ARG = "mealId"
 const val MEAL_TYPE_ARG = "mealType"
 const val FROM_ANALYSIS_ARG = "fromAnalysis"
+const val EDIT_MEAL_ID_ARG = "editMealId"
 
 // Ruteo
 sealed class AppDestination(val route: String) {
@@ -80,14 +81,17 @@ sealed class AppDestination(val route: String) {
 
     data object SavedMeals : AppDestination("nutrition_saved_meals")
 
-    // mealType: horario de la comida. fromAnalysis (opcional, por query): true si viene de voz
-    // o foto, para que la pantalla arranque con los ingredientes "detectados".
-    data object FoodConfirmation :
-        AppDestination("food_confirmation/{$MEAL_TYPE_ARG}?$FROM_ANALYSIS_ARG={$FROM_ANALYSIS_ARG}") {
+    // mealType: horario de la comida. Opcionales, por query:
+    // - fromAnalysis: true si viene de voz o foto, para arrancar con los ingredientes "detectados".
+    // - editMealId: id de la comida a editar ("Edit Meal"); -1 si es una comida nueva.
+    data object FoodConfirmation : AppDestination(
+        "food_confirmation/{$MEAL_TYPE_ARG}?$FROM_ANALYSIS_ARG={$FROM_ANALYSIS_ARG}&$EDIT_MEAL_ID_ARG={$EDIT_MEAL_ID_ARG}"
+    ) {
         fun createRoute(
             mealType: String = MealType.forCurrentTime().name,
             fromAnalysis: Boolean = false,
-        ) = "food_confirmation/$mealType?$FROM_ANALYSIS_ARG=$fromAnalysis"
+            editMealId: Int = -1,
+        ) = "food_confirmation/$mealType?$FROM_ANALYSIS_ARG=$fromAnalysis&$EDIT_MEAL_ID_ARG=$editMealId"
     }
 
     data object MealDetails : AppDestination("nutrition_detail/{$MEAL_ID_ARG}") {

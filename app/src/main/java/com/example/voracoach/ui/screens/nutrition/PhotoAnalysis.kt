@@ -24,10 +24,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.voracoach.R
 import com.example.voracoach.ui.components.AppCard
 import com.example.voracoach.ui.components.AppChip
 import com.example.voracoach.ui.components.AppChipStyle
@@ -48,7 +50,7 @@ fun PhotoAnalysis(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             ScreenHeader(
-                title = "Photo Analysis",
+                title = stringResource(R.string.photo_title),
                 onBackClick = onNavigateBack,
                 modifier = Modifier.statusBarsPadding(),
             )
@@ -82,13 +84,13 @@ fun PhotoAnalysis(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.PhotoCamera,
-                            contentDescription = "Captured Food Photo",
+                            contentDescription = stringResource(R.string.photo_captured),
                             tint = TextMuted,
                             modifier = Modifier.size(56.dp),
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            text = "Analyzed Plate Photo",
+                            text = stringResource(R.string.photo_captured),
                             style = MaterialTheme.typography.bodySmall,
                             color = TextMuted,
                         )
@@ -101,7 +103,7 @@ fun PhotoAnalysis(
                             .padding(start = 20.dp, top = 28.dp),
                     ) {
                         AppChip(
-                            text = "Grilled Chicken — 250g",
+                            text = stringResource(R.string.photo_item_chicken),
                             style = AppChipStyle.Light,
                             selected = true,
                         )
@@ -113,7 +115,7 @@ fun PhotoAnalysis(
                             .padding(end = 20.dp, top = 12.dp),
                     ) {
                         AppChip(
-                            text = "Brown Rice — 150g",
+                            text = stringResource(R.string.photo_item_rice),
                             style = AppChipStyle.Light,
                             selected = true,
                         )
@@ -125,7 +127,7 @@ fun PhotoAnalysis(
                             .padding(start = 24.dp, bottom = 24.dp),
                     ) {
                         AppChip(
-                            text = "Steamed Veggies — 100g",
+                            text = stringResource(R.string.photo_item_vegetables),
                             style = AppChipStyle.Light,
                             selected = true,
                         )
@@ -141,20 +143,20 @@ fun PhotoAnalysis(
                     ) {
                         Column {
                             Text(
-                                text = "ESTIMATED TOTAL",
+                                text = stringResource(R.string.photo_estimate_label),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = TextSecondary,
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
-                                text = "Estimated: 520 kcal",
+                                text = stringResource(R.string.food_kcal_value, 520),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
 
                         Text(
-                            text = "P: 42g · C: 55g · F: 12g",
+                            text = stringResource(R.string.saved_meals_macros, 38, 54, 14),
                             style = MaterialTheme.typography.bodySmall,
                             color = TextSecondary,
                         )
@@ -163,7 +165,7 @@ fun PhotoAnalysis(
 
                 // Insight Tip
                 InsightBanner(
-                    message = "Vora AI detected 3 food items from your plate. Tap 'Review & Add' to confirm.",
+                    message = stringResource(R.string.photo_insight),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -172,7 +174,7 @@ fun PhotoAnalysis(
 
             // Bottom Primary Action
             PrimaryButton(
-                text = "Review & Add",
+                text = stringResource(R.string.photo_review_add),
                 onClick = onReviewAndAdd,
                 modifier = Modifier.fillMaxWidth(),
             )

@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.voracoach.R
 import com.example.voracoach.ui.components.PrimaryButton
 import com.example.voracoach.ui.components.ScreenHeader
 import com.example.voracoach.ui.components.VoraOrb
@@ -58,7 +60,7 @@ fun VoiceFoodLogging(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             ScreenHeader(
-                title = "Voice Logging",
+                title = stringResource(R.string.voice_title),
                 onBackClick = onNavigateBack,
                 modifier = Modifier.statusBarsPadding(),
             )
@@ -78,7 +80,7 @@ fun VoiceFoodLogging(
                 modifier = Modifier.padding(top = 16.dp),
             ) {
                 Text(
-                    text = "Listening...",
+                    text = stringResource(R.string.voice_listening),
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 28.sp,
@@ -87,7 +89,7 @@ fun VoiceFoodLogging(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = "Speak naturally, e.g., 'A bowl of oatmeal with strawberries and a glass of milk'",
+                    text = stringResource(R.string.voice_hint),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -101,7 +103,7 @@ fun VoiceFoodLogging(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Mic,
-                    contentDescription = "Microphone",
+                    contentDescription = stringResource(R.string.voice_microphone),
                     tint = Color.White,
                     modifier = Modifier.size(40.dp),
                 )
@@ -109,7 +111,7 @@ fun VoiceFoodLogging(
 
             // Bottom Action Button
             PrimaryButton(
-                text = "Done Speaking",
+                text = stringResource(R.string.voice_done),
                 onClick = onNavigateToDoneSpeaking,
                 modifier = Modifier.fillMaxWidth(),
             )

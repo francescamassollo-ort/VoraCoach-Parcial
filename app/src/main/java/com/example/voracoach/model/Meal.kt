@@ -28,6 +28,7 @@ data class Meal(
     val id: Int = 0,
     val name: String,
     val date: String, // Formato YYYY-MM-DD
+    val time: String = "", // Hora en que se registró, formato HH:mm
     val type: MealType,
     val calories: Int,
     val protein: Float,

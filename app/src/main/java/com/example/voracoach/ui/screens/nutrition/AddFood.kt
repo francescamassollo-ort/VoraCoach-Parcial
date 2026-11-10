@@ -55,7 +55,7 @@ fun AddFood(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             ScreenHeader(
-                title = "Add Food",
+                title = stringResource(R.string.add_food_title),
                 onBackClick = onNavigateBack,
                 modifier = Modifier.statusBarsPadding(),
             )
@@ -84,12 +84,12 @@ fun AddFood(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Text(
-                            text = "Talk to VORA",
+                            text = stringResource(R.string.add_food_talk_title),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = Color.White,
                         )
                         Text(
-                            text = "\"I had grilled Chicken breast with basmati rice\"",
+                            text = stringResource(R.string.add_food_talk_example),
                             style = MaterialTheme.typography.bodySmall,
                             color = White60,
                         )
@@ -101,7 +101,7 @@ fun AddFood(
                 Spacer(Modifier.height(16.dp))
 
                 PrimaryButton(
-                    text = "Start Voice Logging",
+                    text = stringResource(R.string.add_food_start_voice),
                     onClick = onNavigateToVoice,
                     leadingIcon = Icons.Outlined.Mic,
                     modifier = Modifier.fillMaxWidth(),
@@ -130,12 +130,12 @@ fun AddFood(
                     Spacer(Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Snap a Photo",
+                            text = stringResource(R.string.add_food_photo_title),
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "Take a picture of your plate to auto-analyze...",
+                            text = stringResource(R.string.add_food_photo_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -202,12 +202,12 @@ fun AddFood(
                     Spacer(Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Log Manually",
+                            text = stringResource(R.string.add_food_manual_title),
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "Type in your meal, calories, and macros manually...",
+                            text = stringResource(R.string.add_food_manual_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

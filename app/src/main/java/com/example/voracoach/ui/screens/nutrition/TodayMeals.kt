@@ -116,7 +116,7 @@ fun TodayMealsScreen(
             ) {
                 Column {
                     Text(
-                        text = "TIMELINE",
+                        text = stringResource(R.string.today_meals_timeline),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.8.sp,
@@ -125,14 +125,14 @@ fun TodayMealsScreen(
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "Today's Meals",
+                        text = stringResource(R.string.today_meals_title),
                         style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
 
                 Text(
-                    text = "$totalCalories kcal",
+                    text = stringResource(R.string.food_kcal_value, totalCalories),
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -140,10 +140,10 @@ fun TodayMealsScreen(
 
             // 2. Timeline LazyColumn List & Inline Category Add Triggers
             val categories = listOf(
-                CategoryInfo(MealType.BREAKFAST, "BREAKFAST", "BREAKFAST", Icons.Outlined.FreeBreakfast),
-                CategoryInfo(MealType.LUNCH, "LUNCH", "LUNCH", Icons.Outlined.LunchDining),
-                CategoryInfo(MealType.AFTERNOON_SNACK, "AFTERNOON SNACK", "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
-                CategoryInfo(MealType.DINNER, "DINNER", "DINNER", Icons.Outlined.DinnerDining),
+                CategoryInfo(MealType.BREAKFAST, stringResource(R.string.meal_type_breakfast), "BREAKFAST", Icons.Outlined.FreeBreakfast),
+                CategoryInfo(MealType.LUNCH, stringResource(R.string.meal_type_lunch), "LUNCH", Icons.Outlined.LunchDining),
+                CategoryInfo(MealType.AFTERNOON_SNACK, stringResource(R.string.meal_type_snack), "AFTERNOON_SNACK", Icons.Outlined.Fastfood),
+                CategoryInfo(MealType.DINNER, stringResource(R.string.meal_type_dinner), "DINNER", Icons.Outlined.DinnerDining),
             )
 
             LazyColumn(
@@ -177,7 +177,7 @@ fun TodayMealsScreen(
                                         )
                                         Spacer(Modifier.height(2.dp))
                                         Text(
-                                            text = "P: ${meal.protein.toInt()}g · C: ${meal.carbs.toInt()}g · F: ${meal.fat.toInt()}g",
+                                            text = stringResource(R.string.saved_meals_macros, meal.protein.toInt(), meal.carbs.toInt(), meal.fat.toInt()),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = TextSecondary,
                                         )
@@ -188,7 +188,7 @@ fun TodayMealsScreen(
                                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
                                         Text(
-                                            text = "${meal.calories} kcal",
+                                            text = stringResource(R.string.food_kcal_value, meal.calories),
                                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                                         )
 
@@ -198,7 +198,7 @@ fun TodayMealsScreen(
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Outlined.DeleteOutline,
-                                                contentDescription = "Delete meal",
+                                                contentDescription = stringResource(R.string.meal_details_delete),
                                                 tint = MaterialTheme.colorScheme.error,
                                                 modifier = Modifier.size(18.dp),
                                             )
@@ -216,7 +216,7 @@ fun TodayMealsScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
-                                        text = "No items logged yet",
+                                        text = stringResource(R.string.today_meals_empty_slot),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = TextMuted,
                                     )
@@ -249,13 +249,13 @@ fun TodayMealsScreen(
             onDismissRequest = { mealToDelete = null },
             title = {
                 Text(
-                    text = "Delete Meal",
+                    text = stringResource(R.string.meal_details_delete),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 )
             },
             text = {
                 Text(
-                    text = "Are you sure you want to delete '${meal.name}'?",
+                    text = stringResource(R.string.meal_details_delete_body, meal.name),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             },

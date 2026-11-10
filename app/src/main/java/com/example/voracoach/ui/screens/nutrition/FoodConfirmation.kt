@@ -1,7 +1,6 @@
 package com.example.voracoach.ui.screens.nutrition
 
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +30,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.voracoach.R
+import com.example.voracoach.model.Meal
+import com.example.voracoach.model.MealIngredient
 import com.example.voracoach.model.MealType
 import com.example.voracoach.ui.components.AppCard
 import com.example.voracoach.ui.components.AppCardStyle
@@ -54,6 +57,7 @@ import com.example.voracoach.ui.components.SecondaryButtonStyle
 import com.example.voracoach.ui.components.VoraTextField
 import com.example.voracoach.ui.theme.Mint
 import com.example.voracoach.ui.theme.VoraCoachTheme
+import com.example.voracoach.viewmodel.MealDraft
 import com.example.voracoach.viewmodel.NutritionViewModel
 import kotlin.math.roundToInt
 
@@ -98,14 +102,39 @@ private fun detectedIngredients() = listOf(
         baseProtein = 2f, baseCarbs = 12f, baseFat = 5f),
 )
 
-// Nombre visible de cada tipo de comida (para "Add to Lunch")
-@StringRes
-private fun MealType.labelRes(): Int = when (this) {
-    MealType.BREAKFAST -> R.string.meal_type_breakfast
-    MealType.LUNCH -> R.string.meal_type_lunch
-    MealType.AFTERNOON_SNACK -> R.string.meal_type_snack
-    MealType.DINNER -> R.string.meal_type_dinner
-}
+// Ingrediente guardado -> tarjeta editable. La porción guardada pasa a ser la de referencia,
+// así al cambiar los gramos todo se escala desde ahí.
+private fun MealIngredient.toItem(id: Int) = IngredientItem(
+    id = id,
+    name = name,
+    grams = grams,
+    baseGrams = grams,
+    baseCalories = calories,
+    baseProtein = protein,
+    baseCarbs = carbs,
+    baseFat = fat,
+)
+
+private fun IngredientItem.toMealIngredient() = MealIngredient(
+    name = name.trim(),
+    grams = grams,
+    calories = calories,
+    protein = protein,
+    carbs = carbs,
+    fat = fat,
+)
+
+// Ingredientes para editar una comida. Las comidas sin ingredientes guardados (por ejemplo,
+// las registradas desde "Search Database") se muestran como un único ingrediente con sus totales.
+private fun editItems(meal: Meal, ingredients: List<MealIngredient>): List<IngredientItem> =
+    if (ingredients.isNotEmpty()) {
+        ingredients.mapIndexed { index, ingredient -> ingredient.toItem(index + 1) }
+    } else {
+        listOf(
+            MealIngredient(name = meal.name, grams = 100, calories = meal.calories,
+                protein = meal.protein, carbs = meal.carbs, fat = meal.fat).toItem(1)
+        )
+    }
 
 // Route: recibe la comida armada por la pantalla, la guarda con el ViewModel y navega.
 @Composable
@@ -115,21 +144,32 @@ fun FoodConfirmationRoute(
     onSaveSuccess: () -> Unit,
     mealType: String,
     fromAnalysis: Boolean,
+    editMealId: Int? = null,
 ) {
     val context = LocalContext.current
     val savedMessage = stringResource(R.string.food_meal_saved)
+
+    // Modo edición: carga una sola vez la comida y sus ingredientes desde Room.
+    // Mientras carga queda en null y la pantalla espera (no muestra una lista vacía).
+    val editData by produceState<Pair<Meal, List<MealIngredient>>?>(initialValue = null, editMealId) {
+        value = editMealId?.let { viewModel.getMealForEdit(it) }
+    }
+    if (editMealId != null && editData == null) return
+
     FoodConfirmationScreen(
-        mealType = mealType,
+        mealType = editData?.first?.type?.name ?: mealType,
         fromAnalysis = fromAnalysis,
+        initialIngredients = editData?.let { (meal, ingredients) -> editItems(meal, ingredients) },
+        isEditing = editMealId != null,
         onNavigateBack = onNavigateBack,
-        onSaveMeal = { name, type, calories, protein, carbs, fat ->
-            viewModel.addMeal(name, type, calories, protein, carbs, fat)
+        onSaveMeal = { draft ->
+            if (editMealId != null) viewModel.updateMeal(editMealId, draft) else viewModel.addMeal(draft)
             onSaveSuccess()
         },
         // Guarda la comida como plantilla (sin sumarla al día), avisa con un Toast y vuelve.
         // Toast y no Snackbar: el aviso tiene que verse aunque esta pantalla se cierre.
-        onSaveWithoutLogging = { name, calories, protein, carbs, fat ->
-            viewModel.saveWithoutLogging(name, calories, protein, carbs, fat)
+        onSaveWithoutLogging = { draft ->
+            viewModel.saveWithoutLogging(draft)
             Toast.makeText(context, savedMessage, Toast.LENGTH_SHORT).show()
             onNavigateBack()
         },
@@ -143,12 +183,20 @@ fun FoodConfirmationScreen(
     mealType: String,
     fromAnalysis: Boolean,
     onNavigateBack: () -> Unit,
-    onSaveMeal: (name: String, type: MealType, calories: Int, protein: Float, carbs: Float, fat: Float) -> Unit,
-    onSaveWithoutLogging: (name: String, calories: Int, protein: Float, carbs: Float, fat: Float) -> Unit,
+    onSaveMeal: (MealDraft) -> Unit,
+    onSaveWithoutLogging: (MealDraft) -> Unit,
+    initialIngredients: List<IngredientItem>? = null,
+    isEditing: Boolean = false,
 ) {
-    // Si viene de voz o foto arranca con lo "detectado"; si se carga a mano, arranca vacía
-    val ingredients = remember(fromAnalysis) {
-        mutableStateListOf<IngredientItem>().apply { if (fromAnalysis) addAll(detectedIngredients()) }
+    // Arranca con los ingredientes de la comida que se edita; si no, con lo "detectado"
+    // por voz o foto; si se carga a mano, vacía
+    val ingredients = remember(fromAnalysis, initialIngredients) {
+        mutableStateListOf<IngredientItem>().apply {
+            when {
+                initialIngredients != null -> addAll(initialIngredients)
+                fromAnalysis -> addAll(detectedIngredients())
+            }
+        }
     }
 
     val selectedType = remember(mealType) {
@@ -163,7 +211,15 @@ fun FoodConfirmationScreen(
     val totalCarbs = named.sumOf { it.carbs.toDouble() }.toFloat()
     val totalFat = named.sumOf { it.fat.toDouble() }.toFloat()
     val canSave = named.isNotEmpty()
-    val mealName = named.joinToString(", ") { it.name.trim() }
+    val draft = MealDraft(
+        name = named.joinToString(", ") { it.name.trim() },
+        type = selectedType,
+        calories = totalCalories,
+        protein = totalProtein,
+        carbs = totalCarbs,
+        fat = totalFat,
+        ingredients = named.map { it.toMealIngredient() },
+    )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -220,17 +276,12 @@ fun FoodConfirmationScreen(
 
             // Deshabilitado hasta que haya al menos un ingrediente con nombre
             PrimaryButton(
-                text = stringResource(R.string.food_add_to, typeLabel),
-                onClick = {
-                    onSaveMeal(
-                        mealName,
-                        selectedType,
-                        totalCalories,
-                        totalProtein,
-                        totalCarbs,
-                        totalFat,
-                    )
+                text = if (isEditing) {
+                    stringResource(R.string.food_save_changes)
+                } else {
+                    stringResource(R.string.food_add_to, typeLabel)
                 },
+                onClick = { onSaveMeal(draft) },
                 enabled = canSave,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -239,7 +290,7 @@ fun FoodConfirmationScreen(
             // sin sumarla hoy. Mismas reglas que "Add to …": hace falta un ingrediente con nombre.
             SecondaryButton(
                 text = stringResource(R.string.food_save_without_logging),
-                onClick = { onSaveWithoutLogging(mealName, totalCalories, totalProtein, totalCarbs, totalFat) },
+                onClick = { onSaveWithoutLogging(draft) },
                 enabled = canSave,
                 style = SecondaryButtonStyle.Outlined,
                 modifier = Modifier.fillMaxWidth(),
@@ -421,8 +472,8 @@ private fun FoodConfirmationPreview() {
             mealType = MealType.LUNCH.name,
             fromAnalysis = true,
             onNavigateBack = {},
-            onSaveMeal = { _, _, _, _, _, _ -> },
-            onSaveWithoutLogging = { _, _, _, _, _ -> },
+            onSaveMeal = {},
+            onSaveWithoutLogging = {},
         )
     }
 }
@@ -435,8 +486,8 @@ private fun FoodConfirmationEmptyPreview() {
             mealType = MealType.DINNER.name,
             fromAnalysis = false,
             onNavigateBack = {},
-            onSaveMeal = { _, _, _, _, _, _ -> },
-            onSaveWithoutLogging = { _, _, _, _, _ -> },
+            onSaveMeal = {},
+            onSaveWithoutLogging = {},
         )
     }
 }

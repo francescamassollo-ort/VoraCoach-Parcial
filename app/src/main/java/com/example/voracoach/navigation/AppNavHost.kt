@@ -301,15 +301,26 @@ fun AppNavHost(
                             type = NavType.BoolType
                             defaultValue = false
                         },
+                        navArgument(EDIT_MEAL_ID_ARG) {
+                            type = NavType.IntType
+                            defaultValue = -1
+                        },
                     ),
                 ) { entry ->
+                    val editMealId = entry.arguments?.getInt(EDIT_MEAL_ID_ARG)?.takeIf { it >= 0 }
                     FoodConfirmationRoute(
+                        editMealId = editMealId,
                         mealType = entry.arguments?.getString(MEAL_TYPE_ARG) ?: MealType.forCurrentTime().name,
                         fromAnalysis = entry.arguments?.getBoolean(FROM_ANALYSIS_ARG) ?: false,
                         viewModel = entry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
+                        // Al editar vuelve al detalle de la comida; al agregar, al Dashboard
                         onSaveSuccess = {
-                            navController.popBackStack(AppDestination.Nutrition.route, inclusive = false)
+                            if (editMealId != null) {
+                                navController.popBackStack()
+                            } else {
+                                navController.popBackStack(AppDestination.Nutrition.route, inclusive = false)
+                            }
                         },
                     )
                 }
@@ -319,9 +330,19 @@ fun AppNavHost(
                     arguments = listOf(navArgument(MEAL_ID_ARG) { type = NavType.StringType }),
                 ) { backStackEntry ->
                     MealDetailsRoute(
-                        mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG).orEmpty(),
+                        mealId = backStackEntry.arguments?.getString(MEAL_ID_ARG)?.toIntOrNull() ?: -1,
                         viewModel = backStackEntry.sharedNutritionViewModel(navController),
                         onNavigateBack = { navController.popBackStack() },
+                        // "Edit Meal" reutiliza Review Meal en modo edición
+                        onEditMeal = { mealId, type ->
+                            navController.navigate(
+                                AppDestination.FoodConfirmation.createRoute(type.name, editMealId = mealId)
+                            )
+                        },
+                        // Después de duplicar vuelve al Dashboard, donde aparece la copia
+                        onMealDuplicated = {
+                            navController.popBackStack(AppDestination.Nutrition.route, inclusive = false)
+                        },
                     )
                 }
             }

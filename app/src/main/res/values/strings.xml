@@ -628,8 +628,61 @@
     <string name="food_remove">Remove</string>
     <string name="food_meal_totals">MEAL TOTALS</string>
     <string name="food_add_to">Add to %1$s</string>
+    <string name="food_save_changes">Save changes</string>
     <string name="food_save_without_logging">Save without logging</string>
     <string name="food_meal_saved">Meal saved. Find it in Search Database.</string>
+
+    <!-- Nutrition: textos de pantallas -->
+    <string name="add_food_title">Add Food</string>
+    <string name="add_food_talk_title">Talk to VORA</string>
+    <string name="add_food_talk_example">\"I had grilled chicken breast with basmati rice.\"</string>
+    <string name="add_food_start_voice">Start Voice Logging</string>
+    <string name="add_food_photo_title">Snap a Photo</string>
+    <string name="add_food_photo_subtitle">Vora estimates sizes and nutrition info.</string>
+    <string name="add_food_manual_title">Log Manually</string>
+    <string name="add_food_manual_subtitle">Input weight, calories and macros yourself.</string>
+    <string name="nutrition_consumed_calories">CONSUMED CALORIES</string>
+    <string name="nutrition_goal_kcal">Goal: %1$s kcal</string>
+    <string name="nutrition_percent">%1$d%%</string>
+    <string name="today_meals_timeline">TIMELINE</string>
+    <string name="today_meals_title">Today\'s Meals</string>
+    <string name="today_meals_empty_slot">No items logged yet</string>
+    <string name="voice_title">Voice Logging</string>
+    <string name="voice_listening">Listening…</string>
+    <string name="voice_hint">Speak naturally, e.g. \"A bowl of oatmeal with strawberries and a glass of milk\"</string>
+    <string name="voice_microphone">Microphone</string>
+    <string name="voice_done">Done Speaking</string>
+    <string name="analysis_title">Analyzing…</string>
+    <string name="analysis_message">Vora AI is analyzing your food…</string>
+    <string name="analysis_step_transcribing">Transcribing audio…</string>
+    <string name="analysis_step_identifying">Identifying food ingredients…</string>
+    <string name="analysis_step_macros">Calculating macronutrient breakdown…</string>
+    <string name="analysis_skip">Skip to Review</string>
+    <string name="analysis_completed">Completed</string>
+    <string name="analysis_pending">Pending</string>
+    <string name="analysis_badge_done">DONE</string>
+    <string name="analysis_badge_in_progress">IN PROGRESS</string>
+    <string name="analysis_badge_pending">PENDING</string>
+    <string name="photo_title">Analyse Meal</string>
+    <string name="photo_captured">Analyzed plate photo</string>
+    <string name="photo_item_chicken">Grilled Chicken (~180g)</string>
+    <string name="photo_item_rice">Basmati Rice (~150g)</string>
+    <string name="photo_item_vegetables">Mixed Steamed Vegetables (~100g)</string>
+    <string name="photo_estimate_label">VORA ESTIMATE</string>
+    <string name="photo_insight">Portions and quantities can be refined in the next step before saving.</string>
+    <string name="photo_review_add">Review &amp; Add</string>
+
+    <!-- Meal Details -->
+    <string name="meal_details_total_calories">TOTAL CALORIES</string>
+    <string name="meal_details_ingredients">Ingredients</string>
+    <string name="meal_details_no_ingredients">This meal was logged with totals only.</string>
+    <string name="meal_details_edit">Edit Meal</string>
+    <string name="meal_details_duplicate">Duplicate Meal</string>
+    <string name="meal_details_duplicated">Meal duplicated to today.</string>
+    <string name="meal_details_delete">Delete meal</string>
+    <string name="meal_details_delete_body">Are you sure you want to remove \"%1$s\"? This action cannot be undone.</string>
+    <string name="meal_details_insight_protein">Great choice. You\'re now %1$dg away from your daily protein target.</string>
+    <string name="meal_details_insight_done">You\'ve reached your daily protein target. Nice work!</string>
 
     <!-- Saved Meals (Search Database) -->
     <string name="saved_meals_title">Search Database</string>

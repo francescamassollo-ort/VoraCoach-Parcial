@@ -28,10 +28,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.voracoach.R
 import com.example.voracoach.ui.components.AppCard
 import com.example.voracoach.ui.components.ScreenHeader
 import com.example.voracoach.ui.components.SecondaryButton
@@ -68,7 +70,7 @@ fun FoodAnalysis(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             ScreenHeader(
-                title = "Analyzing...",
+                title = stringResource(R.string.analysis_title),
                 onBackClick = onNavigateBack,
                 modifier = Modifier.statusBarsPadding(),
             )
@@ -93,7 +95,7 @@ fun FoodAnalysis(
                 VoraOrb(diameter = 110.dp) {
                     Icon(
                         imageVector = Icons.Outlined.AutoAwesome,
-                        contentDescription = "AI Analyzing",
+                        contentDescription = stringResource(R.string.analysis_title),
                         tint = Color.White,
                         modifier = Modifier.size(36.dp),
                     )
@@ -102,7 +104,7 @@ fun FoodAnalysis(
                 Spacer(Modifier.height(32.dp))
 
                 Text(
-                    text = "Vora AI is analyzing your food...",
+                    text = stringResource(R.string.analysis_message),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
@@ -115,17 +117,17 @@ fun FoodAnalysis(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     StepRow(
-                        title = "Transcribing audio...",
+                        title = stringResource(R.string.analysis_step_transcribing),
                         isCompleted = currentStep >= 1,
                         isLoading = currentStep == 0,
                     )
                     StepRow(
-                        title = "Identifying food ingredients...",
+                        title = stringResource(R.string.analysis_step_identifying),
                         isCompleted = currentStep >= 2,
                         isLoading = currentStep == 1,
                     )
                     StepRow(
-                        title = "Calculating macronutrient breakdown...",
+                        title = stringResource(R.string.analysis_step_macros),
                         isCompleted = currentStep >= 3,
                         isLoading = currentStep == 2,
                     )
@@ -134,7 +136,7 @@ fun FoodAnalysis(
 
             // Bottom Action Button: Skip to Review
             SecondaryButton(
-                text = "Skip to Review",
+                text = stringResource(R.string.analysis_skip),
                 onClick = onAnalysisComplete,
                 style = SecondaryButtonStyle.Outlined,
                 modifier = Modifier.fillMaxWidth(),
@@ -162,7 +164,7 @@ private fun StepRow(
                 when {
                     isCompleted -> Icon(
                         imageVector = Icons.Outlined.CheckCircle,
-                        contentDescription = "Completed",
+                        contentDescription = stringResource(R.string.analysis_completed),
                         tint = DarkGreen,
                         modifier = Modifier.size(22.dp),
                     )
@@ -173,7 +175,7 @@ private fun StepRow(
                     )
                     else -> Icon(
                         imageVector = Icons.Outlined.RadioButtonUnchecked,
-                        contentDescription = "Pending",
+                        contentDescription = stringResource(R.string.analysis_pending),
                         tint = TextMuted,
                         modifier = Modifier.size(22.dp),
                     )
@@ -193,9 +195,9 @@ private fun StepRow(
             Spacer(Modifier.width(8.dp))
 
             when {
-                isCompleted -> StatusBadge(text = "DONE", style = StatusBadgeStyle.Mint)
-                isLoading -> StatusBadge(text = "IN PROGRESS", style = StatusBadgeStyle.Mint)
-                else -> StatusBadge(text = "PENDING", style = StatusBadgeStyle.Plain)
+                isCompleted -> StatusBadge(text = stringResource(R.string.analysis_badge_done), style = StatusBadgeStyle.Mint)
+                isLoading -> StatusBadge(text = stringResource(R.string.analysis_badge_in_progress), style = StatusBadgeStyle.Mint)
+                else -> StatusBadge(text = stringResource(R.string.analysis_badge_pending), style = StatusBadgeStyle.Plain)
             }
         }
     }
