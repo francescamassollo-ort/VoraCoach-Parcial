@@ -155,14 +155,15 @@ Una pantalla con 6 estados simulados.
 ### Nutrition
 | Pantalla (Figma) | Ruta | Estado |
 |---|---|---|
-| Nutrition / 01 — Dashboard | `nutrition` | 🎭 Demostración (comidas y totales de ejemplo, sin persistencia) |
-| Nutrition / 02 — Today's Meals | — | ⏳ No implementada |
-| Nutrition / 03 — Add Food | — | ⏳ No implementada |
-| Nutrition / 04 — Voice Food Logging | — | ⏳ No implementada |
-| Nutrition / 05 — Food Analysis | — | ⏳ No implementada |
-| Nutrition / 06 — Photo Analysis | — | ⏳ No implementada |
-| Nutrition / 07 — Food Confirmation | — | ⏳ No implementada |
-| Nutrition / 08 — Meal Details | — | ⏳ No implementada |
+| Nutrition / 01 — Dashboard | `nutrition` | ✅ Funcional (comidas y totales del día desde Room) |
+| Nutrition / 02 — Today's Meals | `nutrition_today_meals` | ✅ Funcional (comidas del día con sus ingredientes, desde Room) |
+| Nutrition / 03 — Add Food | `nutrition_add_food` | ✅ Funcional (voz, foto, búsqueda de comidas guardadas y carga manual) |
+| Nutrition / 04 — Voice Food Logging | `nutrition_voice` | 🎭 Demostración (escucha simulada, sin permiso de micrófono) |
+| Nutrition / 05 — Food Analysis | `nutrition_analysis` | 🎭 Demostración (análisis simulado) |
+| Nutrition / 06 — Photo Analysis | `nutrition_photo` | 🎭 Demostración (foto y estimación de ejemplo, sin permiso de cámara) |
+| Nutrition / 07 — Food Confirmation | `food_confirmation/{mealType}` | ✅ Funcional (alta y edición de comidas con ingredientes en Room) |
+| Nutrition / 08 — Meal Details | `nutrition_detail/{mealId}` | ✅ Funcional (detalle con ingredientes; editar, duplicar y borrar) |
+| Search Database (fuera del Figma) | `nutrition_saved_meals` | ✅ Funcional (búsqueda de comidas guardadas en Room) |
 
 ### Progress
 | Pantalla (Figma) | Ruta | Estado |
@@ -170,7 +171,7 @@ Una pantalla con 6 estados simulados.
 | Progress / 01 — Today's Overview | `progress_today` | 🎭 Demostración (métricas del día de ejemplo; entrenamiento real desde Room; objetivo y meta semanal del perfil) |
 | Progress / 02 — Dashboard | `progress` | 🎭 Demostración (métricas de ejemplo por período; "Active goal" del perfil) |
 | Progress / 03 — Workout Progress | `progress_workout` | 🎭 Demostración (volumen y ejercicios de ejemplo por período) |
-| Progress / 04 — Nutrition Progress | `progress_nutrition` | 🎭 Demostración (objetivos por macro y hábitos de ejemplo) |
+| Progress / 04 — Nutrition Progress | `progress_nutrition` | ✅ Funcional (promedios, días en objetivo y hábitos calculados desde Room) |
 | Progress / 05 — Health Trends | `progress_health` | 🎭 Demostración (pasos y señales de hábito de ejemplo) |
 | Progress / 06 — Weekly Review | `progress_weekly_review` | 🎭 Demostración (revisión de ejemplo; accesos reales a Nutrition, Weekly Plan y Coach) |
 
@@ -201,16 +202,17 @@ El asistente no usa reconocimiento de voz, IA ni audio reales, y nunca pide perm
 - **Estado que sobrevive a la rotación:** ViewModels con `StateFlow` y `rememberSaveable` para lo que se escribe.
 - **Notificaciones:** "Mark all as read" apaga el aviso de la campana de Home.
 - **Datos compartidos:** el nombre y los objetivos del perfil se ven en Home y en Progress.
+- **Registro de comidas:** alta manual o desde voz y foto, validación, listado por fecha, edición, duplicado y borrado con confirmación, y total diario. Persistencia en Room con tres tablas: comidas, ingredientes (clave foránea con borrado en cascada) y comidas guardadas.
+- **Progreso de nutrición:** promedios y hábitos calculados con las comidas guardadas en Room.
 
 ### Simuladas (funcionan sin servicio real)
 - **Acceso (Sign In / Sign Up):** no hay cuentas. Los campos se validan (obligatorios y largo mínimo de contraseña), pero cualquier dato válido permite entrar.
 - **Asistente VORA:** ver "Funciones simuladas del asistente".
-- **Métricas** de Home, Progress, Nutrition y Workout Complete: datos de ejemplo, porque la app no mide pasos, calorías ni sueño.
+- **Métricas** de Home, Progress y Workout Complete: datos de ejemplo, porque la app no mide pasos, calorías ni sueño. Nutrition muestra datos de ejemplo que se cargan en Room la primera vez.
 - **Botones sin destino en el Figma** ("•••", "Allow Access", adjuntar): muestran un aviso de función de demostración.
 - **Permisos:** la app nunca pide permiso de micrófono ni de cámara.
 
 ### No implementadas
-- **Registro de comidas** (carga manual, validación, listado por fecha, eliminación y total diario, con persistencia en Room) y las pantallas Nutrition 02 a 08.
 - **Persistencia del perfil:** Edit Profile, Goals y las preferencias se guardan en memoria; se pierden al cerrar la app.
 - **Sesión recordada:** cada vez que se abre la app pide Sign In.
 - **Firebase:** el acceso es de demostración y los datos privados no se sincronizan con la nube.
@@ -221,6 +223,12 @@ El asistente no usa reconocimiento de voz, IA ni audio reales, y nunca pide perm
 | Home / 01 — Dashboard | ![Figma](docs/comparaciones/home-figma.png) | ![App](docs/comparaciones/home-app.png) | Iniciales en lugar de foto (el perfil de demostración no tiene foto). El saludo cambia según la hora real. La tarjeta del entrenamiento recomendado (real, de Room) queda más abajo, con scroll. |
 | Workout / 03 — Workout Details | ![Figma](docs/comparaciones/workout-detail-figma.png) | ![App](docs/comparaciones/workout-detail-app.png) | Nombre, ejercicios y nota de VORA son los reales que devuelve la API, no el ejemplo del Figma. Cada ejercicio suma su instrucción breve. |
 | Workout / 05 — Active Workout | ![Figma](docs/comparaciones/active-workout-figma.png) | ![App](docs/comparaciones/active-workout-app.png) | Ejercicios y consejo del coach reales de la API. El peso se ajusta con − / + (demostración). El ícono ⓘ abre la guía del ejercicio. |
+| Nutrition / 01 — Dashboard | ![Figma](docs/comparaciones/nutrition-dashboard-figma.png) | ![App](docs/comparaciones/nutrition-dashboard-app.png) | Comidas y totales reales de Room, con la fecha de hoy. El ícono de la pestaña Nutrition es de la barra inferior compartida. |
+| Nutrition / 02 — Today's Meals | ![Figma](docs/comparaciones/nutrition-today-meals-figma.png) | ![App](docs/comparaciones/nutrition-today-meals-app.png) | Ingredientes reales de cada comida. Tiene flecha atrás porque se abre desde el Dashboard ("View History"). |
+| Nutrition / 04 — Voice Food Logging | ![Figma](docs/comparaciones/nutrition-voice-figma.png) | ![App](docs/comparaciones/nutrition-voice-app.png) | Escucha simulada con transcripción de ejemplo; no pide permiso de micrófono. |
+| Nutrition / 05 — Food Analysis | ![Figma](docs/comparaciones/nutrition-analysis-figma.png) | ![App](docs/comparaciones/nutrition-analysis-app.png) | Los pasos avanzan solos y al terminar abren Review Meal. |
+| Nutrition / 07 — Food Confirmation | ![Figma](docs/comparaciones/nutrition-review-meal-figma.png) | ![App](docs/comparaciones/nutrition-review-meal-app.png) | kcal y macros proporcionales a los gramos. El horario ("Add to …") se elige según la hora del día. |
+| Nutrition / 08 — Meal Details | ![Figma](docs/comparaciones/nutrition-meal-details-figma.png) | ![App](docs/comparaciones/nutrition-meal-details-app.png) | Suma un ícono para borrar la comida. El aviso de VORA se calcula con la proteína del día. |
 
 ## Uso de IA
 Usamos Claude (Anthropic) como asistente durante todo el desarrollo. Todo lo que propuso
