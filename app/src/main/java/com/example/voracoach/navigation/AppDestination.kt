@@ -1,11 +1,16 @@
 package com.example.voracoach.navigation
 
+import com.example.voracoach.model.MealType
 import com.example.voracoach.viewmodel.WorkoutDetailViewModel.Companion.WORKOUT_ID_ARG
 
-// Nombre del argumento con el id del ejercicio en la ruta de la guía
+// Nombre de los argumentos con el id de ejercicio, comida y tipo de comida
 const val EXERCISE_ID_ARG = "exerciseId"
+const val MEAL_ID_ARG = "mealId"
+const val MEAL_TYPE_ARG = "mealType"
+const val FROM_ANALYSIS_ARG = "fromAnalysis"
+const val EDIT_MEAL_ID_ARG = "editMealId"
 
-//Ruteo
+// Ruteo
 sealed class AppDestination(val route: String) {
     data object SignIn : AppDestination("sign_in")
     data object SignUp : AppDestination("sign_up")
@@ -17,9 +22,6 @@ sealed class AppDestination(val route: String) {
     data object Profile : AppDestination("profile")
     data object Coach : AppDestination("coach")
 
-    // Rutas con parámetro: "route" es el patrón que registra el NavHost ({workoutId} es un
-    // lugar a completar) y createRoute arma la ruta concreta para navegar ("workout/w01").
-    // Así cada entrenamiento del catálogo abre su propio detalle (NAV04).
     data object WorkoutDetail : AppDestination("workout/{$WORKOUT_ID_ARG}") {
         fun createRoute(workoutId: String) = "workout/$workoutId"
     }
@@ -50,7 +52,7 @@ sealed class AppDestination(val route: String) {
 
     data object NutritionPreferences : AppDestination("profile_nutrition")
 
-    // Sub-pantallas de Progress: se abren desde el Dashboard (la pestaña) y Today's Overview desde Home
+    // Sub-pantallas de Progress
     data object TodayOverview : AppDestination("progress_today")
 
     data object WorkoutProgress : AppDestination("progress_workout")
@@ -62,4 +64,37 @@ sealed class AppDestination(val route: String) {
     data object HealthTrends : AppDestination("progress_health")
 
     data object WeeklyReview : AppDestination("progress_weekly_review")
+
+    // Ruta del subgrafo que agrupa todas las pantallas de Nutrition (no es una pantalla)
+    data object NutritionGraph : AppDestination("nutrition_graph")
+
+    // Sub-pantallas de Nutrition
+    data object TodayMeals : AppDestination("nutrition_today_meals")
+
+    data object AddFood : AppDestination("nutrition_add_food")
+
+    data object VoiceFoodLogging : AppDestination("nutrition_voice")
+
+    data object FoodAnalysis : AppDestination("nutrition_analysis")
+
+    data object PhotoAnalysis : AppDestination("nutrition_photo")
+
+    data object SavedMeals : AppDestination("nutrition_saved_meals")
+
+    // mealType: horario de la comida. Opcionales, por query:
+    // - fromAnalysis: true si viene de voz o foto, para arrancar con los ingredientes "detectados".
+    // - editMealId: id de la comida a editar ("Edit Meal"); -1 si es una comida nueva.
+    data object FoodConfirmation : AppDestination(
+        "food_confirmation/{$MEAL_TYPE_ARG}?$FROM_ANALYSIS_ARG={$FROM_ANALYSIS_ARG}&$EDIT_MEAL_ID_ARG={$EDIT_MEAL_ID_ARG}"
+    ) {
+        fun createRoute(
+            mealType: String = MealType.forCurrentTime().name,
+            fromAnalysis: Boolean = false,
+            editMealId: Int = -1,
+        ) = "food_confirmation/$mealType?$FROM_ANALYSIS_ARG=$fromAnalysis&$EDIT_MEAL_ID_ARG=$editMealId"
+    }
+
+    data object MealDetails : AppDestination("nutrition_detail/{$MEAL_ID_ARG}") {
+        fun createRoute(mealId: String) = "nutrition_detail/$mealId"
+    }
 }

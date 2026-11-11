@@ -527,6 +527,7 @@
     <string name="progress_nutrition_analysis_text">\"Your protein intake has improved this week, especially on workout days. Keeping this consistent will better support your strength goal.\"</string>
     <string name="progress_food_habits">FOOD HABITS &amp; PATTERNS</string>
     <string name="progress_frequent_lunch">Frequent lunch</string>
+    <string name="progress_no_data">—</string>
     <string name="progress_top_protein">Top protein source</string>
     <string name="progress_avg_breakfast">Avg breakfast</string>
     <string name="progress_avg_dinner">Avg dinner</string>
@@ -591,4 +592,121 @@
     <string name="progress_review_next_week_plan">View next week\'s plan</string>
     <string name="progress_review_ask_vora">Ask VORA</string>
     <string name="progress_review_done">Done</string>
+
+    <!-- Nutrition (Pantalla Dashboard / Hoy) -->
+    <string name="nutrition_date_default">TUESDAY, 8 SEPTEMBER</string>
+    <string name="nutrition_calendar_desc">Select date</string>
+    <string name="nutrition_calories_consumed">CALORIES CONSUMED</string>
+    <string name="nutrition_calories_goal">Goal: %1$s kcal</string>
+    <string name="nutrition_percent_format">%1$d%%</string>
+    <string name="nutrition_protein">Protein</string>
+    <string name="nutrition_carbs">Carbs</string>
+    <string name="nutrition_fat">Fat</string>
+    <string name="nutrition_grams_format">%1$dg/%2$dg</string>
+    <string name="nutrition_todays_meals">Today’s Meals</string>
+    <string name="nutrition_view_history">View History</string>
+    <string name="nutrition_add_meal">+ Add</string>
+    <string name="nutrition_tell_vora">Tell Vora what you ate</string>
+    <string name="nutrition_ai_description">Vora will automatically estimate the portions, ingredients, and log the nutrition details.</string>
+    <string name="nutrition_btn_voice">Voice</string>
+    <string name="nutrition_btn_photo">Photo</string>
+    <string name="nutrition_btn_search">Search</string>
+    <string name="nutrition_insight_default">You\'re on track today. A protein-rich dinner would help you reach your target.</string>
+    <string name="nutrition_not_logged">Not logged yet</string>
+    <string name="nutrition_delete">Delete</string>
+    <string name="nutrition_cancel">Cancel</string>
+    <string name="nutrition_meal_detail">Meal Detail</string>
+    <string name="nutrition_meal_not_found">Meal not found</string>
+    <string name="nutrition_meal_not_found_body">This meal may have been deleted.</string>
+    <string name="nutrition_back_to_meals">Back to meals</string>
+
+    <!-- Food Confirmation (Review Meal) -->
+    <string name="food_review_meal">Review Meal</string>
+    <string name="food_add_ingredient">+ Add Ingredient</string>
+    <string name="food_ingredient_name">Ingredient name</string>
+    <string name="food_ingredient_name_hint">e.g. Oats, Eggs, Chicken</string>
+    <string name="food_kcal_per_100g">kcal per 100 g</string>
+    <string name="food_remove">Remove</string>
+    <string name="food_meal_totals">MEAL TOTALS</string>
+    <string name="food_add_to">Add to %1$s</string>
+    <string name="food_save_changes">Save changes</string>
+    <string name="food_save_without_logging">Save without logging</string>
+    <string name="food_meal_saved">Meal saved. Find it in Search Database.</string>
+
+    <!-- Nutrition: textos de pantallas -->
+    <string name="add_food_title">Add Food</string>
+    <string name="add_food_talk_title">Talk to VORA</string>
+    <string name="add_food_talk_example">\"I had grilled chicken breast with basmati rice.\"</string>
+    <string name="add_food_start_voice">Start Voice Logging</string>
+    <string name="add_food_photo_title">Snap a Photo</string>
+    <string name="add_food_photo_subtitle">Vora estimates sizes and nutrition info.</string>
+    <string name="add_food_manual_title">Log Manually</string>
+    <string name="add_food_manual_subtitle">Input weight, calories and macros yourself.</string>
+    <string name="nutrition_consumed_calories">CALORIES CONSUMED</string>
+    <string name="nutrition_goal_kcal">Goal: %1$s kcal</string>
+    <string name="nutrition_percent">%1$d%%</string>
+    <string name="today_meals_timeline">TIMELINE</string>
+    <string name="today_meals_title">Today\'s Meals</string>
+    <string name="today_meals_not_logged">%1$s is not logged yet</string>
+    <string name="today_meals_add">+ Add %1$s</string>
+    <string name="nutrition_goal_kcal_value">%1$s kcal</string>
+    <string name="voice_title">Voice Logging</string>
+    <string name="voice_listening">Listening…</string>
+    <string name="voice_hint">Speak naturally, e.g. \"A bowl of oatmeal with strawberries and a glass of milk\"</string>
+    <string name="voice_microphone">Microphone</string>
+    <string name="voice_done">Done Speaking</string>
+    <string name="voice_keep_talking">\"Keep talking. I\'m listening.\"</string>
+    <string name="voice_transcript_example">\"I had grilled chicken with rice and some mixed vegetables for lunch.\"</string>
+    <string name="voice_type_instead">Type instead</string>
+    <string name="nutrition_close">Close</string>
+    <string name="analysis_header">VORA AI</string>
+    <string name="analysis_title">Analyzing Meal…</string>
+    <string name="analysis_captured_input">CAPTURED INPUT</string>
+    <string name="analysis_captured_example">\"Grilled chicken, rice and mixed vegetables\"</string>
+    <string name="analysis_step_identifying">Identifying foods…</string>
+    <string name="analysis_step_portions">Estimating portions…</string>
+    <string name="analysis_step_nutrition">Calculating nutrition…</string>
+    <string name="analysis_cancel">Cancel analysis</string>
+    <string name="photo_title">Analyse Meal</string>
+    <string name="photo_captured">Analyzed plate photo</string>
+    <string name="photo_item_chicken">Grilled Chicken (~180g)</string>
+    <string name="photo_item_rice">Basmati Rice (~150g)</string>
+    <string name="photo_item_vegetables">Mixed Steamed Vegetables (~100g)</string>
+    <string name="photo_estimate_label">VORA ESTIMATE</string>
+    <string name="photo_insight">Portions and quantities can be refined in the next step before saving.</string>
+    <string name="photo_review_add">Review &amp; Add</string>
+
+    <!-- Meal Details -->
+    <string name="meal_details_total_calories">TOTAL CALORIES</string>
+    <string name="meal_details_ingredients">Ingredients</string>
+    <string name="meal_details_no_ingredients">This meal was logged with totals only.</string>
+    <string name="meal_details_edit">Edit Meal</string>
+    <string name="meal_details_duplicate">Duplicate Meal</string>
+    <string name="meal_details_duplicated">Meal duplicated to today.</string>
+    <string name="meal_details_delete">Delete meal</string>
+    <string name="meal_details_delete_body">Are you sure you want to remove \"%1$s\"? This action cannot be undone.</string>
+    <string name="meal_details_insight_protein">Great choice. You\'re now %1$dg away from your daily protein target.</string>
+    <string name="meal_details_insight_done">You\'ve reached your daily protein target. Nice work!</string>
+
+    <!-- Saved Meals (Search Database) -->
+    <string name="saved_meals_title">Search Database</string>
+    <string name="saved_meals_search_label">Search</string>
+    <string name="saved_meals_search_hint">e.g. chicken, smoothie</string>
+    <string name="saved_meals_macros">P: %1$dg · C: %2$dg · F: %3$dg</string>
+    <string name="saved_meals_delete">Delete saved meal</string>
+    <string name="saved_meals_delete_title">Delete saved meal?</string>
+    <string name="saved_meals_delete_body">\"%1$s\" will be removed from your saved meals.</string>
+    <string name="saved_meals_empty">No saved meals yet</string>
+    <string name="saved_meals_no_results">No meals match your search</string>
+    <string name="saved_meals_empty_body">Use \"Save without logging\" when reviewing a meal to find it here later.</string>
+    <string name="add_food_search_title">Search database</string>
+    <string name="add_food_search_subtitle">Search your saved meals and log them in one tap.</string>
+    <string name="food_kcal_value">%1$d kcal</string>
+    <string name="food_grams_value">%1$dg</string>
+    <string name="food_increase_grams">Increase grams</string>
+    <string name="food_decrease_grams">Decrease grams</string>
+    <string name="meal_type_breakfast">Breakfast</string>
+    <string name="meal_type_lunch">Lunch</string>
+    <string name="meal_type_snack">Snack</string>
+    <string name="meal_type_dinner">Dinner</string>
 </resources>
